@@ -79,7 +79,6 @@ function Formulario() {
 
     return (
         <form onSubmit={handleSubmit}>
-            {/* Datos del alumno */}
             <div className="p-3 mb-4 bg-white border rounded">
                 <h2 className="mt-4">Datos del alumno</h2>
                 <div className="form-group">
@@ -100,7 +99,6 @@ function Formulario() {
                 </div>
             </div>
 
-            {/* Datos de los Padres o Tutores */}
             <div className="p-3 mb-4 bg-white border rounded">
                 <h2 className="mt-4">Datos de los Padres o Tutores</h2>
                 <div className="form-group">
