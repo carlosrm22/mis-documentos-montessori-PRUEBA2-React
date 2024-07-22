@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Formulario from './components/Formulario';
+import Formulario from './components/DatosIniciales'
 
 function App() {
   return (
