@@ -5,17 +5,17 @@ function Footer() {
         <footer className="bg-light text-center text-lg-start mt-5">
             <div className="container p-4">
                 <div className="row">
-                    <div className="col-lg-4 col-md-6 mb-4 mb-md-0">
-                        <img src="assets/images/logo.png" alt="Logo" width="50" height="50" className="d-inline-block align-top" />
-                        <h5 className="text-uppercase">Asociación Montessori de México</h5>
+                    <div className="col-12 col-md-4 mb-4 mb-md-0">
+                        <img src="/assets/images/logo.png" alt="Logo" width="50" height="50" className="d-inline-block align-top" />
+                        <h5 className="text-uppercase mt-2">Asociación Montessori de México</h5>
                     </div>
-                    <div className="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <div className="col-12 col-md-4 mb-4 mb-md-0">
                         <h5 className="text-uppercase">Información de contacto</h5>
                         <ul className="list-unstyled mb-0">
-                            <li>
+                            <li className="text-wrap">
                                 <i className="fas fa-home mr-3"></i> Avenida 2 No. 48, Col. San Pedro de los Pinos, Benito Jarez, C.P.03800, Ciudad de México
                             </li>
-                            <li>
+                            <li className="text-wrap">
                                 <i className="fas fa-envelope mr-3"></i> contacto@asociacionmontessori.com.mx
                             </li>
                             <li>
@@ -23,7 +23,7 @@ function Footer() {
                             </li>
                         </ul>
                     </div>
-                    <div className="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <div className="col-12 col-md-4 mb-4 mb-md-0">
                         <h5 className="text-uppercase">Síguenos</h5>
                         <a href="https://www.instagram.com/asociacionmontessori/" className="btn btn-outline-dark btn-floating m-1" role="button">
                             <i className="fab fa-instagram"></i>
