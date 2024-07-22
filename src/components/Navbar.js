@@ -5,7 +5,7 @@ function Navbar() {
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <div className="container">
         <a className="navbar-brand" href="#">
-          <img src="/assets/images/logo.png" width="30" height="30" className="d-inline-block align-top" alt="Logo" />
+          <img src={`${process.env.PUBLIC_URL}/assets/images/logo.png`} width="30" height="30" className="d-inline-block align-top" alt="Logo" />
           Mis Documentos Montessori
         </a>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

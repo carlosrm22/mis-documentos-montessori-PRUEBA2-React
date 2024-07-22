@@ -6,7 +6,7 @@ function Footer() {
             <div className="container p-4">
                 <div className="row">
                     <div className="col-12 col-md-4 mb-4 mb-md-0">
-                        <img src="/assets/images/logo.png" alt="Logo" width="50" height="50" className="d-inline-block align-top" />
+                        <img src={`${process.env.PUBLIC_URL}/assets/images/logo.png`} alt="Logo" width="50" height="50" className="d-inline-block align-top" />
                         <h5 className="text-uppercase mt-2">Asociación Montessori de México</h5>
                     </div>
                     <div className="col-12 col-md-4 mb-4 mb-md-0">
