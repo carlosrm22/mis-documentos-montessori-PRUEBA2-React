@@ -25,16 +25,20 @@ function Footer() {
                     </div>
                     <div className="col-12 col-md-4 mb-4 mb-md-0">
                         <h5 className="text-uppercase">Síguenos</h5>
-                        <a href="https://www.instagram.com/asociacionmontessori/" className="btn btn-outline-dark btn-floating m-1" role="button">
+                        <a href="https://www.instagram.com/asociacionmontessori/" className="btn btn-outline-dark btn-floating m-1" role="button" target="_blank"
+                            rel="noopener noreferrer">
                             <i className="fab fa-instagram"></i>
                         </a>
-                        <a href="https://www.facebook.com/asociacionmontessori" className="btn btn-outline-dark btn-floating m-1" role="button">
+                        <a href="https://www.facebook.com/asociacionmontessori" className="btn btn-outline-dark btn-floating m-1" role="button" target="_blank"
+                            rel="noopener noreferrer">
                             <i className="fab fa-facebook-f"></i>
                         </a>
-                        <a href="https://api.whatsapp.com/send?phone=5215548885013&text=Hola,%20Me%20gustar%C3%ADa%20informaci%C3%B3n%20sobre%20la%20certificaci%C3%B3n%20Montessori." className="btn btn-outline-dark btn-floating m-1" role="button">
+                        <a href="https://api.whatsapp.com/send?phone=5215548885013&text=Hola,%20Me%20gustar%C3%ADa%20informaci%C3%B3n%20sobre%20la%20certificaci%C3%B3n%20Montessori." className="btn btn-outline-dark btn-floating m-1" role="button" target="_blank"
+                            rel="noopener noreferrer">
                             <i className="fab fa-whatsapp"></i>
                         </a>
-                        <a href="https://www.youtube.com/@montessorimx" className="btn btn-outline-dark btn-floating m-1" role="button">
+                        <a href="https://www.youtube.com/@montessorimx" className="btn btn-outline-dark btn-floating m-1" role="button" target="_blank"
+                            rel="noopener noreferrer">
                             <i className="fab fa-youtube"></i>
                         </a>
                     </div>

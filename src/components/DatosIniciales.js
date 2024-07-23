@@ -1,29 +1,23 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
-function DatosIniciales() {
+function DatosIniciales({ formData, setFormData }) {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        apellidosAlumno: '',
-        nombresAlumno: '',
-        fechaNacimientoAlumno: '',
-        edadAlumno: '',
-        curpAlumno: '',
-        apellidosResponsable: '',
-        nombresResponsable: '',
-        telefonoContacto: '',
-        emailContacto: ''
-    });
 
     const handleChange = (e) => {
         const { id, value } = e.target;
-        setFormData((prevFormData) => ({ ...prevFormData, [id]: value }));
 
-        if (id === 'fechaNacimientoAlumno') {
-            const edad = calcularEdad(value);
-            setFormData((prevFormData) => ({ ...prevFormData, edadAlumno: edad, [id]: value }));
-        }
+        setFormData((prevFormData) => {
+            const newFormData = { ...prevFormData, [id]: value };
+
+            if (id === 'fechaNacimientoAlumno') {
+                const edad = calcularEdad(value);
+                newFormData.edadAlumno = edad;
+            }
+
+            return newFormData;
+        });
     };
 
     const calcularEdad = (fechaNacimiento) => {
@@ -37,26 +31,16 @@ function DatosIniciales() {
         return edad;
     };
 
+
+
     const validarFormulario = (e) => {
         e.preventDefault();
-        const allFieldsFilled = Object.values(formData).every(field => {
-            if (typeof field === 'string') {
-                return field.trim() !== '';
-            } else if (typeof field === 'number') {
-                return !isNaN(field) && field !== '';
-            } else if (field instanceof Date) {
-                return !isNaN(field.getTime());
-            }
-            return field !== '';
-        });
-
-        if (!allFieldsFilled) {
+        if (!Object.values(formData).every(field => typeof field === 'string' ? field.trim() !== '' : field !== '')) {
             Swal.fire({
                 icon: 'error',
                 title: 'Ups, faltan datos',
                 text: 'Por favor, completa todos los campos obligatorios.',
             });
-            return false;
         } else {
             Swal.fire({
                 title: '¿Seguro que quieres guardar y continuar?',
@@ -72,11 +56,8 @@ function DatosIniciales() {
                     guardarYContinuar();
                 }
             });
-            return false;
         }
     };
-
-
 
     const guardarYContinuar = () => {
         // Guardar la información en variables
@@ -94,12 +75,18 @@ function DatosIniciales() {
         navigate('/aviso-privacidad');
     };
 
+
     return (
         <div className="p-3 mb-4 bg-light rounded">
             <h1 className="mt-5">Datos iniciales</h1>
-            <p>Por favor, ingresa los datos iniciales para que podamos generar tus documentos. Asegúrate de llenar correctamente cada campo, ya que tu documento se generará exactamente como ingreses la información.</p>
-            <form id="miFormulario" encType="multipart/form-data" onSubmit={validarFormulario}>
-                {/* Datos del alumno */}
+            <p>Ingresa los datos iniciales para generar tus
+                documentos. Llena correctamente cada campo,
+                ya que el documento se generará según la
+                información ingresada. Por motivos de
+                privacidad, no guardamos la información más
+                que temporalmente, así que evita actualizar la
+                página mientras completas tus datos. Gracias.</p>
+            <form id="miFormulario" onSubmit={validarFormulario}>
                 <div className="p-3 mb-4 bg-white border rounded">
                     <h2 className="mt-4">Datos del alumno</h2>
                     <div className="form-group">
@@ -124,7 +111,6 @@ function DatosIniciales() {
                     </div>
                 </div>
 
-                {/* Datos del responsable legal del alumno */}
                 <div className="p-3 mb-4 bg-white border rounded">
                     <h2 className="mt-4">Datos del responsable legal del alumno</h2>
                     <div className="form-group">
@@ -147,7 +133,6 @@ function DatosIniciales() {
                     </div>
                 </div>
 
-                {/* Botón de envío */}
                 <button type="submit" className="btn btn-primary">Guardar y continuar</button>
             </form>
         </div>

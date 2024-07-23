@@ -1,1 +1,37 @@
-/* Este archivo está vacío intencionalmente */
+.float-whatsapp {
+    position: fixed;
+    width: 240px;
+    height: 70px;
+    bottom: 20px;
+    right: 20px;
+    background-color: #25d366;
+    color: white;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 7px 7px 3px #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    z-index: 1000;
+    text-decoration: none;
+}
+
+.float-whatsapp:hover {
+    background-color: white;
+    color: #25d366;
+    text-decoration: none;
+    font-size: 19px;
+    border-color: dimgray;
+}
+
+.float-whatsapp i {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.signature-line {
+    width: 300px;
+    border: 1px solid black;
+    margin: 100px auto 0 auto;
+}
