@@ -6,7 +6,7 @@ function AvisoPrivacidad({ formData, getFechaActual, generarPDF }) {
     const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
     const navigate = useNavigate();
 
-    const handleAceptarContinuar = () => {
+    const handleAceptarContinuar = async () => {
         Swal.fire({
             title: 'Se descargará el documento en PDF para que pueda imprimirlo y firmarlo',
             icon: 'warning',
@@ -17,8 +17,24 @@ function AvisoPrivacidad({ formData, getFechaActual, generarPDF }) {
             cancelButtonText: 'Revisar'
         }).then((result) => {
             if (result.isConfirmed) {
-                generarPDF();
-                navigate('/datos-personales');
+                generarPDF().then((pdfBlob) => {
+                    // Descargar el PDF
+                    const url = window.URL.createObjectURL(new Blob([pdfBlob]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'documento.pdf');
+                    document.body.appendChild(link);
+                    link.click();
+
+                    // Redirigir a la nueva sección "Datos Personales"
+                    navigate('/datos-personales');
+                }).catch((error) => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un problema al generar el PDF.'
+                    });
+                });
             }
         });
     };

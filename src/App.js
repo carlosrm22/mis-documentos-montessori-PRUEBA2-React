@@ -35,17 +35,15 @@ function App() {
     return `A los días ${dia} del mes de ${mes} del año ${año}`;
   };
 
+  // Función para generar el PDF
   const generarPDF = () => {
-    const input = document.getElementById('aviso-privacidad');
-    html2canvas(input)
-      .then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF();
-        pdf.addImage(imgData, 'PNG', 0, 0);
-        pdf.save("aviso_de_privacidad.pdf");
-
-        enviarCorreo(pdf.output('blob'));
-      });
+    const input = document.body;
+    return html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 0, 0);
+      return pdf.output('blob');
+    });
   };
 
   return (
@@ -55,7 +53,7 @@ function App() {
         <Routes>
           <Route path="/" element={<DatosIniciales formData={formData} setFormData={setFormData} />} />
           <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} getFechaActual={getFechaActual} generarPDF={generarPDF} />} />
-          <Route path="/datos-personales" element={<DatosPersonales formData={formData} setFormData={setFormData} />} />
+          <Route path="/datos-personales" element={<DatosPersonales formData={formData} />} />
         </Routes>
       </div>
       <Footer />
