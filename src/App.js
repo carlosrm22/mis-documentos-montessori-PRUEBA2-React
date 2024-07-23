@@ -39,11 +39,12 @@ function App() {
   const generarPDF = (input) => {
     return html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      const pdf = new jsPDF('p', 'pt', 'letter'); // 'pt' para puntos, 'letter' para tamaño carta
+      const margin = 50; // Define el margen en puntos
+      const pdfWidth = pdf.internal.pageSize.getWidth() - 2 * margin; // Resta los márgenes del ancho total
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Calcula la altura proporcional de la imagen
+
+      pdf.addImage(imgData, 'PNG', margin, margin, pdfWidth, pdfHeight);
       return pdf.output('blob');
     });
   };
