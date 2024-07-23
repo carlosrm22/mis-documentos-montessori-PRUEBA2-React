@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 function DatosIniciales() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         apellidosAlumno: '',
         nombresAlumno: '',
@@ -16,11 +18,11 @@ function DatosIniciales() {
 
     const handleChange = (e) => {
         const { id, value } = e.target;
-        setFormData({ ...formData, [id]: value });
+        setFormData((prevFormData) => ({ ...prevFormData, [id]: value }));
 
         if (id === 'fechaNacimientoAlumno') {
             const edad = calcularEdad(value);
-            setFormData({ ...formData, edadAlumno: edad });
+            setFormData((prevFormData) => ({ ...prevFormData, edadAlumno: edad, [id]: value }));
         }
     };
 
@@ -35,8 +37,20 @@ function DatosIniciales() {
         return edad;
     };
 
-    const validarFormulario = () => {
-        if (!Object.values(formData).every(field => field.trim() !== '')) {
+    const validarFormulario = (e) => {
+        e.preventDefault();
+        const allFieldsFilled = Object.values(formData).every(field => {
+            if (typeof field === 'string') {
+                return field.trim() !== '';
+            } else if (typeof field === 'number') {
+                return !isNaN(field) && field !== '';
+            } else if (field instanceof Date) {
+                return !isNaN(field.getTime());
+            }
+            return field !== '';
+        });
+
+        if (!allFieldsFilled) {
             Swal.fire({
                 icon: 'error',
                 title: 'Ups, faltan datos',
@@ -62,6 +76,8 @@ function DatosIniciales() {
         }
     };
 
+
+
     const guardarYContinuar = () => {
         // Guardar la información en variables
         localStorage.setItem('formData', JSON.stringify(formData));
@@ -74,36 +90,36 @@ function DatosIniciales() {
             timer: 1500
         });
 
-        // Redirigir a la siguiente sección (opcional)
-        // window.location.href = 'datos_personales.html'; // Descomenta y actualiza esta línea para redirigir a la página siguiente
+        // Redirigir a la siguiente sección
+        navigate('/aviso-privacidad');
     };
 
     return (
         <div className="p-3 mb-4 bg-light rounded">
             <h1 className="mt-5">Datos iniciales</h1>
             <p>Por favor, ingresa los datos iniciales para que podamos generar tus documentos. Asegúrate de llenar correctamente cada campo, ya que tu documento se generará exactamente como ingreses la información.</p>
-            <form id="miFormulario" enctype="multipart/form-data" onSubmit={validarFormulario}>
+            <form id="miFormulario" encType="multipart/form-data" onSubmit={validarFormulario}>
                 {/* Datos del alumno */}
                 <div className="p-3 mb-4 bg-white border rounded">
                     <h2 className="mt-4">Datos del alumno</h2>
                     <div className="form-group">
-                        <label for="apellidosAlumno">Apellidos del alumno: <span className="text-danger">*</span></label>
+                        <label htmlFor="apellidosAlumno">Apellidos del alumno: <span className="text-danger">*</span></label>
                         <input type="text" className="form-control" id="apellidosAlumno" value={formData.apellidosAlumno} onChange={handleChange} required />
                     </div>
                     <div className="form-group">
-                        <label for="nombresAlumno">Nombre(s) del alumno: <span className="text-danger">*</span></label>
+                        <label htmlFor="nombresAlumno">Nombre(s) del alumno: <span className="text-danger">*</span></label>
                         <input type="text" className="form-control" id="nombresAlumno" value={formData.nombresAlumno} onChange={handleChange} required />
                     </div>
                     <div className="form-group">
-                        <label for="fechaNacimientoAlumno">Fecha de nacimiento del alumno: <span className="text-danger">*</span></label>
+                        <label htmlFor="fechaNacimientoAlumno">Fecha de nacimiento del alumno: <span className="text-danger">*</span></label>
                         <input type="date" className="form-control" id="fechaNacimientoAlumno" value={formData.fechaNacimientoAlumno} onChange={handleChange} required />
                     </div>
                     <div className="form-group">
-                        <label for="edadAlumno">Edad del alumno: <span className="text-danger">*</span></label>
+                        <label htmlFor="edadAlumno">Edad del alumno: <span className="text-danger">*</span></label>
                         <input type="number" className="form-control" id="edadAlumno" value={formData.edadAlumno} readOnly required />
                     </div>
                     <div className="form-group">
-                        <label for="curpAlumno">CURP del alumno: <span className="text-danger">*</span></label>
+                        <label htmlFor="curpAlumno">CURP del alumno: <span className="text-danger">*</span></label>
                         <input type="text" className="form-control" id="curpAlumno" value={formData.curpAlumno} onChange={handleChange} required />
                     </div>
                 </div>
@@ -112,20 +128,20 @@ function DatosIniciales() {
                 <div className="p-3 mb-4 bg-white border rounded">
                     <h2 className="mt-4">Datos del responsable legal del alumno</h2>
                     <div className="form-group">
-                        <label for="apellidosResponsable">Apellidos del responsable legal del alumno: <span className="text-danger">*</span></label>
+                        <label htmlFor="apellidosResponsable">Apellidos del responsable legal del alumno: <span className="text-danger">*</span></label>
                         <input type="text" className="form-control" id="apellidosResponsable" value={formData.apellidosResponsable} onChange={handleChange} required />
                     </div>
                     <div className="form-group">
-                        <label for="nombresResponsable">Nombre(s) del responsable legal del alumno: <span className="text-danger">*</span></label>
+                        <label htmlFor="nombresResponsable">Nombre(s) del responsable legal del alumno: <span className="text-danger">*</span></label>
                         <input type="text" className="form-control" id="nombresResponsable" value={formData.nombresResponsable} onChange={handleChange} required />
                     </div>
                     <div className="form-group">
-                        <label for="telefonoContacto">Teléfono de contacto: <span className="text-danger">*</span></label>
+                        <label htmlFor="telefonoContacto">Teléfono de contacto: <span className="text-danger">*</span></label>
                         <input type="tel" className="form-control" id="telefonoContacto" value={formData.telefonoContacto} onChange={handleChange} required />
                         <small className="form-text text-muted">Es posible que nos contactemos a este número vía WhatsApp para dar seguimiento a esta información.</small>
                     </div>
                     <div className="form-group">
-                        <label for="emailContacto">Email de contacto: <span className="text-danger">*</span></label>
+                        <label htmlFor="emailContacto">Email de contacto: <span className="text-danger">*</span></label>
                         <input type="email" className="form-control" id="emailContacto" value={formData.emailContacto} onChange={handleChange} required />
                         <small className="form-text text-muted">Es posible que nos comuniquemos a este correo para dar seguimiento a esta información.</small>
                     </div>
