@@ -1,51 +1,21 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
 
-function AvisoPrivacidad({ formData, getFechaActual, generarPDF }) {
+function AvisoPrivacidad({ formData, getFechaActual, mostrarAvisoYDescargarPDF }) {
     const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
     const navigate = useNavigate();
 
-    const handleAceptarContinuar = async () => {
-        Swal.fire({
-            title: 'Se descargará el documento en PDF para que pueda imprimirlo y firmarlo',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Aceptar y Continuar',
-            cancelButtonText: 'Revisar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                generarPDF().then((pdfBlob) => {
-                    // Descargar el PDF
-                    const url = window.URL.createObjectURL(new Blob([pdfBlob]));
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.setAttribute('download', 'documento.pdf');
-                    document.body.appendChild(link);
-                    link.click();
-
-                    // Redirigir a la nueva sección "Datos Personales"
-                    navigate('/datos-personales');
-                }).catch((error) => {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Hubo un problema al generar el PDF.'
-                    });
-                });
-            }
-        });
+    const handleAceptarContinuar = () => {
+        mostrarAvisoYDescargarPDF(() => navigate('/datos-personales'));
     };
 
     return (
-        <div className="container mt-5">
+        <div id="aviso-privacidad" className="container mt-5">
             <h1>Aviso de Privacidad</h1>
             <p>En la Institución Educativa denominada <b>Montessori Kalpilli</b> con domicilio ubicado en la calle de Avenida 2 No.48
                 Colonia San Pedro de los Pinos, C.P. 03800, Benito Juárez, Ciudad de México. Con fundamento en lo dispuesto por los
                 artículos 1, 2, 3, fracciones V, VI, XI, XII, XIII, 5, 6, 7, 8, 9, 10, 12, 16, 17, 22, 26, 34, 37, y demás relativos de la LEY
-                    FEDERAL DE PROTECCIÓN DE DATOS PERSONALES EN POSESIÓN DE LOS PARTICULARES es
+                FEDERAL DE PROTECCIÓN DE DATOS PERSONALES EN POSESIÓN DE LOS PARTICULARES es
                 responsable de recibir sus datos personales y los de su hijo(a), del uso que se le dé a los mismos y de su protección, lo
                 anterior con el propósito de dar cumplimiento con la citada Ley. Para tal efecto se señala al Sr. Carlos Alfonso Romero
                 Muñoz como persona responsable directamente de salvaguardar y custodiar los datos proporcionados por usted. La

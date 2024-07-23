@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import DatosIniciales from './components/DatosIniciales';
@@ -37,12 +37,46 @@ function App() {
 
   // Función para generar el PDF
   const generarPDF = () => {
-    const input = document.body;
+    const input = document.getElementById('aviso-privacidad');
     return html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 0, 0);
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       return pdf.output('blob');
+    });
+  };
+
+  // Función para mostrar aviso y descargar PDF
+  const mostrarAvisoYDescargarPDF = (navigateTo) => {
+    Swal.fire({
+      title: 'Se descargará el documento en PDF para que pueda imprimirlo y firmarlo',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Aceptar y Continuar',
+      cancelButtonText: 'Revisar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        generarPDF().then((pdfBlob) => {
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(pdfBlob);
+          link.download = 'documento.pdf';
+          link.click();
+          if (navigateTo) {
+            navigateTo();
+          }
+        }).catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un problema al generar el PDF.'
+          });
+        });
+      }
     });
   };
 
@@ -52,7 +86,7 @@ function App() {
       <div className="container">
         <Routes>
           <Route path="/" element={<DatosIniciales formData={formData} setFormData={setFormData} />} />
-          <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} getFechaActual={getFechaActual} generarPDF={generarPDF} />} />
+          <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} getFechaActual={getFechaActual} mostrarAvisoYDescargarPDF={mostrarAvisoYDescargarPDF} />} />
           <Route path="/datos-personales" element={<DatosPersonales formData={formData} />} />
         </Routes>
       </div>
