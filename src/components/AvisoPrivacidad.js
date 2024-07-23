@@ -6,8 +6,8 @@ function AvisoPrivacidad({ formData, getFechaActual, mostrarAvisoYDescargarPDF }
     const navigate = useNavigate();
 
     const handleAceptarContinuar = () => {
-        const input = document.getElementById('aviso-privacidad');
-        mostrarAvisoYDescargarPDF(input, () => navigate('/datos-personales'));
+        const inputId = 'aviso-privacidad';
+        mostrarAvisoYDescargarPDF(inputId, () => navigate('/datos-personales'));
     };
 
     return (
@@ -63,7 +63,7 @@ function AvisoPrivacidad({ formData, getFechaActual, mostrarAvisoYDescargarPDF }
                 <p>{getFechaActual()}</p>
             </div>
             <div className="text-center mt-5">
-                <button className="btn btn-primary" onClick={handleAceptarContinuar}>Aceptar y Continuar</button>
+                <button className="btn btn-primary no-print" onClick={handleAceptarContinuar}>Aceptar y Continuar</button>
             </div>
         </div>
     );

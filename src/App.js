@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import DatosIniciales from './components/DatosIniciales';
@@ -36,21 +36,35 @@ function App() {
   };
 
   // Función para generar el PDF
-  const generarPDF = (input) => {
+  const generarPDF = (inputId) => {
+    const input = document.getElementById(inputId);
+
+    // Ocultar elementos no deseados
+    const elementsToHide = input.querySelectorAll('.no-print');
+    elementsToHide.forEach(element => {
+      element.style.display = 'none';
+    });
+
     return html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'pt', 'letter'); // 'pt' para puntos, 'letter' para tamaño carta
+      const pdf = new jsPDF('p', 'pt', 'letter'); // 'letter' para tamaño carta
       const margin = 50; // Define el margen en puntos
       const pdfWidth = pdf.internal.pageSize.getWidth() - 2 * margin; // Resta los márgenes del ancho total
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Calcula la altura proporcional de la imagen
 
       pdf.addImage(imgData, 'PNG', margin, margin, pdfWidth, pdfHeight);
+
+      // Volver a mostrar los elementos no deseados
+      elementsToHide.forEach(element => {
+        element.style.display = '';
+      });
+
       return pdf.output('blob');
     });
   };
 
   // Función para mostrar aviso y descargar PDF
-  const mostrarAvisoYDescargarPDF = (input, navigateTo) => {
+  const mostrarAvisoYDescargarPDF = (inputId, navigateTo) => {
     Swal.fire({
       title: 'Se descargará el documento en PDF para que pueda imprimirlo y firmarlo',
       icon: 'warning',
@@ -61,7 +75,7 @@ function App() {
       cancelButtonText: 'Revisar'
     }).then((result) => {
       if (result.isConfirmed) {
-        generarPDF(input).then((pdfBlob) => {
+        generarPDF(inputId).then((pdfBlob) => {
           const link = document.createElement('a');
           link.href = URL.createObjectURL(pdfBlob);
           link.download = 'documento.pdf';
