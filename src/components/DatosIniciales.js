@@ -1,8 +1,5 @@
 import React from 'react';
 import Swal from 'sweetalert2';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import emailjs from 'emailjs-com';
 import { useNavigate } from 'react-router-dom';
 
 function DatosIniciales({ formData, setFormData }) {
