@@ -6,9 +6,9 @@ function AvisoPrivacidad({ formData, getFechaActual, mostrarAvisoYDescargarPDF }
     const navigate = useNavigate();
 
     const handleAceptarContinuar = () => {
-        const inputId = 'aviso-privacidad';
-        mostrarAvisoYDescargarPDF(inputId, () => navigate('/datos-personales'));
+        mostrarAvisoYDescargarPDF('aviso-privacidad', () => navigate('/datos-personales'));
     };
+
 
     return (
         <div id="aviso-privacidad" className="container mt-5">

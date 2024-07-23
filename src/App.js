@@ -25,7 +25,6 @@ function App() {
     emailContacto: ''
   });
 
-  // Extraer fecha actual para usarla en otras partes de la app
   const getFechaActual = () => {
     const fecha = new Date();
     const meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
@@ -35,9 +34,16 @@ function App() {
     return `A los días ${dia} del mes de ${mes} del año ${año}`;
   };
 
-  // Función para generar el PDF
   const generarPDF = (inputId) => {
     const input = document.getElementById(inputId);
+
+    if (!input) {
+      console.error(`Elemento con id "${inputId}" no encontrado.`);
+      return;
+    }
+
+    // Añadir clase para aumentar tamaño de letra
+    input.classList.add('pdf-font-size');
 
     // Ocultar elementos no deseados
     const elementsToHide = input.querySelectorAll('.no-print');
@@ -47,10 +53,10 @@ function App() {
 
     return html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'pt', 'letter'); // 'letter' para tamaño carta
-      const margin = 50; // Define el margen en puntos
-      const pdfWidth = pdf.internal.pageSize.getWidth() - 2 * margin; // Resta los márgenes del ancho total
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Calcula la altura proporcional de la imagen
+      const pdf = new jsPDF('p', 'pt', 'letter');
+      const margin = 50;
+      const pdfWidth = pdf.internal.pageSize.getWidth() - 2 * margin;
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
       pdf.addImage(imgData, 'PNG', margin, margin, pdfWidth, pdfHeight);
 
@@ -59,11 +65,13 @@ function App() {
         element.style.display = '';
       });
 
+      // Remover clase de aumento de tamaño de letra
+      input.classList.remove('pdf-font-size');
+
       return pdf.output('blob');
     });
   };
 
-  // Función para mostrar aviso y descargar PDF
   const mostrarAvisoYDescargarPDF = (inputId, navigateTo) => {
     Swal.fire({
       title: 'Se descargará el documento en PDF para que pueda imprimirlo y firmarlo',
@@ -106,7 +114,6 @@ function App() {
       </div>
       <Footer />
 
-      {/* Botón flotante de WhatsApp */}
       <a href="https://wa.me/5215548885013?text=Hola,%20necesito%20ayuda%20con%20mis%20documentos%20Montessori"
         className="float-whatsapp"
         target="_blank"
