@@ -111,7 +111,7 @@ function App() {
   };
 
   return (
-    <Router basename="/mis-documentos-montessori-PRUEBA2-React">
+    <Router basename="/">
       <Navbar />
       <div className="container">
         <Routes>
