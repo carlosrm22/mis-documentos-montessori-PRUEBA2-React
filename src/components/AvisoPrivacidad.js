@@ -1,9 +1,27 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
-
-
-function AvisoPrivacidad({ formData, getFechaActual }) {
+function AvisoPrivacidad({ formData, getFechaActual, generarPDF }) {
     const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
+    const navigate = useNavigate();
+
+    const handleAceptarContinuar = () => {
+        Swal.fire({
+            title: 'Se descargará el documento en PDF para que pueda imprimirlo y firmarlo',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Aceptar y Continuar',
+            cancelButtonText: 'Revisar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                generarPDF();
+                navigate('/datos-personales');
+            }
+        });
+    };
 
     return (
         <div className="container mt-5">
@@ -56,6 +74,9 @@ function AvisoPrivacidad({ formData, getFechaActual }) {
                 <hr className="signature-line" />
                 <p><b>{nombresResponsable} {apellidosResponsable}</b></p>
                 <p>{getFechaActual()}</p>
+            </div>
+            <div className="text-center mt-5">
+                <button className="btn btn-primary" onClick={handleAceptarContinuar}>Aceptar y Continuar</button>
             </div>
         </div>
     );

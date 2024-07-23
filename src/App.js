@@ -4,9 +4,13 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import DatosIniciales from './components/DatosIniciales';
 import AvisoPrivacidad from './components/AvisoPrivacidad';
+import DatosPersonales from './components/DatosPersonales';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './index.css';
+import Swal from 'sweetalert2';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 function App() {
   const [formData, setFormData] = useState({
@@ -28,7 +32,20 @@ function App() {
     const dia = fecha.getDate();
     const mes = meses[fecha.getMonth()];
     const año = fecha.getFullYear();
-    return `A los  días ${dia} del mes de ${mes} del año ${año}`;
+    return `A los días ${dia} del mes de ${mes} del año ${año}`;
+  };
+
+  const generarPDF = () => {
+    const input = document.getElementById('aviso-privacidad');
+    html2canvas(input)
+      .then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 0, 0);
+        pdf.save("aviso_de_privacidad.pdf");
+
+        enviarCorreo(pdf.output('blob'));
+      });
   };
 
   return (
@@ -37,7 +54,8 @@ function App() {
       <div className="container">
         <Routes>
           <Route path="/" element={<DatosIniciales formData={formData} setFormData={setFormData} />} />
-          <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} getFechaActual={getFechaActual} />} />
+          <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} getFechaActual={getFechaActual} generarPDF={generarPDF} />} />
+          <Route path="/datos-personales" element={<DatosPersonales formData={formData} setFormData={setFormData} />} />
         </Routes>
       </div>
       <Footer />
