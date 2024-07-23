@@ -39,3 +39,25 @@
 .pdf-font-size {
     font-size: 20px;
 }
+/*
+
+Alternativa CSS para formulario
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-control {
+  font-size: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ced4da;
+}
+
+.form-control:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+*/

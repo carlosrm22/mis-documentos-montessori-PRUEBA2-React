@@ -14,6 +14,7 @@ import jsPDF from 'jspdf';
 
 function App() {
   const [formData, setFormData] = useState({
+    // Variables de Datos Iniciales
     apellidosAlumno: '',
     nombresAlumno: '',
     fechaNacimientoAlumno: '',
@@ -22,7 +23,14 @@ function App() {
     apellidosResponsable: '',
     nombresResponsable: '',
     telefonoContacto: '',
-    emailContacto: ''
+    emailContacto: '',
+    lugarNacimientoAlumno: '',
+    nombresMadre: '',
+    apellidosMadre: '',
+    nombresPadre: '',
+    apellidosPadre: '',
+    domicilioPadres: ''
+    // variables de Datos Personales
   });
 
   const getFechaActual = () => {
