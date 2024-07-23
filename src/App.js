@@ -36,8 +36,7 @@ function App() {
   };
 
   // Función para generar el PDF
-  const generarPDF = () => {
-    const input = document.getElementById('aviso-privacidad');
+  const generarPDF = (input) => {
     return html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
@@ -50,7 +49,7 @@ function App() {
   };
 
   // Función para mostrar aviso y descargar PDF
-  const mostrarAvisoYDescargarPDF = (navigateTo) => {
+  const mostrarAvisoYDescargarPDF = (input, navigateTo) => {
     Swal.fire({
       title: 'Se descargará el documento en PDF para que pueda imprimirlo y firmarlo',
       icon: 'warning',
@@ -61,7 +60,7 @@ function App() {
       cancelButtonText: 'Revisar'
     }).then((result) => {
       if (result.isConfirmed) {
-        generarPDF().then((pdfBlob) => {
+        generarPDF(input).then((pdfBlob) => {
           const link = document.createElement('a');
           link.href = URL.createObjectURL(pdfBlob);
           link.download = 'documento.pdf';
