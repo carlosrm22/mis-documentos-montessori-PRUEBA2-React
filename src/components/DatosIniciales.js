@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { db } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import { differenceInYears } from 'date-fns';
+import { datosInicialesValidationSchema } from '../utils/validationSchemas';
 
 /**
  * Componente principal para los datos iniciales.
@@ -20,18 +20,7 @@ function DatosIniciales({ formData, setFormData }) {
 
     const initialValues = formData;
 
-    const validationSchema = Yup.object().shape({
-        apellidosAlumno: Yup.string().required('Requerido'),
-        nombresAlumno: Yup.string().required('Requerido'),
-        fechaNacimientoAlumno: Yup.date().required('Requerido'),
-        curpAlumno: Yup.string().required('Requerido'),
-        apellidosResponsable: Yup.string().required('Requerido'),
-        nombresResponsable: Yup.string().required('Requerido'),
-        telefonoContacto: Yup.string().required('Requerido'),
-        emailContacto: Yup.string().email('Email inválido').required('Requerido')
-    });
-
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values, { setSubmitting }) => {
         const edadAlumno = differenceInYears(new Date(), new Date(values.fechaNacimientoAlumno));
         const dataToSave = { ...values, edadAlumno };
         setFormData(dataToSave);
@@ -39,10 +28,12 @@ function DatosIniciales({ formData, setFormData }) {
             await addDoc(collection(db, 'datosIniciales'), dataToSave);
             console.log('Datos guardados exitosamente');
             mostrarAlerta('success', 'Datos almacenados correctamente', 'Por favor, no actualice la página', false, 1500);
+            setSubmitting(false);
             navigate('/aviso-privacidad');
         } catch (error) {
             console.error('Error guardando datos:', error);
             mostrarAlerta('error', 'Error al guardar los datos', 'Ocurrió un problema al guardar la información.');
+            setSubmitting(false);
         }
     };
 
@@ -62,10 +53,10 @@ function DatosIniciales({ formData, setFormData }) {
             <p>Ingresa los datos iniciales para generar tus documentos. Llena correctamente cada campo, ya que el documento se generará según la información ingresada. Por motivos de privacidad, no guardamos la información más que temporalmente, así que evita actualizar la página mientras completas tus datos. Gracias.</p>
             <Formik
                 initialValues={initialValues}
-                validationSchema={validationSchema}
+                validationSchema={datosInicialesValidationSchema}
                 onSubmit={handleSubmit}
             >
-                {({ values, handleChange }) => (
+                {({ values, isSubmitting }) => (
                     <Form>
                         <div className="p-3 mb-4 bg-white border rounded">
                             <h2 className="mt-4">Datos del alumno</h2>
@@ -119,7 +110,7 @@ function DatosIniciales({ formData, setFormData }) {
                                 <small className="form-text text-muted">Es posible que nos comuniquemos a este correo para dar seguimiento a esta información.</small>
                             </div>
                         </div>
-                        <button type="submit" className="btn btn-primary">Guardar y continuar</button>
+                        <button type="submit" className="btn btn-primary" disabled={isSubmitting}>Guardar y continuar</button>
                     </Form>
                 )}
             </Formik>
