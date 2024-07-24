@@ -9,14 +9,12 @@ function DatosIniciales({ formData, setFormData }) {
         const { id, value } = e.target;
 
         setFormData((prevFormData) => {
-            const newFormData = { ...prevFormData, [id]: value };
-
             if (id === 'fechaNacimientoAlumno') {
                 const edad = calcularEdad(value);
-                newFormData.edadAlumno = edad;
+                return { ...prevFormData, [id]: value, edadAlumno: edad };
             }
 
-            return newFormData;
+            return { ...prevFormData, [id]: value };
         });
     };
 
@@ -66,7 +64,7 @@ function DatosIniciales({ formData, setFormData }) {
         // Mostrar alerta de éxito con SweetAlert2
         Swal.fire({
             icon: 'success',
-            title: 'Formulario enviado correctamente',
+            title: 'Datos almacenados correctamente, por favor no actualice la página',
             showConfirmButton: false,
             timer: 1500
         });
