@@ -8,7 +8,8 @@ Esta es una aplicación React para gestionar documentos de inscripción, privaci
 - Generación de documentos en PDF.
 - Navegación entre secciones reutilizando la información ingresada.
 - Guardado temporal de datos en local storage.
-- Despliegue en GitHub Pages.
+- Despliegue en GitHub Pages con dominio personalizado:
+  - contrato.asociacionmonmtessori.com.mx
 
 ## **Instalación**
 
@@ -16,6 +17,21 @@ Esta es una aplicación React para gestionar documentos de inscripción, privaci
    ```bash
    git clone https://github.com/tu-usuario/nombre-del-repositorio.git
    cd nombre-del-repositorio
+
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+
+## **Uso**
+1. Inicia la aplicación en modo desarrollo:
+   ```bash
+   npm start
+   ```
+
+2. Abre http://localhost:3000 en tu navegador.
+
+---
 
 ## **Contribuciones**
 Las contribuciones son bienvenidas. Por favor, sigue el código de conducta.
