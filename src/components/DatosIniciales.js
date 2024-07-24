@@ -4,7 +4,7 @@ import React from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { differenceInYears } from 'date-fns';
+import { differenceInYears, isValid } from 'date-fns';
 import { datosInicialesValidationSchema } from '../utils/validationSchemas';
 import { saveData } from '../services/firebaseService';
 import FormGroup from './FormGroup';
@@ -21,28 +21,31 @@ function DatosIniciales({ formData, setFormData }) {
     const initialValues = formData;
 
     const handleSubmit = async (values, { setSubmitting }) => {
-        const edadAlumno = differenceInYears(new Date(), new Date(values.fechaNacimientoAlumno));
+        const fechaNacimiento = new Date(values.fechaNacimientoAlumno);
+        const edadAlumno = isValid(fechaNacimiento) ? differenceInYears(new Date(), fechaNacimiento) : 0;
+
         const dataToSave = { ...values, edadAlumno };
         setFormData(dataToSave);
         try {
             await saveData('datosIniciales', dataToSave);
-            mostrarAlerta('success', 'Datos almacenados correctamente', 'Por favor, no actualice la página', false, 1500);
+            Swal.fire({
+                icon: 'success',
+                title: 'Datos almacenados correctamente',
+                text: 'Por favor, no actualice la página',
+                showConfirmButton: false,
+                timer: 1500
+            });
             setSubmitting(false);
             navigate('/aviso-privacidad');
         } catch (error) {
-            mostrarAlerta('error', 'Error al guardar los datos', 'Ocurrió un problema al guardar la información.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al guardar los datos',
+                text: 'Ocurrió un problema al guardar la información.'
+            });
+            console.error('Error al guardar los datos:', error);
             setSubmitting(false);
         }
-    };
-
-    const mostrarAlerta = (icon, title, text, showConfirmButton = true, timer = null) => {
-        Swal.fire({
-            icon,
-            title,
-            text,
-            showConfirmButton,
-            timer
-        });
     };
 
     return (
@@ -54,14 +57,14 @@ function DatosIniciales({ formData, setFormData }) {
                 validationSchema={datosInicialesValidationSchema}
                 onSubmit={handleSubmit}
             >
-                {({ values, isSubmitting }) => (
+                {({ values, isSubmitting, errors, touched }) => (
                     <Form>
                         <div className="p-3 mb-4 bg-white border rounded">
                             <h2 className="mt-4">Datos del alumno</h2>
                             <FormGroup name="apellidosAlumno" label="Apellidos del alumno" required />
                             <FormGroup name="nombresAlumno" label="Nombre(s) del alumno" required />
                             <FormGroup name="fechaNacimientoAlumno" label="Fecha de nacimiento del alumno" type="date" required />
-                            <FormGroup name="edadAlumno" label="Edad del alumno" type="number" value={differenceInYears(new Date(), new Date(values.fechaNacimientoAlumno))} readOnly />
+                            <FormGroup name="edadAlumno" label="Edad del alumno" type="number" value={isValid(new Date(values.fechaNacimientoAlumno)) ? differenceInYears(new Date(), new Date(values.fechaNacimientoAlumno)) : 0} readOnly />
                             <FormGroup name="curpAlumno" label="CURP del alumno" required />
                         </div>
                         <div className="p-3 mb-4 bg-white border rounded">
@@ -72,6 +75,11 @@ function DatosIniciales({ formData, setFormData }) {
                             <FormGroup name="emailContacto" label="Email de contacto" type="email" required helperText="Es posible que nos comuniquemos a este correo para dar seguimiento a esta información." />
                         </div>
                         <button type="submit" className="btn btn-primary" disabled={isSubmitting}>Guardar y continuar</button>
+                        {Object.keys(errors).length > 0 && touched && (
+                            <div className="alert alert-danger mt-3">
+                                Por favor, completa todos los campos obligatorios.
+                            </div>
+                        )}
                     </Form>
                 )}
             </Formik>
