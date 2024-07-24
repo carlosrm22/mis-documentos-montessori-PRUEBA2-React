@@ -2,20 +2,18 @@ import React from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
-// Componente para Datos Iniciales
+// Componente principal para los datos iniciales
 function DatosIniciales({ formData, setFormData }) {
     const navigate = useNavigate();
 
     // Maneja los cambios en los campos del formulario
     const handleChange = (e) => {
         const { id, value } = e.target;
-
         setFormData((prevFormData) => {
             if (id === 'fechaNacimientoAlumno') {
                 const edad = calcularEdad(value);
                 return { ...prevFormData, [id]: value, edadAlumno: edad };
             }
-
             return { ...prevFormData, [id]: value };
         });
     };

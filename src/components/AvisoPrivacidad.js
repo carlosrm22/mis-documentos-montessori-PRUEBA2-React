@@ -9,7 +9,6 @@ function AvisoPrivacidad({ formData, getFechaActual, mostrarAvisoYDescargarPDF }
         mostrarAvisoYDescargarPDF('aviso-privacidad', () => navigate('/datos-personales'));
     };
 
-
     return (
         <div id="aviso-privacidad" className="container mt-5">
             <h1>Aviso de Privacidad</h1>
