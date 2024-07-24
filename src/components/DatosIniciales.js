@@ -1,8 +1,10 @@
-// DatosIniciales.js
+// src/components/DatosIniciales.js
 
 import React from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { db } from '../firebaseConfig';
+import { collection, addDoc } from 'firebase/firestore';
 
 /**
  * Componente principal para los datos iniciales.
@@ -71,12 +73,18 @@ function DatosIniciales({ formData, setFormData }) {
     };
 
     /**
-     * Guarda la información y muestra la alerta de éxito.
+     * Guarda la información en Firestore y muestra la alerta de éxito.
      */
-    const guardarYContinuar = () => {
-        localStorage.setItem('formData', JSON.stringify(formData));
-        mostrarAlerta('success', 'Datos almacenados correctamente', 'Por favor, no actualice la página', false, 1500);
-        navigate('/aviso-privacidad');
+    const guardarYContinuar = async () => {
+        try {
+            await addDoc(collection(db, 'datosIniciales'), formData);
+            console.log('Datos guardados exitosamente');
+            mostrarAlerta('success', 'Datos almacenados correctamente', 'Por favor, no actualice la página', false, 1500);
+            navigate('/aviso-privacidad');
+        } catch (error) {
+            console.error('Error guardando datos:', error);
+            mostrarAlerta('error', 'Error al guardar los datos', 'Ocurrió un problema al guardar la información.');
+        }
     };
 
     /**
