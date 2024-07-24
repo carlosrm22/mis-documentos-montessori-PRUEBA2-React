@@ -1,4 +1,4 @@
-// src/firebaseConfig.js
+// src/utils/firebaseConfig.js
 
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from "firebase/analytics";
