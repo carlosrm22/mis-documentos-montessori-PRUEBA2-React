@@ -121,7 +121,7 @@ function App() {
         </Routes>
       </div>
       <Footer />
-
+      {/* Botón flotante de WhatsApp */}
       <a href="https://wa.me/5215548885013?text=Hola,%20necesito%20ayuda%20con%20mis%20documentos%20Montessori"
         className="float-whatsapp"
         target="_blank"
