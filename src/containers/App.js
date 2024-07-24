@@ -9,7 +9,7 @@ import AvisoPrivacidad from '../components/AvisoPrivacidad';
 import DatosPersonales from '../components/DatosPersonales';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import '../styles/index.css';
+import '../styles/App.css';
 import Swal from 'sweetalert2';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';

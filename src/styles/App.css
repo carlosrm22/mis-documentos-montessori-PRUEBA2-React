@@ -1,1 +1,65 @@
-/* Este archivo está vacío intencionalmente */
+/* Estilos para el botón flotante de WhatsApp */
+.float-whatsapp {
+    position: fixed;
+    width: 240px;
+    height: 70px;
+    bottom: 20px;
+    right: 20px;
+    background-color: #25d366;
+    color: white;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 7px 7px 3px #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    z-index: 1000;
+    text-decoration: none;
+}
+
+/* Estilos para el botón flotante de WhatsApp al pasar el ratón */
+.float-whatsapp:hover {
+    background-color: white;
+    color: #25d366;
+    text-decoration: none;
+    font-size: 19px;
+    border-color: dimgray;
+}
+
+/* Icono de WhatsApp dentro del botón flotante */
+.float-whatsapp i {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+/* Línea de firma en el aviso de privacidad */
+.signature-line {
+    width: 300px;
+    border: 1px solid black;
+    margin: 100px auto 0 auto;
+}
+
+/* Estilo aumentado para la generación de PDF */
+.pdf-font-size {
+    font-size: 20px;
+}
+
+/* Estilos alternativos para el formulario
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-control {
+    font-size: 1rem;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+*/
