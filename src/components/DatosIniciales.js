@@ -4,26 +4,17 @@ import React from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';
-import * as yup from 'yup';
 import { differenceInYears, isValid } from 'date-fns';
 import { saveData } from '../services/firebaseService';
 import FormGroup from './FormGroup';
+import { datosInicialesValidationSchema } from '../utils/validationSchemas';
 
-// Esquema de validación con Yup
-const validationSchema = yup.object().shape({
-    apellidosAlumno: yup.string().required('Los apellidos del alumno son requeridos'),
-    nombresAlumno: yup.string().required('El nombre del alumno es requerido'),
-    fechaNacimientoAlumno: yup.date()
-        .max(new Date(), "La fecha de nacimiento no puede ser en el futuro")
-        .min(new Date(new Date().setFullYear(new Date().getFullYear() - 160)), "La edad del alumno no puede ser mayor a 160 años")
-        .required('La fecha de nacimiento es requerida'),
-    curpAlumno: yup.string().required('La CURP del alumno es requerida'),
-    apellidosResponsable: yup.string().required('Los apellidos del responsable son requeridos'),
-    nombresResponsable: yup.string().required('El nombre del responsable es requerido'),
-    telefonoContacto: yup.string().required('El teléfono de contacto es requerido'),
-    emailContacto: yup.string().email('El email debe ser válido').required('El email de contacto es requerido')
-});
-
+/**
+ * Componente principal para los datos iniciales.
+ * @param {Object} props - Las propiedades del componente.
+ * @param {Object} props.formData - Los datos del formulario.
+ * @param {Function} props.setFormData - La función para actualizar los datos del formulario.
+ */
 function DatosIniciales({ formData, setFormData }) {
     const navigate = useNavigate();
 
@@ -63,7 +54,7 @@ function DatosIniciales({ formData, setFormData }) {
             <p>Ingresa los datos iniciales para generar tus documentos. Llena correctamente cada campo, ya que el documento se generará según la información ingresada. Por motivos de privacidad, no guardamos la información más que temporalmente, así que evita actualizar la página mientras completas tus datos. Gracias.</p>
             <Formik
                 initialValues={initialValues}
-                validationSchema={validationSchema}
+                validationSchema={datosInicialesValidationSchema}
                 onSubmit={handleSubmit}
             >
                 {({ values, isSubmitting, errors, touched }) => (
@@ -75,6 +66,11 @@ function DatosIniciales({ formData, setFormData }) {
                             <FormGroup name="fechaNacimientoAlumno" label="Fecha de nacimiento del alumno" type="date" required />
                             <FormGroup name="edadAlumno" label="Edad del alumno" type="number" value={isValid(new Date(values.fechaNacimientoAlumno)) ? differenceInYears(new Date(), new Date(values.fechaNacimientoAlumno)) : 0} readOnly />
                             <FormGroup name="curpAlumno" label="CURP del alumno" required />
+                            <div>
+                                <a href="https://consultas.curp.gob.mx/CurpSP/renapo/inicio2020.jsp" target="_blank" rel="noopener noreferrer">
+                                    Consulta tu CURP aquí
+                                </a>
+                            </div>
                         </div>
                         <div className="p-3 mb-4 bg-white border rounded">
                             <h2 className="mt-4">Datos del responsable legal del alumno</h2>

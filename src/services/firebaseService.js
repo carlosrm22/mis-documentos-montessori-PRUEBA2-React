@@ -4,28 +4,6 @@ import { db, auth } from '../utils/firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
-// Manejo de errores
-const getErrorMessage = (errorCode) => {
-    switch (errorCode) {
-        case 'auth/email-already-in-use':
-            return 'El correo electrónico ya está en uso.';
-        case 'auth/invalid-email':
-            return 'El correo electrónico no es válido.';
-        case 'auth/operation-not-allowed':
-            return 'La operación no está permitida.';
-        case 'auth/weak-password':
-            return 'La contraseña es demasiado débil.';
-        case 'auth/user-disabled':
-            return 'El usuario ha sido deshabilitado.';
-        case 'auth/user-not-found':
-            return 'No se encontró el usuario.';
-        case 'auth/wrong-password':
-            return 'Contraseña incorrecta.';
-        default:
-            return 'Ocurrió un error. Por favor, inténtelo de nuevo.';
-    }
-};
-
 // Función para registrar usuarios
 const register = (email, password) => {
     createUserWithEmailAndPassword(auth, email, password)
