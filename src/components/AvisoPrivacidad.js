@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { storage } from '../firebaseConfig';
+import { storage } from '../utils/firebaseConfig';
 import { ref, uploadBytes } from 'firebase/storage';
 import Swal from 'sweetalert2';
 
