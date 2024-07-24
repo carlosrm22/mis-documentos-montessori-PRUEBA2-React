@@ -7,6 +7,7 @@ import { db } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { differenceInYears } from 'date-fns';
 
 /**
  * Componente principal para los datos iniciales.
@@ -31,9 +32,11 @@ function DatosIniciales({ formData, setFormData }) {
     });
 
     const handleSubmit = async (values) => {
-        setFormData(values);
+        const edadAlumno = differenceInYears(new Date(), new Date(values.fechaNacimientoAlumno));
+        const dataToSave = { ...values, edadAlumno };
+        setFormData(dataToSave);
         try {
-            await addDoc(collection(db, 'datosIniciales'), values);
+            await addDoc(collection(db, 'datosIniciales'), dataToSave);
             console.log('Datos guardados exitosamente');
             mostrarAlerta('success', 'Datos almacenados correctamente', 'Por favor, no actualice la página', false, 1500);
             navigate('/aviso-privacidad');
@@ -82,6 +85,10 @@ function DatosIniciales({ formData, setFormData }) {
                                 <ErrorMessage name="fechaNacimientoAlumno" component="div" className="text-danger" />
                             </div>
                             <div className="form-group">
+                                <label htmlFor="edadAlumno">Edad del alumno:</label>
+                                <Field type="number" name="edadAlumno" className="form-control" value={differenceInYears(new Date(), new Date(values.fechaNacimientoAlumno))} readOnly />
+                            </div>
+                            <div className="form-group">
                                 <label htmlFor="curpAlumno">CURP del alumno: <span className="text-danger">*</span></label>
                                 <Field type="text" name="curpAlumno" className="form-control" />
                                 <ErrorMessage name="curpAlumno" component="div" className="text-danger" />
@@ -103,11 +110,13 @@ function DatosIniciales({ formData, setFormData }) {
                                 <label htmlFor="telefonoContacto">Teléfono de contacto: <span className="text-danger">*</span></label>
                                 <Field type="tel" name="telefonoContacto" className="form-control" />
                                 <ErrorMessage name="telefonoContacto" component="div" className="text-danger" />
+                                <small className="form-text text-muted">Es posible que nos contactemos a este número vía WhatsApp para dar seguimiento a esta información.</small>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="emailContacto">Email de contacto: <span className="text-danger">*</span></label>
                                 <Field type="email" name="emailContacto" className="form-control" />
                                 <ErrorMessage name="emailContacto" component="div" className="text-danger" />
+                                <small className="form-text text-muted">Es posible que nos comuniquemos a este correo para dar seguimiento a esta información.</small>
                             </div>
                         </div>
                         <button type="submit" className="btn btn-primary">Guardar y continuar</button>
