@@ -3,18 +3,27 @@
 import React from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form } from 'formik';
+import * as yup from 'yup';
 import { differenceInYears, isValid } from 'date-fns';
-import { datosInicialesValidationSchema } from '../utils/validationSchemas';
 import { saveData } from '../services/firebaseService';
 import FormGroup from './FormGroup';
 
-/**
- * Componente principal para los datos iniciales.
- * @param {Object} props - Las propiedades del componente.
- * @param {Object} props.formData - Los datos del formulario.
- * @param {Function} props.setFormData - La función para actualizar los datos del formulario.
- */
+// Esquema de validación con Yup
+const validationSchema = yup.object().shape({
+    apellidosAlumno: yup.string().required('Los apellidos del alumno son requeridos'),
+    nombresAlumno: yup.string().required('El nombre del alumno es requerido'),
+    fechaNacimientoAlumno: yup.date()
+        .max(new Date(), "La fecha de nacimiento no puede ser en el futuro")
+        .min(new Date(new Date().setFullYear(new Date().getFullYear() - 160)), "La edad del alumno no puede ser mayor a 160 años")
+        .required('La fecha de nacimiento es requerida'),
+    curpAlumno: yup.string().required('La CURP del alumno es requerida'),
+    apellidosResponsable: yup.string().required('Los apellidos del responsable son requeridos'),
+    nombresResponsable: yup.string().required('El nombre del responsable es requerido'),
+    telefonoContacto: yup.string().required('El teléfono de contacto es requerido'),
+    emailContacto: yup.string().email('El email debe ser válido').required('El email de contacto es requerido')
+});
+
 function DatosIniciales({ formData, setFormData }) {
     const navigate = useNavigate();
 
@@ -54,7 +63,7 @@ function DatosIniciales({ formData, setFormData }) {
             <p>Ingresa los datos iniciales para generar tus documentos. Llena correctamente cada campo, ya que el documento se generará según la información ingresada. Por motivos de privacidad, no guardamos la información más que temporalmente, así que evita actualizar la página mientras completas tus datos. Gracias.</p>
             <Formik
                 initialValues={initialValues}
-                validationSchema={datosInicialesValidationSchema}
+                validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
                 {({ values, isSubmitting, errors, touched }) => (
