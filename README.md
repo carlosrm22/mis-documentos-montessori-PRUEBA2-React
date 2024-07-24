@@ -1,8 +1,8 @@
-# Mis Documentos Montessori
+# ***Mis Documentos Montessori***
 
 Esta es una aplicación React para gestionar documentos de inscripción, privacidad, reglamento y contrato de una escuela Montessori.
 
-## Características
+## **Características**
 
 - Ingreso de datos iniciales del alumno y el responsable.
 - Generación de documentos en PDF.
@@ -10,15 +10,44 @@ Esta es una aplicación React para gestionar documentos de inscripción, privaci
 - Guardado temporal de datos en local storage.
 - Despliegue en GitHub Pages.
 
-## Instalación
+## **Instalación**
 
 1. Clona el repositorio:
    ```bash
    git clone https://github.com/tu-usuario/nombre-del-repositorio.git
    cd nombre-del-repositorio
 
-## Contribuciones
+## **Contribuciones**
 Las contribuciones son bienvenidas. Por favor, sigue el código de conducta.
 
-## Licencia
-Este proyecto está bajo la licencia MIT.
+## **Licencia**
+#### *Copyright (c) 2024**
+**Carlos Alfonso romero Muñoz**
+
+Asociación Montessori de México A.C.
+
+---
+
+*Este proyecto está bajo la licencia MIT.*
+
+### **MIT License**
+
+
+
+*Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:*
+
+*The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.*
+
+*THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.*
