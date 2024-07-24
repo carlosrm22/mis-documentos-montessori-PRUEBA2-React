@@ -1,12 +1,17 @@
 // src/containers/App.js
 
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../utils/firebaseConfig';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import DatosIniciales from '../components/DatosIniciales';
 import AvisoPrivacidad from '../components/AvisoPrivacidad';
 import DatosPersonales from '../components/DatosPersonales';
+import Register from '../components/Register';
+import Login from '../components/Login';
+import Dashboard from '../components/Dashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/App.css';
@@ -112,6 +117,8 @@ function App() {
     });
   };
 
+  const [user] = useAuthState(auth);
+
   return (
     <Router basename="/mis-documentos-montessori-PRUEBA2-React">
       <Navbar />
@@ -120,6 +127,16 @@ function App() {
           <Route path="/" element={<DatosIniciales formData={formData} setFormData={setFormData} />} />
           <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} getFechaActual={getFechaActual} mostrarAvisoYDescargarPDF={mostrarAvisoYDescargarPDF} />} />
           <Route path="/datos-personales" element={<DatosPersonales formData={formData} />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/dashboard"
+            element={user ? <Dashboard /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="*"
+            element={<Navigate to={user ? "/dashboard" : "/login"} />}
+          />
         </Routes>
       </div>
       <Footer />
