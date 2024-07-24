@@ -1,12 +1,22 @@
+// DatosIniciales.js
+
 import React from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
-// Componente principal para los datos iniciales
+/**
+ * Componente principal para los datos iniciales.
+ * @param {Object} props - Las propiedades del componente.
+ * @param {Object} props.formData - Los datos del formulario.
+ * @param {Function} props.setFormData - La función para actualizar los datos del formulario.
+ */
 function DatosIniciales({ formData, setFormData }) {
     const navigate = useNavigate();
 
-    // Maneja los cambios en los campos del formulario
+    /**
+     * Maneja los cambios en los campos del formulario.
+     * @param {Object} e - El evento de cambio.
+     */
     const handleChange = (e) => {
         const { id, value } = e.target;
         setFormData((prevFormData) => {
@@ -18,7 +28,11 @@ function DatosIniciales({ formData, setFormData }) {
         });
     };
 
-    // Calcula la edad a partir de la fecha de nacimiento
+    /**
+     * Calcula la edad a partir de la fecha de nacimiento.
+     * @param {string} fechaNacimiento - La fecha de nacimiento.
+     * @returns {number} - La edad calculada.
+     */
     const calcularEdad = (fechaNacimiento) => {
         const hoy = new Date();
         const fechaNac = new Date(fechaNacimiento);
@@ -30,7 +44,10 @@ function DatosIniciales({ formData, setFormData }) {
         return edad;
     };
 
-    // Valida el formulario antes de continuar
+    /**
+     * Valida el formulario antes de continuar.
+     * @param {Object} e - El evento de envío del formulario.
+     */
     const validarFormulario = (e) => {
         e.preventDefault();
         if (!Object.values(formData).every(field => typeof field === 'string' ? field.trim() !== '' : field !== '')) {
@@ -53,14 +70,23 @@ function DatosIniciales({ formData, setFormData }) {
         }
     };
 
-    // Guarda la información y muestra la alerta de éxito
+    /**
+     * Guarda la información y muestra la alerta de éxito.
+     */
     const guardarYContinuar = () => {
         localStorage.setItem('formData', JSON.stringify(formData));
         mostrarAlerta('success', 'Datos almacenados correctamente', 'Por favor, no actualice la página', false, 1500);
         navigate('/aviso-privacidad');
     };
 
-    // Muestra una alerta de SweetAlert2
+    /**
+     * Muestra una alerta de SweetAlert2.
+     * @param {string} icon - El ícono de la alerta.
+     * @param {string} title - El título de la alerta.
+     * @param {string} text - El texto de la alerta.
+     * @param {boolean} [showConfirmButton=true] - Si se debe mostrar el botón de confirmación.
+     * @param {number} [timer=null] - El tiempo en milisegundos para cerrar la alerta automáticamente.
+     */
     const mostrarAlerta = (icon, title, text, showConfirmButton = true, timer = null) => {
         Swal.fire({
             icon,
