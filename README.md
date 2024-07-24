@@ -1,17 +1,24 @@
-# Mis documentos Montessori
-## Sitio de pruebas 2 
-### USANDO REACT
-La idea de este proyecto es tener una herramienta para que los padres de familia de Kalpilli y/o alumnos de Certificación Montessori, puedan subir sus datos, mandarlos a imprimir y guardarlos en un CSV.
-### Características
-- Gestión de documentos
-- Generación de PDFs
-- Envío de datos a email
-- Subida de archivos
-- Generación de CSV
-## Tecnologías
-- React
-- Solo se usa HTML y Javascript
-- Bootstrap para el diseño
-- SweetAlert2
-- En otro proyecto experimentaré con React. 
+# Mis Documentos Montessori
 
+Esta es una aplicación React para gestionar documentos de inscripción, privacidad, reglamento y contrato de una escuela Montessori.
+
+## Características
+
+- Ingreso de datos iniciales del alumno y el responsable.
+- Generación de documentos en PDF.
+- Navegación entre secciones reutilizando la información ingresada.
+- Guardado temporal de datos en local storage.
+- Despliegue en GitHub Pages.
+
+## Instalación
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/tu-usuario/nombre-del-repositorio.git
+   cd nombre-del-repositorio
+
+## Contribuciones
+Las contribuciones son bienvenidas. Por favor, sigue el código de conducta.
+
+## Licencia
+Este proyecto está bajo la licencia MIT.

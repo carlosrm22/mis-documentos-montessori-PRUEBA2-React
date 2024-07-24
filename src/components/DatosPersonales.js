@@ -1,6 +1,16 @@
 import React from 'react';
 
+/**
+ * Componente para los datos personales del alumno y los padres.
+ * @param {Object} props - Las propiedades del componente.
+ * @param {Object} props.formData - Los datos del formulario.
+ * @param {Function} props.setFormData - La función para actualizar los datos del formulario.
+ */
 function DatosPersonales({ formData, setFormData }) {
+    /**
+     * Maneja los cambios en los campos del formulario.
+     * @param {Object} e - El evento de cambio.
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -32,7 +42,17 @@ function DatosPersonales({ formData, setFormData }) {
     );
 }
 
-// Componente reutilizable para un grupo de formulario
+/**
+ * Componente reutilizable para un grupo de formulario.
+ * @param {Object} props - Las propiedades del componente.
+ * @param {string} props.label - La etiqueta del campo.
+ * @param {string} props.id - El ID del campo.
+ * @param {string} props.type - El tipo de campo.
+ * @param {string} props.value - El valor del campo.
+ * @param {Function} props.handleChange - La función para manejar cambios en el campo.
+ * @param {boolean} [props.readOnly=false] - Si el campo es de solo lectura.
+ * @param {string} [props.smallText=null] - El texto pequeño de ayuda.
+ */
 const FormGroup = ({ label, id, type, value, handleChange, readOnly = false, smallText = null }) => (
     <div className="form-group">
         <label htmlFor={id}>{label}: <span className="text-danger">*</span></label>

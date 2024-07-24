@@ -1,10 +1,20 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * Componente para el Aviso de Privacidad.
+ * @param {Object} props - Las propiedades del componente.
+ * @param {Object} props.formData - Los datos del formulario.
+ * @param {Function} props.getFechaActual - Función para obtener la fecha actual.
+ * @param {Function} props.mostrarAvisoYDescargarPDF - Función para mostrar el aviso y descargar el PDF.
+ */
 function AvisoPrivacidad({ formData, getFechaActual, mostrarAvisoYDescargarPDF }) {
     const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
     const navigate = useNavigate();
 
+    /**
+     * Maneja la aceptación y continuación después de mostrar el aviso.
+     */
     const handleAceptarContinuar = () => {
         mostrarAvisoYDescargarPDF('aviso-privacidad', () => navigate('/datos-personales'));
     };

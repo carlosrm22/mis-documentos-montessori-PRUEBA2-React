@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * Componente para el pie de página.
+ */
 function Footer() {
     return (
         <footer className="bg-light text-center text-lg-start mt-5">

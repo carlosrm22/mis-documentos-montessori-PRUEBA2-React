@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+/**
+ * Componente para la barra de navegación.
+ */
 function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
