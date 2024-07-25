@@ -1,54 +1,61 @@
 // src/components/Register.js
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { register } from '../services/firebaseService';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Form, Button } from 'react-bootstrap';
+import { mostrarAlertaExito, mostrarAlertaError } from '../utils/sweetAlertUtils';
 
-const Register = () => {
+/**
+ * Componente para la página de registro.
+ */
+function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
-    const handleRegister = () => {
-        if (!email || !password) {
-            setError('Por favor, complete todos los campos');
-            return;
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        try {
+            await register(email, password);
+            mostrarAlertaExito();
+            navigate('/dashboard');
+        } catch (error) {
+            mostrarAlertaError();
+            console.error('Error al registrar usuario:', error);
         }
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email)) {
-            setError('Por favor, ingrese un correo electrónico válido');
-            return;
-        }
-        register(email, password)
-            .then(() => setError(''))
-            .catch((err) => setError(err.message));
     };
 
     return (
-        <div className="container">
-            <h2>Registrar</h2>
-            {error && <p className="text-danger">{error}</p>}
-            <div className="mb-3">
-                <input
-                    type="email"
-                    className="form-control"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-            </div>
-            <div className="mb-3">
-                <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-            </div>
-            <button onClick={handleRegister} className="btn btn-primary">Registrar</button>
+        <div className="container mt-5">
+            <h1>Registro</h1>
+            <Form onSubmit={handleRegister}>
+                <Form.Group controlId="formBasicEmail">
+                    <Form.Label> Usuario</Form.Label>
+                    <Form.Control
+                        type="email"
+                        placeholder="Ingresa tu email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </Form.Group>
+                <Form.Group controlId="formBasicPassword">
+                    <Form.Label>Contraseña</Form.Label>
+                    <Form.Control
+                        type="password"
+                        placeholder="Ingresa tu contraseña"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </Form.Group>
+                <Button variant="primary" type="submit" className="mt-3">
+                    Registrarse
+                </Button>
+            </Form>
         </div>
     );
-};
+}
 
 export default Register;
