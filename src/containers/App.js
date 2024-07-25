@@ -15,9 +15,8 @@ import Dashboard from '../components/Dashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/App.css';
-import Swal from 'sweetalert2';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import { mostrarAviso } from '../utils/sweetAlertUtils';
+import { generarPDF } from '../utils/pdfUtils';
 
 function App() {
   const [formData, setFormData] = useState({
@@ -49,72 +48,31 @@ function App() {
     return `A los días ${dia} del mes de ${mes} del año ${año}`;
   };
 
-  const generarPDF = (inputId) => {
-    const input = document.getElementById(inputId);
-
-    if (!input) {
-      console.error(`Elemento con id "${inputId}" no encontrado.`);
-      return;
-    }
-
-    // Añadir clase para aumentar tamaño de letra
-    input.classList.add('pdf-font-size');
-
-    // Ocultar elementos no deseados
-    const elementsToHide = input.querySelectorAll('.no-print');
-    elementsToHide.forEach(element => {
-      element.style.display = 'none';
-    });
-
-    return html2canvas(input).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'pt', 'letter');
-      const margin = 50;
-      const pdfWidth = pdf.internal.pageSize.getWidth() - 2 * margin;
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', margin, margin, pdfWidth, pdfHeight);
-
-      // Volver a mostrar los elementos no deseados
-      elementsToHide.forEach(element => {
-        element.style.display = '';
+  const handleGenerarPDF = (inputId, storagePath) => {
+    generarPDF(inputId)
+      .then((pdfBlob) => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(pdfBlob);
+        link.download = 'documento.pdf';
+        link.click();
+        subirPDFaFirebase(pdfBlob, storagePath);
+      })
+      .catch((error) => {
+        console.error('Error al generar el PDF:', error);
       });
-
-      // Remover clase de aumento de tamaño de letra
-      input.classList.remove('pdf-font-size');
-
-      return pdf.output('blob');
-    });
   };
 
-  const mostrarAvisoYDescargarPDF = (inputId, navigateTo) => {
-    Swal.fire({
-      title: 'Se descargará el documento en PDF para que pueda imprimirlo y firmarlo',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Aceptar y Continuar',
-      cancelButtonText: 'Revisar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        generarPDF(inputId).then((pdfBlob) => {
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(pdfBlob);
-          link.download = 'documento.pdf';
-          link.click();
-          if (navigateTo) {
-            navigateTo();
-          }
-        }).catch((error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Hubo un problema al generar el PDF.'
-          });
-        });
-      }
-    });
+  const handleMostrarAviso = (inputId, storagePath, navigateTo) => {
+    mostrarAviso()
+      .then((result) => {
+        if (result.isConfirmed) {
+          handleGenerarPDF(inputId, storagePath);
+          if (navigateTo) navigateTo();
+        }
+      })
+      .catch((error) => {
+        console.error('Error al mostrar aviso:', error);
+      });
   };
 
   const [user] = useAuthState(auth);
@@ -125,7 +83,7 @@ function App() {
       <div className="container">
         <Routes>
           <Route path="/" element={<DatosIniciales formData={formData} setFormData={setFormData} />} />
-          <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} getFechaActual={getFechaActual} mostrarAvisoYDescargarPDF={mostrarAvisoYDescargarPDF} />} />
+          <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} getFechaActual={getFechaActual} mostrarAviso={handleMostrarAviso} />} />
           <Route path="/datos-personales" element={<DatosPersonales formData={formData} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />

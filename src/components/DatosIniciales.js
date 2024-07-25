@@ -1,13 +1,13 @@
 // src/components/DatosIniciales.js
 
 import React from 'react';
-import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import { differenceInYears, isValid } from 'date-fns';
 import { saveData } from '../services/firebaseService';
 import FormGroup from './FormGroup';
 import { datosInicialesValidationSchema } from '../utils/validationSchemas';
+import { mostrarAlertaExito, mostrarAlertaError } from '../utils/sweetAlertUtils';
 
 /**
  * Componente principal para los datos iniciales.
@@ -28,21 +28,11 @@ function DatosIniciales({ formData, setFormData }) {
         setFormData(dataToSave);
         try {
             await saveData('datosIniciales', dataToSave);
-            Swal.fire({
-                icon: 'success',
-                title: 'Datos almacenados correctamente',
-                text: 'Por favor, no actualice la página',
-                showConfirmButton: false,
-                timer: 1500
-            });
+            mostrarAlertaExito();
             setSubmitting(false);
             navigate('/aviso-privacidad');
         } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error al guardar los datos',
-                text: 'Ocurrió un problema al guardar la información.'
-            });
+            mostrarAlertaError();
             console.error('Error al guardar los datos:', error);
             setSubmitting(false);
         }
