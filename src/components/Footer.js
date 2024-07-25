@@ -5,7 +5,7 @@ import React from 'react';
  */
 function Footer() {
     return (
-        <footer className="bg-light text-center text-lg-start mt-5">
+        <footer className="bg-light text-center text-lg-start mt-5 border-top">
             <div className="container p-4">
                 <div className="row">
                     <div className="col-12 col-md-4 mb-4 mb-md-0 text-center">

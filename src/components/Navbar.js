@@ -12,8 +12,9 @@ function Navbar() {
   const [user] = useAuthState(auth);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-      <div className="container">
+    <div className="pb-5">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-primary ">
+      <div className="container ">
         <Link className="navbar-brand text-white" to="/">
           <img src={`${process.env.PUBLIC_URL}/assets/images/logo.png`} alt="Logo" width="30" height="30" className="d-inline-block align-top" />
           Mi Cuenta Montessori
@@ -65,6 +66,7 @@ function Navbar() {
         </div>
       </div>
     </nav>
+</div >
   );
 }
 

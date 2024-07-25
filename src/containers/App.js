@@ -13,6 +13,7 @@ import Register from '../components/Register';
 import Login from '../components/Login';
 import Dashboard from '../components/Dashboard';
 import ContratoReglamento from '../components/ContratoReglamento';
+import Bienvenida from '../components/Bienvenida';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/App.css';
@@ -84,12 +85,13 @@ function App() {
       <Navbar />
       <div className="container">
         <Routes>
-          <Route path="/" element={<DatosIniciales formData={formData} setFormData={setFormData} />} />
+          <Route path="/" element={<Bienvenida />} />
+          <Route path="/datos-iniciales" element={<DatosIniciales formData={formData} setFormData={setFormData} />} />
           <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} getFechaActual={getFechaActual} onGenerarYSubirPDF={handleGenerarYSubirPDF} />} />
           <Route path="/datos-personales" element={<DatosPersonales formData={formData} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/contrato-reglamento" element={<ContratoReglamento formData={formData} nivelEducativo={formData.nivelEducativo} />} />
+          <Route path="/contrato-reglamento" element={<ContratoReglamento formData={formData} nivelEducativo="Primaria" />} />
           <Route
             path="/dashboard"
             element={user ? <Dashboard /> : <Navigate to="/login" />}
