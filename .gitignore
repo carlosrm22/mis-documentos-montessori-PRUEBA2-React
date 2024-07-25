@@ -25,4 +25,4 @@ yarn-error.log*
 
 # IDE
 .firebase
-.npmc
+.npmrc
