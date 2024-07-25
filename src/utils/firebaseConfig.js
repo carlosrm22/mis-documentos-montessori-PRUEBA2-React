@@ -1,7 +1,7 @@
 // src/utils/firebaseConfig.js
 
 import { initializeApp } from 'firebase/app';
-// import { getAnalytics } from "firebase/analytics"; Por ahora no se usa, pero se usará en un futuro no muy lejano, si Dios quiere.
+import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
@@ -18,11 +18,18 @@ const firebaseConfig = {
 
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app); // Por ahora no se usa, pero se usará en un futuro no muy lejano, si Dios quiere.
+const analytics = getAnalytics(app);
 
 // Inicializar servicios
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
-export { db, auth, storage };
+export { db, auth, storage, analytics };
+
+// Agregar logs para debugging
+console.log('Firebase app initialized:', app);
+console.log('Firebase analytics initialized:', analytics);
+console.log('Firebase Firestore initialized:', db);
+console.log('Firebase Auth initialized:', auth);
+console.log('Firebase Storage initialized:', storage);
