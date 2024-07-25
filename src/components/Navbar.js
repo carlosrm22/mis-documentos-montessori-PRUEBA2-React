@@ -24,10 +24,10 @@ function Navbar() {
               <Link className="nav-link text-white" to="/aviso-privacidad">Aviso de privacidad</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/datos-personales">Datos Personales</Link>
+              <Link className="nav-link text-white" to="/contrato-reglamento">Contrato y reglamento</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/contrato-reglamento">Contrato y reglamento</Link>
+              <Link className="nav-link text-white" to="/datos-personales">Datos Personales</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link text-white" to="/contacto">Contacto</Link>

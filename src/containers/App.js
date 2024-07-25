@@ -12,6 +12,7 @@ import DatosPersonales from '../components/DatosPersonales';
 import Register from '../components/Register';
 import Login from '../components/Login';
 import Dashboard from '../components/Dashboard';
+import ContratoReglamento from '../components/ContratoReglamento';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/App.css';
@@ -20,6 +21,7 @@ import { generarPDF } from '../utils/pdfUtils';
 import { subirPDFaFirebase } from '../services/firebaseService';
 
 function App() {
+  // Estado inicial del formulario
   const [formData, setFormData] = useState({
     apellidosAlumno: '',
     nombresAlumno: '',
@@ -38,6 +40,7 @@ function App() {
     domicilioPadres: ''
   });
 
+  // Función para obtener la fecha actual
   const getFechaActual = () => {
     const fecha = new Date();
     const meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
@@ -47,6 +50,7 @@ function App() {
     return `A los días ${dia} del mes de ${mes} del año ${año}`;
   };
 
+  // Función para manejar la generación y subida del PDF
   const handleGenerarYSubirPDF = async (inputId, storagePath, navigateTo) => {
     const result = await mostrarAviso();
 
@@ -54,6 +58,7 @@ function App() {
       const pdfBlob = await generarPDF(inputId);
       await subirPDFaFirebase(pdfBlob, storagePath);
 
+      // Descargar el PDF en la computadora del usuario
       const link = document.createElement('a');
       link.href = URL.createObjectURL(pdfBlob);
       link.download = 'documento.pdf';
@@ -77,6 +82,7 @@ function App() {
           <Route path="/datos-personales" element={<DatosPersonales formData={formData} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/contrato-reglamento" element={<ContratoReglamento formData={formData} nivelEducativo="Primaria" />} />
           <Route
             path="/dashboard"
             element={user ? <Dashboard /> : <Navigate to="/login" />}
@@ -88,6 +94,7 @@ function App() {
         </Routes>
       </div>
       <Footer />
+      {/* Botón flotante de WhatsApp */}
       <a href="https://wa.me/5215548885013?text=Hola,%20necesito%20ayuda%20con%20mis%20documentos%20Montessori"
         className="float-whatsapp"
         target="_blank"

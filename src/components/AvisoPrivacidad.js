@@ -16,7 +16,7 @@ function AvisoPrivacidad({ formData, getFechaActual, onGenerarYSubirPDF }) {
     const handleAceptarContinuar = () => {
         const storagePath = `pdfs/aviso-privacidad-${Date.now()}.pdf`;
         onGenerarYSubirPDF('aviso-privacidad', storagePath, () => {
-            navigate('/datos-personales');
+            navigate('/contrato-reglamento');
         });
     };
 
