@@ -19,7 +19,7 @@ function Register() {
         try {
             await register(email, password);
             mostrarAlertaExito();
-            navigate('/dashboard');
+            navigate('/datos-iniciales');
         } catch (error) {
             mostrarAlertaError();
             console.error('Error al registrar usuario:', error);
@@ -31,7 +31,7 @@ function Register() {
             <h1>Registro</h1>
             <Form onSubmit={handleRegister}>
                 <Form.Group controlId="formBasicEmail">
-                    <Form.Label> Usuario</Form.Label>
+                    <Form.Label>Email</Form.Label>
                     <Form.Control
                         type="email"
                         placeholder="Ingresa tu email"
