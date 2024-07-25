@@ -1,41 +1,23 @@
 // src/services/firebaseService.js
 
 import { db, auth } from '../utils/firebaseConfig';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, updateDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 
 // Función para registrar usuarios
 const register = (email, password) => {
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            console.log('Usuario registrado:', userCredential.user);
-        })
-        .catch((error) => {
-            console.error('Error al registrar usuario:', error);
-        });
+    return createUserWithEmailAndPassword(auth, email, password);
 };
 
 // Función para iniciar sesión
 const login = (email, password) => {
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            console.log('Usuario iniciado sesión:', userCredential.user);
-        })
-        .catch((error) => {
-            console.error('Error al iniciar sesión:', error);
-        });
+    return signInWithEmailAndPassword(auth, email, password);
 };
 
 // Función para cerrar sesión
 const logout = () => {
-    signOut(auth)
-        .then(() => {
-            console.log('Usuario cerró sesión');
-        })
-        .catch((error) => {
-            console.error('Error al cerrar sesión:', error);
-        });
+    return signOut(auth);
 };
 
 /**
@@ -55,9 +37,42 @@ const saveData = async (collectionName, data) => {
 };
 
 /**
- * Función para subir el PDF a Firebase Storage.
- * @param {Blob} pdfBlob - El archivo PDF en formato Blob.
- * @param {string} storagePath - La ruta de almacenamiento en Firebase.
+ * Función para obtener datos iniciales del usuario logueado.
+ * @returns {Promise<Object>} - Los datos iniciales del usuario.
+ */
+const getDatosIniciales = async () => {
+    const user = auth.currentUser;
+    if (!user) throw new Error('No hay usuario logueado');
+
+    const q = query(collection(db, 'datosIniciales'), where('uid', '==', user.uid));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) throw new Error('No se encontraron datos iniciales');
+
+    return querySnapshot.docs[0].data();
+};
+
+/**
+ * Función para actualizar datos iniciales en Firestore.
+ * @param {Object} data - Los datos a actualizar.
+ * @returns {Promise<void>}
+ */
+const updateDatosIniciales = async (data) => {
+    const user = auth.currentUser;
+    if (!user) throw new Error('No hay usuario logueado');
+
+    const q = query(collection(db, 'datosIniciales'), where('uid', '==', user.uid));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) throw new Error('No se encontraron datos iniciales para actualizar');
+
+    const docRef = querySnapshot.docs[0].ref;
+    await updateDoc(docRef, data);
+};
+
+/**
+ * Función para subir el PDF a Firebase Storage
+ * @param {Blob} pdfBlob - El Blob del archivo PDF
+ * @param {string} storagePath - La ruta en Firebase Storage
+ * @returns {Promise<void>}
  */
 const subirPDFaFirebase = async (pdfBlob, storagePath) => {
     const storage = getStorage();
@@ -65,4 +80,4 @@ const subirPDFaFirebase = async (pdfBlob, storagePath) => {
     await uploadBytes(storageRef, pdfBlob);
 };
 
-export { register, login, logout, saveData, subirPDFaFirebase };
+export { register, login, logout, saveData, getDatosIniciales, updateDatosIniciales, subirPDFaFirebase };

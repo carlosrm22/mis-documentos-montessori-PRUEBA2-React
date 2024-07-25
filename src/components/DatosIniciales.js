@@ -30,7 +30,7 @@ function DatosIniciales({ formData, setFormData }) {
             await saveData('datosIniciales', dataToSave);
             mostrarAlertaExito();
             setSubmitting(false);
-            navigate('/aviso-privacidad');
+            navigate('/aviso-privacidad'); // Navegar a AvisoPrivacidad
         } catch (error) {
             mostrarAlertaError();
             console.error('Error al guardar los datos:', error);

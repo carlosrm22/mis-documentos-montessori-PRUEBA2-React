@@ -91,10 +91,10 @@ function App() {
           <Route path="/datos-personales" element={<DatosPersonales formData={formData} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/contrato-reglamento" element={<ContratoReglamento formData={formData} nivelEducativo="Primaria" />} />
+          <Route path="/contrato-reglamento" element={<ContratoReglamento formData={formData} nivelEducativo={formData.nivelEducativo} />} />
           <Route
             path="/dashboard"
-            element={user ? <Dashboard /> : <Navigate to="/login" />}
+            element={user ? <Dashboard formData={formData} setFormData={setFormData} /> : <Navigate to="/login" />}
           />
           <Route
             path="*"
