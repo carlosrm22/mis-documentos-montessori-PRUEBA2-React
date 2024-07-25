@@ -12,15 +12,14 @@ import { useNavigate } from 'react-router-dom';
  */
 function AvisoPrivacidad({ formData, getFechaActual, onGenerarYSubirPDF }) {
     const navigate = useNavigate();
+    const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
 
     const handleAceptarContinuar = () => {
         const storagePath = `pdfs/aviso-privacidad-${Date.now()}.pdf`;
         onGenerarYSubirPDF('aviso-privacidad', storagePath, () => {
-            navigate('/contrato-reglamento');
+            navigate('/contrato-reglamento');  // Cambiado a "/contrato-reglamento"
         });
     };
-
-    const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
 
     return (
         <div id="aviso-privacidad" className="container mt-5">
