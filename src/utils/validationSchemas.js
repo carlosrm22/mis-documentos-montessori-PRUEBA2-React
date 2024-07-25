@@ -1,6 +1,13 @@
 // src/utils/validationSchemas.js
 
 import * as yup from 'yup';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
+
+const isPhoneNumberValid = (value) => {
+    if (!value) return false;
+    const phoneNumber = parsePhoneNumberFromString(value, 'MX');
+    return phoneNumber && phoneNumber.isValid();
+};
 
 // Esquema de validación para los datos iniciales
 export const datosInicialesValidationSchema = yup.object().shape({
@@ -13,6 +20,11 @@ export const datosInicialesValidationSchema = yup.object().shape({
     curpAlumno: yup.string().matches(/^[A-Z0-9]{18}$/, 'La CURP no es válida').required('La CURP del alumno es requerida'),
     apellidosResponsable: yup.string().required('Los apellidos del responsable son requeridos'),
     nombresResponsable: yup.string().required('El nombre del responsable es requerido'),
-    telefonoContacto: yup.string().required('El teléfono de contacto es requerido'),
-    emailContacto: yup.string().email('El email debe ser válido').required('El email de contacto es requerido')
+    telefonoContacto: yup.string()
+        .test('is-valid-phone', 'El teléfono de contacto no es válido', isPhoneNumberValid)
+        .required('El teléfono de contacto es requerido'),
+    emailContacto: yup.string()
+        .email('El email debe ser válido')
+        .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'El email debe tener un dominio válido')
+        .required('El email de contacto es requerido')
 });
