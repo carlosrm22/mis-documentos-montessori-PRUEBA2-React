@@ -17,10 +17,10 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/App.css';
 import { mostrarAviso } from '../utils/sweetAlertUtils';
 import { generarPDF } from '../utils/pdfUtils';
+import { subirPDFaFirebase } from '../services/firebaseService';
 
 function App() {
   const [formData, setFormData] = useState({
-    // Variables de Datos Iniciales
     apellidosAlumno: '',
     nombresAlumno: '',
     fechaNacimientoAlumno: '',
@@ -36,7 +36,6 @@ function App() {
     nombresPadre: '',
     apellidosPadre: '',
     domicilioPadres: ''
-    // variables de Datos Personales
   });
 
   const getFechaActual = () => {
@@ -48,31 +47,22 @@ function App() {
     return `A los días ${dia} del mes de ${mes} del año ${año}`;
   };
 
-  const handleGenerarPDF = (inputId, storagePath) => {
-    generarPDF(inputId)
-      .then((pdfBlob) => {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(pdfBlob);
-        link.download = 'documento.pdf';
-        link.click();
-        subirPDFaFirebase(pdfBlob, storagePath);
-      })
-      .catch((error) => {
-        console.error('Error al generar el PDF:', error);
-      });
-  };
+  const handleGenerarYSubirPDF = async (inputId, storagePath, navigateTo) => {
+    const result = await mostrarAviso();
 
-  const handleMostrarAviso = (inputId, storagePath, navigateTo) => {
-    mostrarAviso()
-      .then((result) => {
-        if (result.isConfirmed) {
-          handleGenerarPDF(inputId, storagePath);
-          if (navigateTo) navigateTo();
-        }
-      })
-      .catch((error) => {
-        console.error('Error al mostrar aviso:', error);
-      });
+    if (result.isConfirmed) {
+      const pdfBlob = await generarPDF(inputId);
+      await subirPDFaFirebase(pdfBlob, storagePath);
+
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(pdfBlob);
+      link.download = 'documento.pdf';
+      link.click();
+
+      if (navigateTo) {
+        navigateTo();
+      }
+    }
   };
 
   const [user] = useAuthState(auth);
@@ -83,7 +73,7 @@ function App() {
       <div className="container">
         <Routes>
           <Route path="/" element={<DatosIniciales formData={formData} setFormData={setFormData} />} />
-          <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} getFechaActual={getFechaActual} mostrarAviso={handleMostrarAviso} />} />
+          <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} getFechaActual={getFechaActual} onGenerarYSubirPDF={handleGenerarYSubirPDF} />} />
           <Route path="/datos-personales" element={<DatosPersonales formData={formData} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
@@ -98,7 +88,6 @@ function App() {
         </Routes>
       </div>
       <Footer />
-      {/* Botón flotante de WhatsApp */}
       <a href="https://wa.me/5215548885013?text=Hola,%20necesito%20ayuda%20con%20mis%20documentos%20Montessori"
         className="float-whatsapp"
         target="_blank"

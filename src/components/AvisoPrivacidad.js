@@ -2,28 +2,25 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { storage } from '../utils/firebaseConfig';
-import { ref, uploadBytes } from 'firebase/storage';
-import Swal from 'sweetalert2';
 
-const AvisoPrivacidad = ({ formData, getFechaActual, mostrarAvisoYDescargarPDF }) => {
-    const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
+/**
+ * Componente para la sección de Aviso de Privacidad.
+ * @param {Object} props - Las propiedades del componente.
+ * @param {Object} props.formData - Los datos del formulario.
+ * @param {Function} props.getFechaActual - Función para obtener la fecha actual.
+ * @param {Function} props.onGenerarYSubirPDF - Función para manejar la generación y subida del PDF.
+ */
+function AvisoPrivacidad({ formData, getFechaActual, onGenerarYSubirPDF }) {
     const navigate = useNavigate();
 
-    const handleAceptarContinuar = async () => {
-        const pdfBlob = await mostrarAvisoYDescargarPDF('aviso-privacidad');
-        const fileName = `aviso-privacidad-${formData.nombresAlumno}.pdf`;
-        const storageRef = ref(storage, `pdfs/${fileName}`);
-
-        try {
-            await uploadBytes(storageRef, pdfBlob);
-            Swal.fire('Éxito', 'PDF subido exitosamente', 'success');
+    const handleAceptarContinuar = () => {
+        const storagePath = `pdfs/aviso-privacidad-${Date.now()}.pdf`;
+        onGenerarYSubirPDF('aviso-privacidad', storagePath, () => {
             navigate('/datos-personales');
-        } catch (error) {
-            console.error('Error subiendo PDF:', error);
-            Swal.fire('Error', 'Hubo un problema al subir el PDF', 'error');
-        }
+        });
     };
+
+    const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
 
     return (
         <div id="aviso-privacidad" className="container mt-5">
@@ -35,7 +32,7 @@ const AvisoPrivacidad = ({ formData, getFechaActual, mostrarAvisoYDescargarPDF }
                 responsable de recibir sus datos personales y los de su hijo(a), del uso que se le dé a los mismos y de su protección, lo
                 anterior con el propósito de dar cumplimiento con la citada Ley. Para tal efecto se señala al Sr. Carlos Alfonso Romero
                 Muñoz como persona responsable directamente de salvaguardar y custodiar los datos proporcionados por usted. La
-                información proporcionada será utilizada para proveerle el servicio educativo que nos ha solicitado en favor de su hijo <b> {nombresAlumno} {apellidosAlumno}</b>, y poderle informar a
+                información proporcionada será utilizada para proveerle el servicio educativo que nos ha solicitado en favor de su hijo <b>{nombresAlumno} {apellidosAlumno}</b>, y poderle informar a
                 usted de la situación académica, comportamiento y aspectos importantes de su menor hijo, gestionar ante las autoridades
                 educativas la emisión de documentos oficiales incluyendo en los casos que proceda la obtención de su certificado de
                 estudios, para lo cual le requerimos nos proporcione:</p>

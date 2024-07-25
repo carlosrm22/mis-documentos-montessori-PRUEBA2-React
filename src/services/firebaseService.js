@@ -56,9 +56,8 @@ const saveData = async (collectionName, data) => {
 
 /**
  * Función para subir el PDF a Firebase Storage.
- * @param {Blob} pdfBlob - El archivo PDF en formato blob.
- * @param {string} storagePath - La ruta en el almacenamiento donde se guardará el archivo.
- * @returns {Promise<void>}
+ * @param {Blob} pdfBlob - El archivo PDF en formato Blob.
+ * @param {string} storagePath - La ruta de almacenamiento en Firebase.
  */
 const subirPDFaFirebase = async (pdfBlob, storagePath) => {
     const storage = getStorage();
