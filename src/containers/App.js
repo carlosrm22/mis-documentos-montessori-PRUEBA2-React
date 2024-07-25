@@ -20,6 +20,9 @@ import { mostrarAviso } from '../utils/sweetAlertUtils';
 import { generarPDF } from '../utils/pdfUtils';
 import { subirPDFaFirebase } from '../services/firebaseService';
 
+/**
+ * Componente principal de la aplicación.
+ */
 function App() {
   // Estado inicial del formulario
   const [formData, setFormData] = useState({
@@ -37,7 +40,8 @@ function App() {
     apellidosMadre: '',
     nombresPadre: '',
     apellidosPadre: '',
-    domicilioPadres: ''
+    domicilioPadres: '',
+    nivelEducativo: '' // Añadir el campo nivelEducativo
   });
 
   // Función para obtener la fecha actual
@@ -58,10 +62,13 @@ function App() {
       const pdfBlob = await generarPDF(inputId);
       await subirPDFaFirebase(pdfBlob, storagePath);
 
-      // Descargar el PDF en la computadora del usuario
+      // Descargar el PDF en la computadora del usuario con el nombre específico
+      const nombreAlumno = formData.nombresAlumno.split(' ').join('-') + '-' + formData.apellidosAlumno.split(' ').join('-');
+      const nombreArchivo = `${inputId}-${nombreAlumno}.pdf`;
+
       const link = document.createElement('a');
       link.href = URL.createObjectURL(pdfBlob);
-      link.download = 'documento.pdf';
+      link.download = nombreArchivo;
       link.click();
 
       if (navigateTo) {
@@ -82,7 +89,7 @@ function App() {
           <Route path="/datos-personales" element={<DatosPersonales formData={formData} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/contrato-reglamento" element={<ContratoReglamento formData={formData} nivelEducativo="Primaria" />} />
+          <Route path="/contrato-reglamento" element={<ContratoReglamento formData={formData} nivelEducativo={formData.nivelEducativo} />} />
           <Route
             path="/dashboard"
             element={user ? <Dashboard /> : <Navigate to="/login" />}
