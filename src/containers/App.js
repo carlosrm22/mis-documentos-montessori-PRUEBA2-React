@@ -81,7 +81,7 @@ function App() {
   const [user] = useAuthState(auth);
 
   return (
-    <Router basename="/mis-documentos-montessori-PRUEBA2-React">
+    <Router>
       <Navbar />
       <div className="container">
         <Routes>
