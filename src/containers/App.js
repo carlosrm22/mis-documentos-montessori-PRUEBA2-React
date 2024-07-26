@@ -56,7 +56,6 @@ function App() {
   // Función para manejar la generación y subida del PDF
   const handleGenerarYSubirPDF = async (inputId, storagePath, navigateTo) => {
     const result = await mostrarAviso();
-
     if (result.isConfirmed) {
       const pdfBlob = await generarPDF(inputId);
       await subirPDFaFirebase(pdfBlob, storagePath);
@@ -81,7 +80,7 @@ function App() {
   return (
     <Router>
       <Navbar />
-      <div className="container">
+      <div className="container mt-5">
         <Routes>
           <Route path="/" element={<Bienvenida />} />
           <Route path="/datos-iniciales" element={<DatosIniciales formData={formData} setFormData={setFormData} />} />
@@ -102,10 +101,7 @@ function App() {
       </div>
       <Footer />
       {/* Botón flotante de WhatsApp */}
-      <a href="https://wa.me/5215548885013?text=Hola,%20necesito%20ayuda%20con%20mis%20documentos%20Montessori"
-        className="float-whatsapp"
-        target="_blank"
-        rel="noopener noreferrer">
+      <a href="https://wa.me/5215548885013?text=Hola,%20necesito%20ayuda%20con%20mis%20documentos%20Montessori" className="float-whatsapp" target="_blank" rel="noopener noreferrer">
         <i className="fab fa-whatsapp"></i> ¿Necesitas ayuda? <br /> Chatea con nosotros
       </a>
     </Router>

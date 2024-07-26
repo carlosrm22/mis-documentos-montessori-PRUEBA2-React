@@ -1,73 +1,86 @@
 // src/components/Navbar.js
 
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../utils/firebaseConfig';
 
 /**
  * Componente para la barra de navegación.
  */
-function Navbar() {
+function NavigationBar() {
   const [user] = useAuthState(auth);
+  const [expanded, setExpanded] = useState(false);
+
+  const handleToggle = () => {
+    setExpanded(!expanded);
+  };
+
+  const handleSelect = () => {
+    setExpanded(false);
+  };
 
   return (
     <div className="pb-5">
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary ">
-      <div className="container ">
-        <Link className="navbar-brand text-white" to="/">
-          <img src={`${process.env.PUBLIC_URL}/assets/images/logo.png`} alt="Logo" width="30" height="30" className="d-inline-block align-top" />
-          Mi Cuenta Montessori
-        </Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <Link className="nav-link text-white" to="/">Inicio</Link>
-            </li>
-            {user && (
-              <>
-                <li className="nav-item">
-                  <Link className="nav-link text-white" to="/aviso-privacidad">Aviso de privacidad</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link text-white" to="/contrato-reglamento">Contrato y reglamento</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link text-white" to="/datos-personales">Datos Personales</Link>
-                </li>
-              </>
-            )}
-            <li className="nav-item">
-              <Link className="nav-link text-white" to="/contacto">Contacto</Link>
-            </li>
-            {!user ? (
-              <>
-                <li className="nav-item">
-                  <Link className="nav-link text-white" to="/login">Iniciar Sesión</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link text-white" to="/register">Registrarse</Link>
-                </li>
-              </>
-            ) : (
-              <>
-                <li className="nav-item">
-                  <Link className="nav-link text-white" to="/dashboard">Mi Cuenta</Link>
-                </li>
-                <li className="nav-item">
-                  <button className="nav-link btn btn-link text-white" onClick={() => auth.signOut()}>Cerrar Sesión</button>
-                </li>
-              </>
-            )}
-          </ul>
-        </div>
-      </div>
-    </nav>
-</div >
+      <Navbar bg="primary" variant="dark" expand="lg" expanded={expanded} fixed="top">
+        <Container>
+          <LinkContainer to="/">
+            <Navbar.Brand>
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/images/logo.png`}
+                alt="Logo"
+                width="30"
+                height="30"
+                className="d-inline-block align-top"
+              />
+              Mi Cuenta Montessori
+            </Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle aria-controls="navbar-nav" onClick={handleToggle} />
+          <Navbar.Collapse id="navbar-nav">
+            <Nav className="ms-auto" onSelect={handleSelect}>
+              <LinkContainer to="/">
+                <Nav.Link>Inicio</Nav.Link>
+              </LinkContainer>
+              {user && (
+                <>
+                  <LinkContainer to="/aviso-privacidad">
+                    <Nav.Link>Aviso de privacidad</Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer to="/contrato-reglamento">
+                    <Nav.Link>Contrato y Reglamento</Nav.Link>
+                  </LinkContainer>
+                </>
+              )}
+              <LinkContainer to="/contacto">
+                <Nav.Link>Contacto</Nav.Link>
+              </LinkContainer>
+              {!user ? (
+                <>
+                  <LinkContainer to="/login">
+                    <Nav.Link>Iniciar Sesión</Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer to="/register">
+                    <Nav.Link>Registrarse</Nav.Link>
+                  </LinkContainer>
+                </>
+              ) : (
+                <>
+                  <LinkContainer to="/dashboard">
+                    <Nav.Link>Mi Cuenta</Nav.Link>
+                  </LinkContainer>
+                  <Nav.Link as={Button} variant="link" onClick={() => auth.signOut()} className="text-white">
+                    Cerrar Sesión
+                  </Nav.Link>
+                </>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </div>
   );
 }
 
-export default Navbar;
+export default NavigationBar;
