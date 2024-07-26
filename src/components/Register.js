@@ -2,35 +2,37 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { register } from '../services/firebaseService';
 import { Form, Button } from 'react-bootstrap';
-import { mostrarAlertaExito, mostrarAlertaError } from '../utils/sweetAlertUtils';
+import { register } from '../services/firebaseService';
+import Swal from 'sweetalert2';
+import AuthLayout from './AuthLayout';
 
-/**
- * Componente para la página de registro.
- */
-function Register() {
+const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        if (password !== confirmPassword) {
+            Swal.fire('Las contraseñas no coinciden', '', 'error');
+            return;
+        }
         try {
             await register(email, password);
-            mostrarAlertaExito();
+            Swal.fire('Registro exitoso', '', 'success');
             navigate('/datos-iniciales');
         } catch (error) {
-            mostrarAlertaError();
-            console.error('Error al registrar usuario:', error);
+            Swal.fire('Error al registrarse', error.message, 'error');
         }
     };
 
     return (
-        <div className="container mt-5">
-            <h1>Registro</h1>
+        <AuthLayout>
+            <h1 className="text-center mb-4">Registrarse</h1>
             <Form onSubmit={handleRegister}>
-                <Form.Group controlId="formBasicEmail">
+                <Form.Group controlId="formBasicEmail" className="mb-3">
                     <Form.Label>Email</Form.Label>
                     <Form.Control
                         type="email"
@@ -40,7 +42,7 @@ function Register() {
                         required
                     />
                 </Form.Group>
-                <Form.Group controlId="formBasicPassword">
+                <Form.Group controlId="formBasicPassword" className="mb-3">
                     <Form.Label>Contraseña</Form.Label>
                     <Form.Control
                         type="password"
@@ -50,12 +52,22 @@ function Register() {
                         required
                     />
                 </Form.Group>
-                <Button variant="primary" type="submit" className="mt-3">
+                <Form.Group controlId="formBasicConfirmPassword" className="mb-3">
+                    <Form.Label>Confirmar Contraseña</Form.Label>
+                    <Form.Control
+                        type="password"
+                        placeholder="Confirma tu contraseña"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                    />
+                </Form.Group>
+                <Button variant="secondary" type="submit" className="w-100 mt-3">
                     Registrarse
                 </Button>
             </Form>
-        </div>
+        </AuthLayout>
     );
-}
+};
 
 export default Register;
