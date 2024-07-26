@@ -13,10 +13,12 @@ function NavigationBar() {
   const [user] = useAuthState(auth);
   const [expanded, setExpanded] = useState(false);
 
+  // Función para manejar el estado de expansión del Navbar
   const handleToggle = () => {
     setExpanded(!expanded);
   };
 
+  // Función para cerrar el Navbar al seleccionar un enlace
   const handleSelect = () => {
     setExpanded(false);
   };
