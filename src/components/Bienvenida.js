@@ -32,8 +32,8 @@ const Bienvenida = () => {
         <Container className="shadow-lg p-4 mb-5 bg-body-tertiary rounded">
             <Row className="text-center mb-4">
                 <Col>
-                    <img src={`${process.env.PUBLIC_URL}/assets/images/Logo-No-Text.webp`} alt="Logo" className="w-50 mb-3" />
-                    <h1>Bienvenido a Mi Cuenta Montessori</h1>
+                    <img src={`${process.env.PUBLIC_URL}/assets/images/Logo-No-Text.webp`} alt="Logo" className="w-25 mb-3" />
+                    <h1>Bienvenido a <br></br>Mi Cuenta Montessori</h1>
                     <p className="fs-5 fw-light">Gestione sus documentos y datos fácilmente</p>
                 </Col>
             </Row>

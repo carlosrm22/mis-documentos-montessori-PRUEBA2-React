@@ -23,10 +23,17 @@ const Login = () => {
     };
 
     return (
-        <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '50vh' }}>
-            <Row className="w-100">
-                <Col md={6} lg={4} className="mx-auto">
-                    <Card className="shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+        <Container className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: '50vh' }}>
+            <Row className="w-100 text-center mb-5">
+                <Col>
+                    <img src={`${process.env.PUBLIC_URL}/assets/images/Logo.webp`} alt="Asociación Montessori de México" className="img-fluid mx-2" style={{ maxHeight: '100px' }} />
+                    <img src={`${process.env.PUBLIC_URL}/assets/images/Logo-Kalpilli.webp`} alt="Kalpilli" className="img-fluid mx-2 d-none d-sm-inline" style={{ maxHeight: '100px' }} />
+                    <img src={`${process.env.PUBLIC_URL}/assets/images/Logo-SEM.webp`} alt="Sociedad de Escuelas Montessori" className="img-fluid mx-2 d-none d-sm-inline" style={{ maxHeight: '100px' }} />
+                </Col>
+            </Row>
+            <Row className="w-100 justify-content-center">
+                <Col md={6} lg={4}>
+                    <Card className="shadow-lg p-4 bg-body-tertiary rounded">
                         <Card.Body>
                             <h1 className="text-center mb-4">Inicio de Sesión</h1>
                             <Form onSubmit={handleLogin}>
