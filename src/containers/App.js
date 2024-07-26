@@ -1,5 +1,3 @@
-// src/containers/App.js
-
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';

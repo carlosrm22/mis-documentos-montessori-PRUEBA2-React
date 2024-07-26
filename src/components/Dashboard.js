@@ -31,15 +31,8 @@ const Dashboard = () => {
         return <div>Cargando datos...</div>;
     }
 
-    return (
-        <div>
-            <h1>Dashboard</h1>
-            <p><strong>Nombre del alumno:</strong> {datosIniciales.nombresAlumno} {datosIniciales.apellidosAlumno}</p>
-            <p><strong>Fecha de nacimiento:</strong> {datosIniciales.fechaNacimientoAlumno}</p>
-            <p><strong>CURP:</strong> {datosIniciales.curpAlumno}</p>
-            {/* Otros datos iniciales */}
-        </div>
-    );
+    return <div></div>
+
 };
 
 export default Dashboard;
