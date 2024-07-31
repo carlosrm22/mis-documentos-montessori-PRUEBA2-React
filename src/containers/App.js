@@ -12,7 +12,10 @@ import Login from '../components/Login';
 import Dashboard from '../components/Dashboard';
 import ContratoReglamento from '../components/ContratoReglamento';
 import Bienvenida from '../components/Bienvenida';
-import { saveData } from '../services/firebaseService';
+import { saveData, subirPDFaFirebase } from '../services/firebaseService';
+import { mostrarAviso } from '../utils/sweetAlertUtils';
+import { generarPDF } from '../utils/pdfUtils';
+import { registrarEvento } from '../utils/firebaseConfig';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/App.css';
@@ -41,14 +44,48 @@ function App() {
     nivelEducativo: '' // Añadir el campo nivelEducativo
   });
 
+  // Función para obtener la fecha actual
+  const getFechaActual = () => {
+    const fecha = new Date();
+    const meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+    const dia = fecha.getDate();
+    const mes = meses[fecha.getMonth()];
+    const año = fecha.getFullYear();
+    return `A los días ${dia} del mes de ${mes} del año ${año}`;
+  };
+
   // Función para guardar datos iniciales
   const handleGuardarDatosIniciales = async () => {
     try {
       await saveData('datosIniciales', formData);
+      registrarEvento('guardar_datos_iniciales', { usuario: auth.currentUser.uid });
       alert('Datos guardados exitosamente');
     } catch (error) {
       console.error('Error guardando datos:', error);
       alert('Error al guardar los datos');
+    }
+  };
+
+  // Función para manejar la generación y subida del PDF
+  const handleGenerarYSubirPDF = async (inputId, storagePath, callback) => {
+    const result = await mostrarAviso();
+
+    if (result.isConfirmed) {
+      const pdfBlob = await generarPDF(inputId);
+      await subirPDFaFirebase(pdfBlob, storagePath);
+
+      // Descargar el PDF en la computadora del usuario con el nombre específico
+      const nombreAlumno = formData.nombresAlumno.split(' ').join('-') + '-' + formData.apellidosAlumno.split(' ').join('-');
+      const nombreArchivo = `${inputId}-${nombreAlumno}.pdf`;
+
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(pdfBlob);
+      link.download = nombreArchivo;
+      link.click();
+
+      if (callback) {
+        callback();
+      }
     }
   };
 
@@ -61,7 +98,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Bienvenida />} />
           <Route path="/datos-iniciales" element={<DatosIniciales formData={formData} setFormData={setFormData} onSave={handleGuardarDatosIniciales} />} />
-          <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} />} />
+          <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} getFechaActual={getFechaActual} onGenerarYSubirPDF={handleGenerarYSubirPDF} />} />
           <Route path="/datos-personales" element={<DatosPersonales formData={formData} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />

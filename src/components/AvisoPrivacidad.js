@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 
 /**
  * Componente para la sección de Aviso de Privacidad.
@@ -74,7 +75,7 @@ function AvisoPrivacidad({ formData, getFechaActual, onGenerarYSubirPDF }) {
                 <p>{getFechaActual()}</p>
             </div>
             <div className="text-center mt-5">
-                <button className="btn btn-primary no-print" onClick={handleAceptarContinuar}>Aceptar y Continuar</button>
+                <Button className="btn btn-primary no-print" onClick={handleAceptarContinuar}>Aceptar y Continuar</Button>
             </div>
         </div>
     );
