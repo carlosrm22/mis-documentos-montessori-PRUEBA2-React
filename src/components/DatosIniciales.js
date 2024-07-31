@@ -8,23 +8,23 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import FormGroup from './FormGroup';
 import { datosInicialesValidationSchema } from '../utils/validationSchemas';
 import { handleGuardarDatos } from '../utils/sweetAlertUtils';
+import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
 import Swal from 'sweetalert2';
 
 /**
  * Componente principal para los datos iniciales.
- * @param {Object} props - Las propiedades del componente.
- * @param {Object} props.formData - Los datos del formulario.
- * @param {Function} props.setFormData - La función para actualizar los datos del formulario.
  */
-const DatosIniciales = ({ formData, setFormData }) => {
+const DatosIniciales = () => {
     const navigate = useNavigate();
+    const { formData } = useGlobalState();
+    const dispatch = useGlobalDispatch();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const data = await getDatosIniciales();
                 if (data) {
-                    setFormData(data);
+                    dispatch({ type: 'SET_FORM_DATA', payload: data });
                 }
             } catch (error) {
                 console.error("Error fetching initial data:", error);
@@ -33,7 +33,7 @@ const DatosIniciales = ({ formData, setFormData }) => {
             }
         };
         fetchData();
-    }, [setFormData]);
+    }, [dispatch]);
 
     return (
         <Container fluid className="d-flex flex-column justify-content-center.align-items-center" style={{ minHeight: '70vh' }}>
@@ -52,7 +52,7 @@ const DatosIniciales = ({ formData, setFormData }) => {
                             <Formik
                                 initialValues={formData}
                                 validationSchema={datosInicialesValidationSchema}
-                                onSubmit={(values, { setSubmitting }) => handleGuardarDatos(values, setFormData, setSubmitting, navigate)}
+                                onSubmit={(values, { setSubmitting }) => handleGuardarDatos(values, data => dispatch({ type: 'SET_FORM_DATA', payload: data }), setSubmitting, navigate)}
                                 enableReinitialize
                             >
                                 {({ values, isSubmitting, errors, touched, handleChange }) => (
