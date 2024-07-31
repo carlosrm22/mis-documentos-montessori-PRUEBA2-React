@@ -1,19 +1,21 @@
-// src/components/AvisoPrivacidad.js
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { mostrarAvisoPDF, mostrarAlertaExito, mostrarAlertaError } from '../utils/sweetAlertUtils';
 import { generarPDF, subirPDFaFirebase } from '../utils/pdfUtils';
+import { useGlobalState } from '../utils/GlobalState';
 
 /**
  * Componente para la sección de Aviso de Privacidad.
- * @param {Object} props - Las propiedades del componente.
- * @param {Object} props.formData - Los datos del formulario.
- * @param {Function} props.getFechaActual - Función para obtener la fecha actual.
  */
-function AvisoPrivacidad({ formData, getFechaActual }) {
+function AvisoPrivacidad() {
     const navigate = useNavigate();
+    const { formData } = useGlobalState();
+
+    if (!formData || !formData.nombresAlumno) {
+        return <div>Cargando datos...</div>;
+    }
+
     const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
 
     const handleAceptarContinuar = async () => {
@@ -95,7 +97,7 @@ function AvisoPrivacidad({ formData, getFechaActual }) {
                 <p>Nombre y firma del responsable legal del alumno: </p>
                 <hr className="signature-line" />
                 <p><b>{nombresResponsable} {apellidosResponsable}</b></p>
-                <p>{getFechaActual()}</p>
+                <p>{new Date().toLocaleDateString()}</p>
             </div>
             <div className="text-center mt-5">
                 <Button className="btn btn-primary no-print" onClick={handleAceptarContinuar}>Aceptar y Continuar</Button>
