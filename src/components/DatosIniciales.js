@@ -25,6 +25,8 @@ const DatosIniciales = () => {
                 const data = await getDatosIniciales();
                 if (data) {
                     dispatch({ type: 'SET_FORM_DATA', payload: data });
+                } else {
+                    console.log('No se encontraron datos iniciales');
                 }
             } catch (error) {
                 console.error("Error fetching initial data:", error);

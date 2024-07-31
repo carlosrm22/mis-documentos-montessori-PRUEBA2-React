@@ -52,7 +52,10 @@ const getDatosIniciales = async () => {
 
     const q = query(collection(db, 'datosIniciales'), where('uid', '==', user.uid));
     const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) throw new Error('No se encontraron datos iniciales');
+    if (querySnapshot.empty) {
+        console.log('No se encontraron datos iniciales');
+        return null;
+    }
 
     return querySnapshot.docs[0].data();
 };
