@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { getDatosIniciales } from '../services/firebaseService';
+import Swal from 'sweetalert2';
 
 /**
  * Componente para el Dashboard.
@@ -17,6 +18,8 @@ const Dashboard = () => {
                 setDatosIniciales(datos);
             } catch (error) {
                 setError(error.message);
+                // Mostrar alerta de error al usuario
+                Swal.fire('Error al cargar datos', error.message, 'error');
             }
         };
 
@@ -31,8 +34,7 @@ const Dashboard = () => {
         return <div>Cargando datos...</div>;
     }
 
-    return <div></div>
-
+    return <div>{/* Aquí va el contenido del dashboard */}</div>;
 };
 
 export default Dashboard;

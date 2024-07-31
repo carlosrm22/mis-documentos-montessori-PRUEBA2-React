@@ -1,3 +1,4 @@
+// src/components/DatosIniciales.js
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
@@ -7,6 +8,7 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import FormGroup from './FormGroup';
 import { datosInicialesValidationSchema } from '../utils/validationSchemas';
 import { handleGuardarDatos } from '../utils/sweetAlertUtils';
+import Swal from 'sweetalert2';
 
 /**
  * Componente principal para los datos iniciales.
