@@ -1,21 +1,22 @@
-// src/components/Login.js
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { login } from '../services/firebaseService';
 import Swal from 'sweetalert2';
 import AuthLayout from './AuthLayout';
+import { useGlobalDispatch } from '../utils/GlobalState';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const dispatch = useGlobalDispatch();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            await login(email, password);
+            const user = await login(email, password);
+            dispatch({ type: 'SET_USER', payload: user });
             Swal.fire('Inicio de sesión exitoso', '', 'success');
             navigate('/dashboard');
         } catch (error) {
