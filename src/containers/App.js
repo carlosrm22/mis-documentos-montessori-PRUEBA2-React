@@ -12,12 +12,13 @@ import Login from '../components/Login';
 import Dashboard from '../components/Dashboard';
 import ContratoReglamento from '../components/ContratoReglamento';
 import Bienvenida from '../components/Bienvenida';
+import { saveData, subirPDFaFirebase } from '../services/firebaseService';
+import { mostrarAviso } from '../utils/sweetAlertUtils';
+import { generarPDF } from '../utils/pdfUtils';
+import { registrarEvento } from '../utils/firebaseConfig';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/App.css';
-import { mostrarAviso } from '../utils/sweetAlertUtils';
-import { generarPDF } from '../utils/pdfUtils';
-import { subirPDFaFirebase } from '../services/firebaseService';
 
 /**
  * Componente principal de la aplicación.
@@ -53,8 +54,20 @@ function App() {
     return `A los días ${dia} del mes de ${mes} del año ${año}`;
   };
 
+  // Función para guardar datos iniciales
+  const handleGuardarDatosIniciales = async () => {
+    try {
+      await saveData('datosIniciales', formData);
+      registrarEvento('guardar_datos_iniciales', { usuario: auth.currentUser.uid });
+      alert('Datos guardados exitosamente');
+    } catch (error) {
+      console.error('Error guardando datos:', error);
+      alert('Error al guardar los datos');
+    }
+  };
+
   // Función para manejar la generación y subida del PDF
-  const handleGenerarYSubirPDF = async (inputId, storagePath, navigateTo) => {
+  const handleGenerarYSubirPDF = async (inputId, storagePath, callback) => {
     const result = await mostrarAviso();
 
     if (result.isConfirmed) {
@@ -70,8 +83,8 @@ function App() {
       link.download = nombreArchivo;
       link.click();
 
-      if (navigateTo) {
-        navigateTo();
+      if (callback) {
+        callback();
       }
     }
   };
@@ -84,7 +97,7 @@ function App() {
       <div className="container">
         <Routes>
           <Route path="/" element={<Bienvenida />} />
-          <Route path="/datos-iniciales" element={<DatosIniciales formData={formData} setFormData={setFormData} />} />
+          <Route path="/datos-iniciales" element={<DatosIniciales formData={formData} setFormData={setFormData} onSave={handleGuardarDatosIniciales} />} />
           <Route path="/aviso-privacidad" element={<AvisoPrivacidad formData={formData} getFechaActual={getFechaActual} onGenerarYSubirPDF={handleGenerarYSubirPDF} />} />
           <Route path="/datos-personales" element={<DatosPersonales formData={formData} />} />
           <Route path="/register" element={<Register />} />
@@ -101,13 +114,6 @@ function App() {
         </Routes>
       </div>
       <Footer />
-      {/* Botón flotante de WhatsApp */}
-      <a href="https://wa.me/5215548885013?text=Hola,%20necesito%20ayuda%20con%20mis%20documentos%20Montessori"
-        className="float-whatsapp"
-        target="_blank"
-        rel="noopener noreferrer">
-        <i className="fab fa-whatsapp"></i> ¿Necesitas ayuda? <br /> Chatea con nosotros
-      </a>
     </Router>
   );
 }

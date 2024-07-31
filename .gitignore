@@ -26,3 +26,5 @@ yarn-error.log*
 # IDE
 .firebase
 .npmrc
+
+.env

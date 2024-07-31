@@ -21,14 +21,20 @@ const logout = () => {
 };
 
 /**
- * Función para guardar datos en Firestore.
+ * Función para guardar datos en Firestore, incluyendo el UID del usuario.
  * @param {string} collectionName - El nombre de la colección.
  * @param {Object} data - Los datos a guardar.
  * @returns {Promise<void>}
  */
 const saveData = async (collectionName, data) => {
+    const user = auth.currentUser;
+    if (!user) throw new Error('No hay usuario logueado');
+
+    // Añadir el UID del usuario a los datos
+    const dataWithUID = { ...data, uid: user.uid };
+
     try {
-        await addDoc(collection(db, collectionName), data);
+        await addDoc(collection(db, collectionName), dataWithUID);
         console.log('Datos guardados exitosamente');
     } catch (error) {
         console.error('Error guardando datos:', error);
