@@ -8,10 +8,11 @@ import { auth } from '../utils/firebaseConfig';
 
 /**
  * Componente para la barra de navegación.
+ * Muestra diferentes enlaces dependiendo del estado de autenticación del usuario.
  */
 function NavigationBar() {
-  const [user] = useAuthState(auth);
-  const [expanded, setExpanded] = useState(false);
+  const [user] = useAuthState(auth); // Estado del usuario autenticado
+  const [expanded, setExpanded] = useState(false); // Estado para manejar la expansión del Navbar
 
   // Función para manejar el estado de expansión del Navbar
   const handleToggle = () => {
