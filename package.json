@@ -11,6 +11,7 @@
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.3.3",
     "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
     "emailjs-com": "^3.2.0",
     "firebase": "^10.12.4",
     "formik": "^2.4.6",

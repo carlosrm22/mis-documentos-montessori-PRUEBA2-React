@@ -1,6 +1,6 @@
 // src/components/DatosIniciales.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import { differenceInYears, isValid } from 'date-fns';
@@ -37,7 +37,10 @@ const DatosIniciales = ({ formData, setFormData }) => {
         const fechaNacimiento = new Date(values.fechaNacimientoAlumno);
         const edadAlumno = isValid(fechaNacimiento) ? differenceInYears(new Date(), fechaNacimiento) : 0;
 
-        const dataToSave = { ...values, edadAlumno };
+        // Guardar solo la primera palabra del nivel educativo seleccionado
+        const nivelEducativo = values.nivelEducativo.split(' ')[0];
+
+        const dataToSave = { ...values, edadAlumno, nivelEducativo };
         setFormData(dataToSave);
         try {
             await saveData('datosIniciales', dataToSave);
@@ -50,6 +53,7 @@ const DatosIniciales = ({ formData, setFormData }) => {
             setSubmitting(false);
         }
     };
+
     return (
         <Container fluid className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
             <Row className="w-auto text-center mb-3 justify-content-center">
@@ -75,6 +79,22 @@ const DatosIniciales = ({ formData, setFormData }) => {
                                             <Col md={6}>
                                                 <div className="p-3 mb-4 bg-white border rounded">
                                                     <h2 className="mt-4">Datos del alumno</h2>
+                                                    <div className="mb-3">
+                                                        <label htmlFor="nivelEducativo" className="form-label">Nivel Educativo</label>
+                                                        <select
+                                                            id="nivelEducativo"
+                                                            name="nivelEducativo"
+                                                            className="form-select"
+                                                            value={values.nivelEducativo}
+                                                            onChange={(e) => setFormData({ ...values, nivelEducativo: e.target.value })}
+                                                            required
+                                                        >
+                                                            <option value="">Selecciona el nivel educativo</option>
+                                                            <option value="Maternal (Nido & Casa de Niños)">Maternal (Nido & Casa de Niños)</option>
+                                                            <option value="Preescolar (Casa de niños)">Preescolar (Casa de niños)</option>
+                                                            <option value="Primaria (Taller)">Primaria (Taller)</option>
+                                                        </select>
+                                                    </div>
                                                     <FormGroup name="apellidosAlumno" label="Apellidos del alumno" required />
                                                     <FormGroup name="nombresAlumno" label="Nombre(s) del alumno" required />
                                                     <FormGroup name="fechaNacimientoAlumno" label="Fecha de nacimiento del alumno" type="date" required />

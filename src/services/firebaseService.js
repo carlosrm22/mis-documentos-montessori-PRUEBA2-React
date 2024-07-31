@@ -44,7 +44,7 @@ const saveData = async (collectionName, data) => {
 
 /**
  * Función para obtener datos iniciales del usuario logueado.
- * @returns {Promise<Object>} - Los datos iniciales del usuario.
+ * @returns {Promise<Object|null>} - Los datos iniciales del usuario o null si no se encuentran datos.
  */
 const getDatosIniciales = async () => {
     const user = auth.currentUser;

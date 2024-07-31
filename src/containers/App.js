@@ -41,7 +41,7 @@ function App() {
     nombresPadre: '',
     apellidosPadre: '',
     domicilioPadres: '',
-    nivelEducativo: '' // Añadir el campo nivelEducativo
+    nivelEducativo: ''
   });
 
   // Función para obtener la fecha actual
