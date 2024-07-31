@@ -1,3 +1,4 @@
+// src/components/DatosIniciales.js
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
@@ -110,14 +111,14 @@ const DatosIniciales = () => {
                                                             <option value="Primaria (Taller)">Primaria (Taller)</option>
                                                         </Field>
                                                     </div>
-                                                    <FormGroup name="apellidosAlumno" label="Apellidos del alumno" required readOnly={isReadOnly} />
-                                                    <FormGroup name="nombresAlumno" label="Nombre(s) del alumno" required readOnly={isReadOnly} />
+                                                    <FormGroup name="apellidosAlumno" label="Apellidos del alumno" required readOnly={isReadOnly} onChange={handleChange} />
+                                                    <FormGroup name="nombresAlumno" label="Nombre(s) del alumno" required readOnly={isReadOnly} onChange={handleChange} />
                                                     <FormGroup name="fechaNacimientoAlumno" label="Fecha de nacimiento del alumno" type="date" required readOnly={isReadOnly} onChange={(e) => {
                                                         handleChange(e);
                                                         setFieldValue('edadAlumno', calculateAge(new Date(e.target.value)));
                                                     }} />
                                                     <FormGroup name="edadAlumno" label="Edad del alumno" type="number" value={values.edadAlumno} readOnly />
-                                                    <FormGroup name="curpAlumno" label="CURP del alumno" required readOnly={isReadOnly} />
+                                                    <FormGroup name="curpAlumno" label="CURP del alumno" required readOnly={isReadOnly} onChange={handleChange} />
                                                     <div>
                                                         <a href="https://consultas.curp.gob.mx/CurpSP/renapo/inicio2020.jsp" target="_blank" rel="noopener noreferrer">
                                                             Consulta tu CURP aquí
@@ -128,10 +129,10 @@ const DatosIniciales = () => {
                                             <Col md={6}>
                                                 <div className="p-3 mb-4 bg-white border rounded">
                                                     <h2 className="mt-4">Datos del responsable legal del alumno</h2>
-                                                    <FormGroup name="apellidosResponsable" label="Apellidos del responsable legal del alumno" required readOnly={isReadOnly} />
-                                                    <FormGroup name="nombresResponsable" label="Nombre(s) del responsable legal del alumno" required readOnly={isReadOnly} />
-                                                    <FormGroup name="telefonoContacto" label="Teléfono de contacto" type="tel" required readOnly={isReadOnly} helperText="Es posible que nos contactemos a este número vía WhatsApp para dar seguimiento a esta información." />
-                                                    <FormGroup name="emailContacto" label="Email de contacto" type="email" required readOnly={isReadOnly} helperText="Es posible que nos comuniquemos a este correo para dar seguimiento a esta información." />
+                                                    <FormGroup name="apellidosResponsable" label="Apellidos del responsable legal del alumno" required readOnly={isReadOnly} onChange={handleChange} />
+                                                    <FormGroup name="nombresResponsable" label="Nombre(s) del responsable legal del alumno" required readOnly={isReadOnly} onChange={handleChange} />
+                                                    <FormGroup name="telefonoContacto" label="Teléfono de contacto" type="tel" required readOnly={isReadOnly} helperText="Es posible que nos contactemos a este número vía WhatsApp para dar seguimiento a esta información." onChange={handleChange} />
+                                                    <FormGroup name="emailContacto" label="Email de contacto" type="email" required readOnly={isReadOnly} helperText="Es posible que nos comuniquemos a este correo para dar seguimiento a esta información." onChange={handleChange} />
                                                 </div>
                                             </Col>
                                         </Row>

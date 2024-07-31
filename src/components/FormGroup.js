@@ -5,7 +5,7 @@ import { Field, ErrorMessage } from 'formik';
 /**
  * Componente para un grupo de formulario reutilizable.
  */
-const FormGroup = ({ name, label, type = 'text', required = false, readOnly = false, helperText }) => (
+const FormGroup = ({ name, label, type = 'text', required = false, readOnly = false, helperText, onChange }) => (
     <div className="mb-3">
         <label htmlFor={name} className="form-label">
             {label} {required && <span className="text-danger">*</span>}
@@ -18,6 +18,7 @@ const FormGroup = ({ name, label, type = 'text', required = false, readOnly = fa
             id={name}
             required={required}
             readOnly={readOnly}
+            onChange={onChange} // Añade esta línea para manejar el cambio solo si se proporciona
         />
         {helperText && <small className="form-text text-muted">{helperText}</small>}
         <ErrorMessage name={name} component="div" className="text-danger" />
