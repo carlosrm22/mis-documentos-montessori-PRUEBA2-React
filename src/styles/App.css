@@ -57,6 +57,22 @@
     /* Añade espacio alrededor del contenido */
 }
 
+/* src/styles/App.css */
+body {
+    padding-top: 56px;
+}
+
 .no-underline {
     text-decoration: none;
+}
+
+/* Estilos adicionales para responsividad */
+@media (max-width: 768px) {
+    .navbar-nav {
+        text-align: center;
+    }
+
+    .footer {
+        text-align: center;
+    }
 }
