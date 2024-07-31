@@ -23,7 +23,11 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
-// Función para registrar eventos personalizados
+/**
+ * Función para registrar un evento en Firebase Analytics.
+ * @param {string} nombreEvento - El nombre del evento.
+ * @param {Object} parametros - Los parámetros del evento.
+ */
 const registrarEvento = (nombreEvento, parametros) => {
     logEvent(analytics, nombreEvento, parametros);
 };

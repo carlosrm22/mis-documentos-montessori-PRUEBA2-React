@@ -3,23 +3,46 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { mostrarAvisoPDF, mostrarAlertaExito, mostrarAlertaError } from '../utils/sweetAlertUtils';
+import { generarPDF, subirPDFaFirebase } from '../utils/pdfUtils';
 
 /**
  * Componente para la sección de Aviso de Privacidad.
  * @param {Object} props - Las propiedades del componente.
  * @param {Object} props.formData - Los datos del formulario.
  * @param {Function} props.getFechaActual - Función para obtener la fecha actual.
- * @param {Function} props.onGenerarYSubirPDF - Función para manejar la generación y subida del PDF.
  */
-function AvisoPrivacidad({ formData, getFechaActual, onGenerarYSubirPDF }) {
+function AvisoPrivacidad({ formData, getFechaActual }) {
     const navigate = useNavigate();
     const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
 
-    const handleAceptarContinuar = () => {
-        const storagePath = `pdfs/aviso-privacidad-${Date.now()}.pdf`;
-        onGenerarYSubirPDF('aviso-privacidad', storagePath, () => {
-            navigate('/contrato-reglamento');  // Cambiado a "/contrato-reglamento"
-        });
+    const handleAceptarContinuar = async () => {
+        const result = await mostrarAvisoPDF();
+
+        if (result.isConfirmed) {
+            const storagePath = `pdfs/aviso-privacidad-${Date.now()}.pdf`;
+            try {
+                const pdfBlob = await generarPDF('aviso-privacidad');
+                await subirPDFaFirebase(pdfBlob, storagePath);
+                mostrarAlertaExito();
+
+                // Crear un enlace de descarga y simular un clic para descargar el archivo PDF
+                const nombreAlumno = formData.nombresAlumno.split(' ').join('-') + '-' + formData.apellidosAlumno.split(' ').join('-');
+                const nombreArchivo = `aviso-privacidad-${nombreAlumno}.pdf`;
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(pdfBlob);
+                link.download = nombreArchivo;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                navigate('/contrato-reglamento'); // Navegar a ContratoReglamento
+            } catch (error) {
+                mostrarAlertaError(error.message);
+                console.error('Error al generar y subir el PDF:', error);
+            }
+        }
     };
 
     return (

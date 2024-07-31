@@ -2,13 +2,13 @@
 
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Formik, Form } from 'formik';
-import { differenceInYears, isValid } from 'date-fns';
-import { saveData, getDatosIniciales } from '../services/firebaseService';
+import { Formik, Form, Field } from 'formik';
+import { isValid, differenceInYears } from 'date-fns';
+import { getDatosIniciales } from '../services/firebaseService';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import FormGroup from './FormGroup';
 import { datosInicialesValidationSchema } from '../utils/validationSchemas';
-import Swal from 'sweetalert2';
+import { handleGuardarDatos } from '../utils/sweetAlertUtils';
 
 /**
  * Componente principal para los datos iniciales.
@@ -33,29 +33,8 @@ const DatosIniciales = ({ formData, setFormData }) => {
         fetchData();
     }, [setFormData]);
 
-    const handleSubmit = async (values, { setSubmitting }) => {
-        const fechaNacimiento = new Date(values.fechaNacimientoAlumno);
-        const edadAlumno = isValid(fechaNacimiento) ? differenceInYears(new Date(), fechaNacimiento) : 0;
-
-        // Guardar solo la primera palabra del nivel educativo seleccionado
-        const nivelEducativo = values.nivelEducativo.split(' ')[0];
-
-        const dataToSave = { ...values, edadAlumno, nivelEducativo };
-        setFormData(dataToSave);
-        try {
-            await saveData('datosIniciales', dataToSave);
-            Swal.fire('Datos guardados exitosamente', '', 'success');
-            setSubmitting(false);
-            navigate('/aviso-privacidad'); // Navegar a AvisoPrivacidad
-        } catch (error) {
-            Swal.fire('Error al guardar los datos', error.message, 'error');
-            console.error('Error al guardar los datos:', error);
-            setSubmitting(false);
-        }
-    };
-
     return (
-        <Container fluid className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
+        <Container fluid className="d-flex flex-column justify-content-center.align-items-center" style={{ minHeight: '70vh' }}>
             <Row className="w-auto text-center mb-3 justify-content-center">
                 <Col className="mx-auto">
                     <h1 className="mb-3 ">Datos Iniciales del Alumno</h1>
@@ -71,9 +50,10 @@ const DatosIniciales = ({ formData, setFormData }) => {
                             <Formik
                                 initialValues={formData}
                                 validationSchema={datosInicialesValidationSchema}
-                                onSubmit={handleSubmit}
+                                onSubmit={(values, { setSubmitting }) => handleGuardarDatos(values, setFormData, setSubmitting, navigate)}
+                                enableReinitialize
                             >
-                                {({ values, isSubmitting, errors, touched }) => (
+                                {({ values, isSubmitting, errors, touched, handleChange }) => (
                                     <Form>
                                         <Row>
                                             <Col md={6}>
@@ -81,19 +61,20 @@ const DatosIniciales = ({ formData, setFormData }) => {
                                                     <h2 className="mt-4">Datos del alumno</h2>
                                                     <div className="mb-3">
                                                         <label htmlFor="nivelEducativo" className="form-label">Nivel Educativo</label>
-                                                        <select
+                                                        <Field
+                                                            as="select"
                                                             id="nivelEducativo"
                                                             name="nivelEducativo"
                                                             className="form-select"
                                                             value={values.nivelEducativo}
-                                                            onChange={(e) => setFormData({ ...values, nivelEducativo: e.target.value })}
+                                                            onChange={handleChange}
                                                             required
                                                         >
                                                             <option value="">Selecciona el nivel educativo</option>
                                                             <option value="Maternal (Nido & Casa de Niños)">Maternal (Nido & Casa de Niños)</option>
                                                             <option value="Preescolar (Casa de niños)">Preescolar (Casa de niños)</option>
                                                             <option value="Primaria (Taller)">Primaria (Taller)</option>
-                                                        </select>
+                                                        </Field>
                                                     </div>
                                                     <FormGroup name="apellidosAlumno" label="Apellidos del alumno" required />
                                                     <FormGroup name="nombresAlumno" label="Nombre(s) del alumno" required />

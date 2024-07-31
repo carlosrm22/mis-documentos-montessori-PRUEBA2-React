@@ -1,3 +1,5 @@
+// src/containers/App.js
+
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -13,12 +15,12 @@ import Dashboard from '../components/Dashboard';
 import ContratoReglamento from '../components/ContratoReglamento';
 import Bienvenida from '../components/Bienvenida';
 import { saveData, subirPDFaFirebase } from '../services/firebaseService';
-import { mostrarAviso } from '../utils/sweetAlertUtils';
+import { mostrarAvisoDatos, mostrarAvisoPDF, mostrarAlertaExito, mostrarAlertaError, mostrarAvisoRevisar } from '../utils/sweetAlertUtils';
 import { generarPDF } from '../utils/pdfUtils';
-import { registrarEvento } from '../utils/firebaseConfig';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/App.css';
+import { registrarEvento } from '../utils/firebaseConfig'; // Asegúrate de importar `registrarEvento`
 
 /**
  * Componente principal de la aplicación.
@@ -68,7 +70,7 @@ function App() {
 
   // Función para manejar la generación y subida del PDF
   const handleGenerarYSubirPDF = async (inputId, storagePath, callback) => {
-    const result = await mostrarAviso();
+    const result = await mostrarAvisoPDF();
 
     if (result.isConfirmed) {
       const pdfBlob = await generarPDF(inputId);

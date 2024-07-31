@@ -42,27 +42,20 @@
 
 /* Estilo aumentado para la generación de PDF */
 .pdf-font-size {
-    font-size: 20px;
+    font-size: 12px;
+    /* Ajusta el tamaño de fuente según sea necesario */
 }
 
-/* Estilos alternativos para el formulario
-.form-group {
-    margin-bottom: 1.5rem;
+#aviso-privacidad {
+    width: 100%;
+    /* Asegura que el contenido se ajuste al ancho de la página */
+    max-width: 800px;
+    /* Ajusta el ancho máximo para asegurar que el contenido se ajuste a una página de tamaño carta */
+    margin: 0 auto;
+    /* Centra el contenido */
+    padding: 20px;
+    /* Añade espacio alrededor del contenido */
 }
-
-.form-control {
-    font-size: 1rem;
-    padding: 0.75rem;
-    border-radius: 0.25rem;
-    border: 1px solid #ced4da;
-}
-
-.form-control:focus {
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-*/
 
 .no-underline {
     text-decoration: none;
