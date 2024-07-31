@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import { mostrarAvisoPDF, mostrarAlertaExito, mostrarAlertaError } from '../utils/sweetAlertUtils';
 import { generarPDF, subirPDFaFirebase } from '../utils/pdfUtils';
 import { useGlobalState } from '../utils/GlobalState';
+import { formatearFecha } from '../utils/dateUtils';
 
 /**
  * Componente para la sección de Aviso de Privacidad.
@@ -97,7 +98,7 @@ function AvisoPrivacidad() {
                 <p>Nombre y firma del responsable legal del alumno: </p>
                 <hr className="signature-line" />
                 <p><b>{nombresResponsable} {apellidosResponsable}</b></p>
-                <p>{new Date().toLocaleDateString()}</p>
+                <p>{formatearFecha(new Date())}</p>
             </div>
             <div className="text-center mt-5">
                 <Button className="btn btn-primary no-print" onClick={handleAceptarContinuar}>Aceptar y Continuar</Button>
