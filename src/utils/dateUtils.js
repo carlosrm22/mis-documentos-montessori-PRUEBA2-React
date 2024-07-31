@@ -14,5 +14,5 @@ export const formatearFecha = (date) => {
     const mes = meses[date.getMonth()];
     const año = date.getFullYear();
 
-    return `A los ${dias} días del mes de ${mes} del año ${año}`;
+    return `A los ${dias} días del mes de ${mes} del año ${año}.`;
 };
