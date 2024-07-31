@@ -1,21 +1,21 @@
-// src/components/Dashboard.js
-
 import React, { useState, useEffect } from 'react';
 import { getDatosIniciales } from '../services/firebaseService';
 import Swal from 'sweetalert2';
+import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
 
 /**
  * Componente para el Dashboard.
  */
 const Dashboard = () => {
-    const [datosIniciales, setDatosIniciales] = useState(null);
+    const { formData } = useGlobalState();
+    const dispatch = useGlobalDispatch();
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchDatos = async () => {
             try {
                 const datos = await getDatosIniciales();
-                setDatosIniciales(datos);
+                dispatch({ type: 'SET_FORM_DATA', payload: datos });
             } catch (error) {
                 setError(error.message);
                 // Mostrar alerta de error al usuario
@@ -24,13 +24,13 @@ const Dashboard = () => {
         };
 
         fetchDatos();
-    }, []);
+    }, [dispatch]);
 
     if (error) {
         return <div>Error: {error}</div>;
     }
 
-    if (!datosIniciales) {
+    if (!formData) {
         return <div>Cargando datos...</div>;
     }
 
