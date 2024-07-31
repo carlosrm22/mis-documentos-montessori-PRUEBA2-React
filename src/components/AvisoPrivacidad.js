@@ -1,3 +1,4 @@
+// src/components/AvisoPrivacidad.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
@@ -9,7 +10,7 @@ import { formatearFecha } from '../utils/dateUtils';
 /**
  * Componente para la sección de Aviso de Privacidad.
  */
-function AvisoPrivacidad() {
+function AvisoPrivacidad({ setLoading }) {
     const navigate = useNavigate();
     const { formData } = useGlobalState();
 
@@ -25,6 +26,7 @@ function AvisoPrivacidad() {
         if (result.isConfirmed) {
             const storagePath = `pdfs/aviso-privacidad-${Date.now()}.pdf`;
             try {
+                setLoading(true);
                 const pdfBlob = await generarPDF('aviso-privacidad');
                 await subirPDFaFirebase(pdfBlob, storagePath);
                 mostrarAlertaExito();
@@ -40,8 +42,10 @@ function AvisoPrivacidad() {
                 link.click();
                 document.body.removeChild(link);
 
+                setLoading(false);
                 navigate('/contrato-reglamento'); // Navegar a ContratoReglamento
             } catch (error) {
+                setLoading(false);
                 mostrarAlertaError(error.message);
                 console.error('Error al generar y subir el PDF:', error);
             }

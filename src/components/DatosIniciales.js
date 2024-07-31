@@ -10,6 +10,7 @@ import { datosInicialesValidationSchema } from '../utils/validationSchemas';
 import { handleGuardarDatos } from '../utils/sweetAlertUtils';
 import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
 import Swal from 'sweetalert2';
+import { useLoading } from '../utils/LoadingContext';
 
 /**
  * Componente principal para los datos iniciales.
@@ -18,6 +19,7 @@ const DatosIniciales = () => {
     const navigate = useNavigate();
     const { formData } = useGlobalState();
     const dispatch = useGlobalDispatch();
+    const { setLoading } = useLoading();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,7 +56,7 @@ const DatosIniciales = () => {
                             <Formik
                                 initialValues={formData}
                                 validationSchema={datosInicialesValidationSchema}
-                                onSubmit={(values, { setSubmitting }) => handleGuardarDatos(values, data => dispatch({ type: 'SET_FORM_DATA', payload: data }), setSubmitting, navigate)}
+                                onSubmit={(values, { setSubmitting }) => handleGuardarDatos(values, data => dispatch({ type: 'SET_FORM_DATA', payload: data }), setSubmitting, navigate, setLoading)}
                                 enableReinitialize
                             >
                                 {({ values, isSubmitting, errors, touched, handleChange }) => (

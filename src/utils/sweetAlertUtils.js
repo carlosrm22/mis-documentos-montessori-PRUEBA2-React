@@ -1,3 +1,4 @@
+// src/utils/sweetAlertUtils.js
 import Swal from 'sweetalert2';
 import { saveData } from '../services/firebaseService';
 import { isValid, differenceInYears } from 'date-fns';
@@ -79,9 +80,10 @@ export const mostrarAlertaError = (mensaje) => {
  * @param {Function} setFormData - Función para actualizar el estado del formulario.
  * @param {Function} setSubmitting - Función para actualizar el estado de envío del formulario.
  * @param {Function} navigate - Función para navegar a otra ruta.
+ * @param {Function} setLoading - Función para actualizar el estado de carga.
  * @returns {Promise<void>}
  */
-export const handleGuardarDatos = async (values, setFormData, setSubmitting, navigate) => {
+export const handleGuardarDatos = async (values, setFormData, setSubmitting, navigate, setLoading) => {
     const result = await mostrarAvisoDatos();
 
     if (result.isConfirmed) {
@@ -95,11 +97,14 @@ export const handleGuardarDatos = async (values, setFormData, setSubmitting, nav
         setFormData(dataToSave);
 
         try {
+            setLoading(true);
             await saveData('datosIniciales', dataToSave);
             mostrarAlertaExito();
             setSubmitting(false);
+            setLoading(false);
             navigate('/aviso-privacidad'); // Navegar a AvisoPrivacidad
         } catch (error) {
+            setLoading(false);
             mostrarAlertaError(error.message);
             console.error('Error al guardar los datos:', error);
             setSubmitting(false);
