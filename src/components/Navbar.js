@@ -1,5 +1,4 @@
 // src/components/Navbar.js
-
 import React, { useState } from 'react';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -8,11 +7,10 @@ import { auth } from '../utils/firebaseConfig';
 
 /**
  * Componente para la barra de navegación.
- * Muestra diferentes enlaces dependiendo del estado de autenticación del usuario.
  */
 function NavigationBar() {
-  const [user] = useAuthState(auth); // Estado del usuario autenticado
-  const [expanded, setExpanded] = useState(false); // Estado para manejar la expansión del Navbar
+  const [user] = useAuthState(auth);
+  const [expanded, setExpanded] = useState(false);
 
   // Función para manejar el estado de expansión del Navbar
   const handleToggle = () => {
@@ -38,6 +36,11 @@ function NavigationBar() {
                 className="d-inline-block align-top"
               />
               Mi Cuenta Montessori
+              {user && (
+                <div style={{ fontSize: 'smaller', fontStyle: 'italic', marginTop: '5px' }}>
+                  {user.email}
+                </div>
+              )}
             </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="navbar-nav" onClick={handleToggle} />

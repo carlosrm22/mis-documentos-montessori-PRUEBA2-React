@@ -1,3 +1,4 @@
+// src/utils/firebaseConfig.js
 import { initializeApp } from 'firebase/app';
 import { getAnalytics, logEvent } from "firebase/analytics";
 import { getFirestore } from 'firebase/firestore';

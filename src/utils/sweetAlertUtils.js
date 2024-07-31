@@ -1,7 +1,7 @@
 // src/utils/sweetAlertUtils.js
 import Swal from 'sweetalert2';
-import { saveData } from '../services/firebaseService';
-import { isValid, differenceInYears } from 'date-fns';
+import { saveData, updateDatosIniciales } from '../services/firebaseService';
+import { calculateAge } from './dateUtils'; // Asegúrate de importar calculateAge
 
 /**
  * Muestra una alerta de aviso con opciones para aceptar y continuar o revisar.
@@ -88,7 +88,7 @@ export const handleGuardarDatos = async (values, setFormData, setSubmitting, nav
 
     if (result.isConfirmed) {
         const fechaNacimiento = new Date(values.fechaNacimientoAlumno);
-        const edadAlumno = isValid(fechaNacimiento) ? differenceInYears(new Date(), fechaNacimiento) : 0;
+        const edadAlumno = calculateAge(fechaNacimiento);
 
         // Guardar solo la primera palabra del nivel educativo seleccionado
         const nivelEducativo = values.nivelEducativo.split(' ')[0];

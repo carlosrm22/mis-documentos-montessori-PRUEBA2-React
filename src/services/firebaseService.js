@@ -1,5 +1,4 @@
 // src/services/firebaseService.js
-
 import { db, auth } from '../utils/firebaseConfig';
 import { collection, addDoc, getDocs, query, where, updateDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
@@ -30,7 +29,6 @@ const saveData = async (collectionName, data) => {
     const user = auth.currentUser;
     if (!user) throw new Error('No hay usuario logueado');
 
-    // Añadir el UID del usuario a los datos
     const dataWithUID = { ...data, uid: user.uid };
 
     try {
@@ -52,10 +50,7 @@ const getDatosIniciales = async () => {
 
     const q = query(collection(db, 'datosIniciales'), where('uid', '==', user.uid));
     const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) {
-        console.log('No se encontraron datos iniciales');
-        return null;
-    }
+    if (querySnapshot.empty) return null;
 
     return querySnapshot.docs[0].data();
 };

@@ -1,3 +1,4 @@
+// src/components/DatosPersonales.js
 import React from 'react';
 
 /**

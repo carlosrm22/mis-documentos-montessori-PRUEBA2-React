@@ -16,3 +16,18 @@ export const formatearFecha = (date) => {
 
     return `A los ${dias} días del mes de ${mes} del año ${año}.`;
 };
+
+/**
+ * Calcula la edad a partir de una fecha de nacimiento.
+ * @param {Date} fechaNacimiento - La fecha de nacimiento.
+ * @returns {number} - La edad calculada.
+ */
+export const calculateAge = (fechaNacimiento) => {
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+    const mes = hoy.getMonth() - fechaNacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+        edad--;
+    }
+    return edad;
+};

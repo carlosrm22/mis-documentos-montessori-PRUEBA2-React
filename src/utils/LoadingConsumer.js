@@ -1,3 +1,4 @@
+// src/utils/LoadingConsumer.js
 import React from 'react';
 import { useLoading } from '../utils/LoadingContext';
 
