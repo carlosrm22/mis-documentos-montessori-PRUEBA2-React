@@ -1,5 +1,3 @@
-// src/components/DatosIniciales.js
-
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
@@ -28,6 +26,8 @@ const DatosIniciales = ({ formData, setFormData }) => {
                 }
             } catch (error) {
                 console.error("Error fetching initial data:", error);
+                // Mostrar alerta de error al usuario
+                Swal.fire('Error al cargar datos iniciales', error.message, 'error');
             }
         };
         fetchData();
