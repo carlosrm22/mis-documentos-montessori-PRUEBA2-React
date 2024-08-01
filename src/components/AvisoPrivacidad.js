@@ -10,6 +10,9 @@ import { formatearFecha } from '../utils/dateUtils';
 import { auth } from '../utils/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import PrivacidadPDF from './PrivacidadPDF';
+import '../styles/AvisoPrivacidad.css';
+import PropTypes from 'prop-types';
+
 
 const AvisoPrivacidad = ({ setLoading }) => {
     const navigate = useNavigate();
@@ -131,6 +134,10 @@ const AvisoPrivacidad = ({ setLoading }) => {
             </div>
         </div>
     );
+};
+
+AvisoPrivacidad.propTypes = {
+    setLoading: PropTypes.func.isRequired
 };
 
 export default AvisoPrivacidad;

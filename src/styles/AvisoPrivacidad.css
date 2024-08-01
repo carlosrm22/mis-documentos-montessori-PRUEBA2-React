@@ -1,0 +1,16 @@
+/* src/styles/AvisoPrivacidad.css */
+.signature-line {
+    border-top: 1px solid #000;
+    width: 200px;
+    margin: 0 auto;
+}
+
+.no-print {
+    display: none;
+}
+
+@media print {
+    .no-print {
+        display: none;
+    }
+}
