@@ -12,13 +12,13 @@ const ContratoReglamento = () => {
         return <div>Cargando datos...</div>;
     }
 
-    const { nombresResponsable, apellidosResponsable } = formData;
+    const { nombresResponsable, apellidosResponsable, nivelEducativo } = formData;
 
     return (
         <div className="container mt-5">
             <h1 className="text-center p-4">CONTRATO DE PRESTACIÓN DE SERVICIOS EDUCATIVOS</h1>
             <h2 className="text-end">CICLO ESCOLAR 2021-2022</h2>
-            <h3 className="text-end p-4">NIVEL EDUCATIVO {formData.nivelEducativo}</h3>
+            <h3 className="text-end p-4">NIVEL EDUCATIVO {nivelEducativo}</h3>
             <p>
                 CONTRATO DE PRESTACIÓN DE SERVICIOS EDUCATIVOS QUE CELEBRAN POR UNA PARTE LA ASOCIACIÓN
                 MONTESSORI DE MÉXICO A.C. Y A QUIEN EN LO SUCESIVO SE LE DENOMINARA “EL PRESTADOR” CON DOMICILIO
