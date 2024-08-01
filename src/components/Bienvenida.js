@@ -1,13 +1,11 @@
 // src/components/Bienvenida.js
-
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Card, Form, FloatingLabel } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../utils/firebaseConfig';
 import Swal from 'sweetalert2';
+import PropTypes from 'prop-types';
 
 const Bienvenida = () => {
     const navigate = useNavigate();
@@ -118,6 +116,12 @@ const Bienvenida = () => {
             </Row>
         </Container>
     );
+};
+
+Bienvenida.propTypes = {
+    email: PropTypes.string,
+    password: PropTypes.string,
+    handleLogin: PropTypes.func
 };
 
 export default Bienvenida;
