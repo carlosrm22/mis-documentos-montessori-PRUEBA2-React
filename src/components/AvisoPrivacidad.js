@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { mostrarAvisoPDF, mostrarAlertaExito, mostrarAlertaError } from '../utils/sweetAlertUtils';
-import { generarPDF, subirPDFaFirebase, descargarPDFdeFirebase } from '../utils/pdfUtils'; // Asegúrate de importar la función para descargar
+import { generarPDF, subirPDFaFirebase, descargarPDFdeFirebase } from '../utils/pdfUtils';
 import { useGlobalState } from '../utils/GlobalState';
 import { formatearFecha } from '../utils/dateUtils';
 import { auth } from '../utils/firebaseConfig';
@@ -21,12 +21,12 @@ function AvisoPrivacidad({ setLoading }) {
     useEffect(() => {
         if (user) {
             // Aquí se puede agregar la lógica para verificar si el PDF ya está generado
-            const storagePath = `pdfs/aviso-privacidad-${user.uid}.pdf`;
+            const storagePath = `pdfs/aviso-privacidad-${formData.nombresAlumno}-${formData.apellidosAlumno}-${user.uid}.pdf`;
             descargarPDFdeFirebase(storagePath)
                 .then(url => setPdfUrl(url))
                 .catch(error => console.error('Error al descargar el PDF:', error));
         }
-    }, [user]);
+    }, [user, formData]);
 
     if (!formData || !formData.nombresAlumno) {
         return <div>Cargando datos...</div>;
@@ -35,7 +35,8 @@ function AvisoPrivacidad({ setLoading }) {
     const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
 
     const handleAceptarContinuar = async () => {
-        const storagePath = `pdfs/aviso-privacidad-${user.uid}.pdf`;
+        const nombreArchivo = `aviso-privacidad-${nombresAlumno}-${apellidosAlumno}-${user.uid}.pdf`;
+        const storagePath = `pdfs/${nombreArchivo}`;
 
         if (pdfUrl) {
             // Descargar el PDF desde Firebase Storage
@@ -50,6 +51,14 @@ function AvisoPrivacidad({ setLoading }) {
                     const url = await descargarPDFdeFirebase(storagePath);
                     setPdfUrl(url);
                     mostrarAlertaExito();
+
+                    // Crear un enlace de descarga y simular un clic para descargar el archivo PDF
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = nombreArchivo;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
 
                     setLoading(false);
                     navigate('/contrato-reglamento'); // Navegar a ContratoReglamento
