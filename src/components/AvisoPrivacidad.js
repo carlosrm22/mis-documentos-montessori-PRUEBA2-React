@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import { PDFDownloadLink, pdf } from '@react-pdf/renderer';
+import { pdf } from '@react-pdf/renderer';
 import { mostrarAvisoPDF, mostrarAlertaExito, mostrarAlertaError } from '../utils/sweetAlertUtils';
 import { subirPDFaFirebase, descargarPDFdeFirebase } from '../utils/pdfUtils';
 import { useGlobalState } from '../utils/GlobalState';
@@ -10,9 +10,6 @@ import { auth } from '../utils/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import PrivacidadPDF from './PrivacidadPDF';
 
-/**
- * Componente para la sección de Aviso de Privacidad.
- */
 const AvisoPrivacidad = ({ setLoading }) => {
     const navigate = useNavigate();
     const { formData } = useGlobalState();
@@ -39,6 +36,7 @@ const AvisoPrivacidad = ({ setLoading }) => {
         const storagePath = `pdfs/${nombreArchivo}`;
 
         if (pdfUrl) {
+            // Descargar el PDF desde Firebase Storage
             window.open(pdfUrl, '_blank');
         } else {
             const result = await mostrarAvisoPDF();
@@ -50,6 +48,13 @@ const AvisoPrivacidad = ({ setLoading }) => {
                     const url = await descargarPDFdeFirebase(storagePath);
                     setPdfUrl(url);
                     mostrarAlertaExito();
+
+                    // Descargar automáticamente el PDF
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = nombreArchivo;
+                    link.click();
+
                     setLoading(false);
                     navigate('/contrato-reglamento');
                 } catch (error) {
@@ -122,17 +127,9 @@ const AvisoPrivacidad = ({ setLoading }) => {
                 <Button className="btn btn-primary no-print" onClick={handleAceptarContinuar}>
                     {pdfUrl ? 'Volver a descargar' : 'Aceptar y Continuar'}
                 </Button>
-                {pdfUrl && (
-                    <PDFDownloadLink
-                        document={<PrivacidadPDF formData={formData} formatearFecha={formatearFecha} />}
-                        fileName={`aviso-privacidad-${nombresAlumno} ${apellidosAlumno}-${user.uid}.pdf`}
-                    >
-                        {({ blob, url, loading, error }) => (loading ? 'Cargando documento...' : 'Descargar PDF')}
-                    </PDFDownloadLink>
-                )}
             </div>
         </div>
     );
-}
+};
 
 export default AvisoPrivacidad;
