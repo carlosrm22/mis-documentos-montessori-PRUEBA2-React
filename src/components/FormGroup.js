@@ -1,5 +1,6 @@
 // src/components/FormGroup.js
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Field, ErrorMessage } from 'formik';
 
 /**
@@ -24,5 +25,15 @@ const FormGroup = ({ name, label, type = 'text', required = false, readOnly = fa
         <ErrorMessage name={name} component="div" className="text-danger" />
     </div>
 );
+
+FormGroup.propTypes = {
+    name: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    required: PropTypes.bool,
+    readOnly: PropTypes.bool,
+    helperText: PropTypes.string,
+    onChange: PropTypes.func,
+};
 
 export default FormGroup;

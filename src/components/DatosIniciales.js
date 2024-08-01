@@ -1,7 +1,7 @@
 // src/components/DatosIniciales.js
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { getDatosIniciales } from '../services/firebaseService';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import FormGroup from './FormGroup';
@@ -14,9 +14,6 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../utils/firebaseConfig';
 import { calculateAge } from '../utils/dateUtils';
 
-/**
- * Componente principal para los datos iniciales.
- */
 const DatosIniciales = () => {
     const navigate = useNavigate();
     const { formData } = useGlobalState();
@@ -26,7 +23,7 @@ const DatosIniciales = () => {
 
     useEffect(() => {
         if (loading) {
-            return; // Muestra un spinner o algo similar mientras se carga la autenticación
+            return;
         }
         if (!user) {
             navigate('/login');
@@ -50,10 +47,9 @@ const DatosIniciales = () => {
     }, [dispatch, navigate, user, loading]);
 
     if (loading) {
-        return <div>Cargando...</div>; // Muestra un mensaje de carga mientras se verifica la autenticación
+        return <div>Cargando...</div>;
     }
 
-    // Solo leer si ya hay datos guardados en formData y no están vacíos
     const isReadOnly = formData && Object.keys(formData).length > 0 && formData.nombresAlumno !== '';
 
     return (
@@ -87,7 +83,7 @@ const DatosIniciales = () => {
                                 onSubmit={(values, { setSubmitting }) => handleGuardarDatos(values, data => dispatch({ type: 'SET_FORM_DATA', payload: data }), setSubmitting, navigate, setLoading)}
                                 enableReinitialize
                             >
-                                {({ values, isSubmitting, errors, touched, handleChange, setFieldValue }) => (
+                                {({ values, isSubmitting, handleChange, setFieldValue, errors, touched }) => (
                                     <Form>
                                         <Row>
                                             <Col md={6}>
@@ -110,6 +106,7 @@ const DatosIniciales = () => {
                                                             <option value="Preescolar (Casa de niños)">Preescolar (Casa de niños)</option>
                                                             <option value="Primaria (Taller)">Primaria (Taller)</option>
                                                         </Field>
+                                                        <ErrorMessage name="nivelEducativo" component="div" className="text-danger" />
                                                     </div>
                                                     <FormGroup name="apellidosAlumno" label="Apellidos del alumno" required readOnly={isReadOnly} onChange={handleChange} />
                                                     <FormGroup name="nombresAlumno" label="Nombre(s) del alumno" required readOnly={isReadOnly} onChange={handleChange} />

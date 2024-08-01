@@ -1,5 +1,20 @@
 // src/components/DatosPersonales.js
 import React from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import FormGroup from './FormGroup';
+import { Button } from 'react-bootstrap';
+
+const validationSchema = Yup.object().shape({
+    nombresAlumno: Yup.string().required('Nombre del alumno es requerido'),
+    apellidosAlumno: Yup.string().required('Apellidos del alumno son requeridos'),
+    lugarNacimientoAlumno: Yup.string().required('Lugar de nacimiento es requerido'),
+    nombresMadre: Yup.string().required('Nombre de la madre es requerido'),
+    apellidosMadre: Yup.string().required('Apellidos de la madre son requeridos'),
+    nombresPadre: Yup.string().required('Nombre del padre es requerido'),
+    apellidosPadre: Yup.string().required('Apellidos del padre son requeridos'),
+    domicilioPadres: Yup.string().required('Domicilio es requerido')
+});
 
 /**
  * Componente para los datos personales del alumno y los padres.
@@ -29,37 +44,28 @@ function DatosPersonales({ formData, setFormData }) {
                 información se proporciona de manera libre. Los datos e información aquí asentados se encuentran relacionados
                 con el aviso de privacidad que me ha sido dado a conocer previamente, mismo que de forma separada he
                 firmado para constancia y aceptación:</p>
-            <form>
-                <FormGroup label="Nombre completo del alumno(a)" id="nombreAlumno" type="text" value={`${formData.nombresAlumno} ${formData.apellidosAlumno}`} readOnly />
-                <FormGroup label="Edad" id="edadAlumno" type="text" value={formData.edadAlumno} readOnly />
-                <FormGroup label="Lugar de nacimiento" id="lugarNacimientoAlumno" type="text" value={formData.lugarNacimientoAlumno} handleChange={handleChange} required smallText="Ejemplo: Av. 2 No. 48 Colonia San Pedro de los Pinos, Benito Juárez, C.P. 03800, CDMX, México" />
-                <FormGroup label="Nombre(s) de la madre o tutor" id="nombresMadre" type="text" value={formData.nombresMadre} handleChange={handleChange} required />
-                <FormGroup label="Apellidos de la madre o tutor" id="apellidosMadre" type="text" value={formData.apellidosMadre} handleChange={handleChange} required />
-                <FormGroup label="Nombre(s) del padre o tutor" id="nombresPadre" type="text" value={formData.nombresPadre} handleChange={handleChange} required />
-                <FormGroup label="Apellidos del padre o tutor" id="apellidosPadre" type="text" value={formData.apellidosPadre} handleChange={handleChange} required />
-                <FormGroup label="Domicilio particular de los padres o tutores" id="domicilioPadres" type="text" value={formData.domicilioPadres} handleChange={handleChange} required />
-            </form>
+            <Formik
+                initialValues={formData}
+                validationSchema={validationSchema}
+                onSubmit={(values) => setFormData(values)}
+            >
+                {({ isSubmitting }) => (
+                    <Form>
+                        <FormGroup name="nombresAlumno" label="Nombre completo del alumno(a)" type="text" value={formData.nombresAlumno} handleChange={handleChange} required />
+                        <FormGroup name="apellidosAlumno" label="Apellidos del alumno" type="text" value={formData.apellidosAlumno} handleChange={handleChange} required />
+                        <FormGroup name="edadAlumno" label="Edad" type="text" value={formData.edadAlumno} readOnly />
+                        <FormGroup name="lugarNacimientoAlumno" label="Lugar de nacimiento" type="text" value={formData.lugarNacimientoAlumno} handleChange={handleChange} required />
+                        <FormGroup name="nombresMadre" label="Nombre(s) de la madre o tutor" type="text" value={formData.nombresMadre} handleChange={handleChange} required />
+                        <FormGroup name="apellidosMadre" label="Apellidos de la madre o tutor" type="text" value={formData.apellidosMadre} handleChange={handleChange} required />
+                        <FormGroup name="nombresPadre" label="Nombre(s) del padre o tutor" type="text" value={formData.nombresPadre} handleChange={handleChange} required />
+                        <FormGroup name="apellidosPadre" label="Apellidos del padre o tutor" type="text" value={formData.apellidosPadre} handleChange={handleChange} required />
+                        <FormGroup name="domicilioPadres" label="Domicilio particular de los padres o tutores" type="text" value={formData.domicilioPadres} handleChange={handleChange} required />
+                        <Button type="submit" disabled={isSubmitting}>Guardar</Button>
+                    </Form>
+                )}
+            </Formik>
         </div>
     );
 }
-
-/**
- * Componente reutilizable para un grupo de formulario.
- * @param {Object} props - Las propiedades del componente.
- * @param {string} props.label - La etiqueta del campo.
- * @param {string} props.id - El ID del campo.
- * @param {string} props.type - El tipo de campo.
- * @param {string} props.value - El valor del campo.
- * @param {Function} props.handleChange - La función para manejar cambios en el campo.
- * @param {boolean} [props.readOnly=false] - Si el campo es de solo lectura.
- * @param {string} [props.smallText=null] - El texto pequeño de ayuda.
- */
-const FormGroup = ({ label, id, type, value, handleChange, readOnly = false, smallText = null }) => (
-    <div className="form-group">
-        <label htmlFor={id}>{label}: <span className="text-danger">*</span></label>
-        <input type={type} className="form-control" id={id} value={value} onChange={handleChange} readOnly={readOnly} required />
-        {smallText && <small className="form-text text-muted">{smallText}</small>}
-    </div>
-);
 
 export default DatosPersonales;

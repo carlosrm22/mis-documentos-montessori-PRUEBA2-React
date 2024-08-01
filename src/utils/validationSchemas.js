@@ -1,14 +1,15 @@
 // src/utils/validationSchemas.js
-import * as yup from 'yup';
+import * as Yup from 'yup';
 
-export const datosInicialesValidationSchema = yup.object().shape({
-    apellidosAlumno: yup.string().required('Este campo es obligatorio'),
-    nombresAlumno: yup.string().required('Este campo es obligatorio'),
-    fechaNacimientoAlumno: yup.date().required('Este campo es obligatorio').nullable(),
-    curpAlumno: yup.string().matches(/^([A-Z]{4}\d{6}[A-Z]{6}\d{2})$/, 'CURP inválido').required('Este campo es obligatorio'),
-    apellidosResponsable: yup.string().required('Este campo es obligatorio'),
-    nombresResponsable: yup.string().required('Este campo es obligatorio'),
-    telefonoContacto: yup.string().matches(/^\d{10}$/, 'Número de teléfono inválido').required('Este campo es obligatorio'),
-    emailContacto: yup.string().email('Correo electrónico inválido').required('Este campo es obligatorio'),
-    nivelEducativo: yup.string().required('Este campo es obligatorio')
+export const datosInicialesValidationSchema = Yup.object().shape({
+    nivelEducativo: Yup.string().required('Nivel educativo es requerido'),
+    apellidosAlumno: Yup.string().required('Apellidos del alumno son requeridos'),
+    nombresAlumno: Yup.string().required('Nombres del alumno son requeridos'),
+    fechaNacimientoAlumno: Yup.date().required('Fecha de nacimiento es requerida'),
+    edadAlumno: Yup.number().required('Edad del alumno es requerida').min(0, 'Edad no puede ser negativa'),
+    curpAlumno: Yup.string().required('CURP del alumno es requerida'),
+    apellidosResponsable: Yup.string().required('Apellidos del responsable son requeridos'),
+    nombresResponsable: Yup.string().required('Nombres del responsable son requeridos'),
+    telefonoContacto: Yup.string().required('Teléfono de contacto es requerido'),
+    emailContacto: Yup.string().email('Email no es válido').required('Email de contacto es requerido'),
 });

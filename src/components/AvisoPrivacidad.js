@@ -10,15 +10,12 @@ import { formatearFecha } from '../utils/dateUtils';
 import { auth } from '../utils/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import PrivacidadPDF from './PrivacidadPDF';
-import '../styles/AvisoPrivacidad.css';
-import PropTypes from 'prop-types';
-
 
 const AvisoPrivacidad = ({ setLoading }) => {
     const navigate = useNavigate();
     const { formData } = useGlobalState();
     const [pdfUrl, setPdfUrl] = useState(null);
-    const [user, loading, error] = useAuthState(auth);
+    const [user] = useAuthState(auth);  // Remove unused variables 'loading' and 'error'
 
     useEffect(() => {
         if (user) {
@@ -27,7 +24,7 @@ const AvisoPrivacidad = ({ setLoading }) => {
                 .then(url => setPdfUrl(url))
                 .catch(error => console.error('Error al descargar el PDF:', error));
         }
-    }, [user]);
+    }, [user, formData.apellidosAlumno, formData.nombresAlumno]); // Add missing dependencies
 
     if (!formData || !formData.nombresAlumno) {
         return <div>Cargando datos...</div>;
@@ -40,7 +37,6 @@ const AvisoPrivacidad = ({ setLoading }) => {
         const storagePath = `pdfs/${nombreArchivo}`;
 
         if (pdfUrl) {
-            // Descargar el PDF desde Firebase Storage
             window.open(pdfUrl, '_blank');
         } else {
             const result = await mostrarAvisoPDF();
@@ -53,7 +49,6 @@ const AvisoPrivacidad = ({ setLoading }) => {
                     setPdfUrl(url);
                     mostrarAlertaExito();
 
-                    // Descargar automáticamente el PDF
                     const link = document.createElement('a');
                     link.href = url;
                     link.download = nombreArchivo;
@@ -134,10 +129,6 @@ const AvisoPrivacidad = ({ setLoading }) => {
             </div>
         </div>
     );
-};
-
-AvisoPrivacidad.propTypes = {
-    setLoading: PropTypes.func.isRequired
 };
 
 export default AvisoPrivacidad;

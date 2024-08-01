@@ -6,17 +6,21 @@ import { login } from '../services/firebaseService';
 import Swal from 'sweetalert2';
 import AuthLayout from './AuthLayout';
 import { useGlobalDispatch } from '../utils/GlobalState';
+import { Formik, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Email no válido').required('Email es requerido'),
+    password: Yup.string().required('Contraseña es requerida')
+});
 
 const Login = ({ onSuccess }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const dispatch = useGlobalDispatch();
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
+    const handleLogin = async (values, { setSubmitting }) => {
         try {
-            const user = await login(email, password);
+            const user = await login(values.email, values.password);
             dispatch({ type: 'SET_USER', payload: user });
             Swal.fire('Inicio de sesión exitoso', '', 'success');
             if (onSuccess) {
@@ -38,36 +42,47 @@ const Login = ({ onSuccess }) => {
                 }
             });
         }
+        setSubmitting(false);
     };
 
     return (
         <AuthLayout>
             <h1 className="text-center mb-4">Inicio de Sesión</h1>
-            <Form onSubmit={handleLogin}>
-                <Form.Group controlId="formBasicEmail" className="mb-3">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                        type="email"
-                        placeholder="Ingresa tu email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </Form.Group>
-                <Form.Group controlId="formBasicPassword" className="mb-3">
-                    <Form.Label>Contraseña</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="Ingresa tu contraseña"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </Form.Group>
-                <Button variant="primary" type="submit" className="w-100 mt-3">
-                    Iniciar Sesión
-                </Button>
-            </Form>
+            <Formik
+                initialValues={{ email: '', password: '' }}
+                validationSchema={validationSchema}
+                onSubmit={handleLogin}
+            >
+                {({ isSubmitting }) => (
+                    <Form className="text-start">
+                        <Form.Group controlId="formBasicEmail" className="mb-3">
+                            <Form.Label>Email</Form.Label>
+                            <Field
+                                name="email"
+                                type="email"
+                                placeholder="Ingresa tu email"
+                                className="form-control"
+                                required
+                            />
+                            <ErrorMessage name="email" component="div" className="text-danger" />
+                        </Form.Group>
+                        <Form.Group controlId="formBasicPassword" className="mb-3">
+                            <Form.Label>Contraseña</Form.Label>
+                            <Field
+                                name="password"
+                                type="password"
+                                placeholder="Ingresa tu contraseña"
+                                className="form-control"
+                                required
+                            />
+                            <ErrorMessage name="password" component="div" className="text-danger" />
+                        </Form.Group>
+                        <Button variant="primary" type="submit" className="w-100 mt-3" disabled={isSubmitting}>
+                            {isSubmitting ? 'Cargando...' : 'Iniciar Sesión'}
+                        </Button>
+                    </Form>
+                )}
+            </Formik>
         </AuthLayout>
     );
 };
