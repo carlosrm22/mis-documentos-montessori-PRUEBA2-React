@@ -1,0 +1,8 @@
+/* src/styles/AuthLayout.css */
+.auth-container {
+    min-height: 50vh;
+}
+
+.logo-image {
+    max-height: 100px;
+}
