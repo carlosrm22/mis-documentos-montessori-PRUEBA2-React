@@ -38,18 +38,6 @@
     margin: 100px auto 0 auto;
 }
 
-/* Estilo aumentado para la generación de PDF */
-.pdf-font-size {
-    font-size: 12px;
-}
-
-#aviso-privacidad {
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
 /* Estilos generales */
 body {
     padding-top: 56px;

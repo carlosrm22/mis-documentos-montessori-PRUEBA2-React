@@ -1,18 +1,19 @@
-// src/components/AvisoPrivacidad.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { PDFDownloadLink, pdf } from '@react-pdf/renderer';
 import { mostrarAvisoPDF, mostrarAlertaExito, mostrarAlertaError } from '../utils/sweetAlertUtils';
-import { generarPDF, subirPDFaFirebase, descargarPDFdeFirebase } from '../utils/pdfUtils';
+import { subirPDFaFirebase, descargarPDFdeFirebase } from '../utils/pdfUtils';
 import { useGlobalState } from '../utils/GlobalState';
 import { formatearFecha } from '../utils/dateUtils';
 import { auth } from '../utils/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import PrivacidadPDF from './PrivacidadPDF';
 
 /**
  * Componente para la sección de Aviso de Privacidad.
  */
-function AvisoPrivacidad({ setLoading }) {
+const AvisoPrivacidad = ({ setLoading }) => {
     const navigate = useNavigate();
     const { formData } = useGlobalState();
     const [pdfUrl, setPdfUrl] = useState(null);
@@ -20,13 +21,12 @@ function AvisoPrivacidad({ setLoading }) {
 
     useEffect(() => {
         if (user) {
-            // Aquí se puede agregar la lógica para verificar si el PDF ya está generado
-            const storagePath = `pdfs/aviso-privacidad-${formData.nombresAlumno}-${formData.apellidosAlumno}-${user.uid}.pdf`;
+            const storagePath = `pdfs/aviso-privacidad-${formData.nombresAlumno} ${formData.apellidosAlumno}-${user.uid}.pdf`;
             descargarPDFdeFirebase(storagePath)
                 .then(url => setPdfUrl(url))
                 .catch(error => console.error('Error al descargar el PDF:', error));
         }
-    }, [user, formData]);
+    }, [user]);
 
     if (!formData || !formData.nombresAlumno) {
         return <div>Cargando datos...</div>;
@@ -35,33 +35,23 @@ function AvisoPrivacidad({ setLoading }) {
     const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
 
     const handleAceptarContinuar = async () => {
-        const nombreArchivo = `aviso-privacidad-${nombresAlumno}-${apellidosAlumno}-${user.uid}.pdf`;
+        const nombreArchivo = `aviso-privacidad-${nombresAlumno} ${apellidosAlumno}-${user.uid}.pdf`;
         const storagePath = `pdfs/${nombreArchivo}`;
 
         if (pdfUrl) {
-            // Descargar el PDF desde Firebase Storage
             window.open(pdfUrl, '_blank');
         } else {
             const result = await mostrarAvisoPDF();
             if (result.isConfirmed) {
                 try {
                     setLoading(true);
-                    const pdfBlob = await generarPDF('aviso-privacidad');
+                    const pdfBlob = await generarPDFconReactPDF(formData, formatearFecha);
                     await subirPDFaFirebase(pdfBlob, storagePath);
                     const url = await descargarPDFdeFirebase(storagePath);
                     setPdfUrl(url);
                     mostrarAlertaExito();
-
-                    // Crear un enlace de descarga y simular un clic para descargar el archivo PDF
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = nombreArchivo;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-
                     setLoading(false);
-                    navigate('/contrato-reglamento'); // Navegar a ContratoReglamento
+                    navigate('/contrato-reglamento');
                 } catch (error) {
                     setLoading(false);
                     mostrarAlertaError(error.message);
@@ -69,6 +59,11 @@ function AvisoPrivacidad({ setLoading }) {
                 }
             }
         }
+    };
+
+    const generarPDFconReactPDF = async (formData, formatearFecha) => {
+        const blob = await pdf(<PrivacidadPDF formData={formData} formatearFecha={formatearFecha} />).toBlob();
+        return blob;
     };
 
     return (
@@ -127,6 +122,14 @@ function AvisoPrivacidad({ setLoading }) {
                 <Button className="btn btn-primary no-print" onClick={handleAceptarContinuar}>
                     {pdfUrl ? 'Volver a descargar' : 'Aceptar y Continuar'}
                 </Button>
+                {pdfUrl && (
+                    <PDFDownloadLink
+                        document={<PrivacidadPDF formData={formData} formatearFecha={formatearFecha} />}
+                        fileName={`aviso-privacidad-${nombresAlumno} ${apellidosAlumno}-${user.uid}.pdf`}
+                    >
+                        {({ blob, url, loading, error }) => (loading ? 'Cargando documento...' : 'Descargar PDF')}
+                    </PDFDownloadLink>
+                )}
             </div>
         </div>
     );

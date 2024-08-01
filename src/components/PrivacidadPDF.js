@@ -1,4 +1,3 @@
-// src/components/PrivacidadPDF.js
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
@@ -6,7 +5,7 @@ import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 const styles = StyleSheet.create({
     page: {
         padding: 30,
-        fontSize: 10, // Ajustar el tamaño de la fuente para que todo quepa en una página
+        fontSize: 10,
         lineHeight: 1.5
     },
     title: {
