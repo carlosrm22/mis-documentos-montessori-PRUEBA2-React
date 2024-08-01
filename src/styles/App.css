@@ -18,7 +18,6 @@
     text-decoration: none;
 }
 
-/* Estilos para el botón flotante de WhatsApp al pasar el ratón */
 .float-whatsapp:hover {
     background-color: white;
     color: #25d366;
@@ -27,7 +26,6 @@
     border-color: dimgray;
 }
 
-/* Icono de WhatsApp dentro del botón flotante */
 .float-whatsapp i {
     font-size: 24px;
     margin-right: 10px;
@@ -43,21 +41,16 @@
 /* Estilo aumentado para la generación de PDF */
 .pdf-font-size {
     font-size: 12px;
-    /* Ajusta el tamaño de fuente según sea necesario */
 }
 
 #aviso-privacidad {
     width: 100%;
-    /* Asegura que el contenido se ajuste al ancho de la página */
     max-width: 800px;
-    /* Ajusta el ancho máximo para asegurar que el contenido se ajuste a una página de tamaño carta */
     margin: 0 auto;
-    /* Centra el contenido */
     padding: 20px;
-    /* Añade espacio alrededor del contenido */
 }
 
-/* src/styles/App.css */
+/* Estilos generales */
 body {
     padding-top: 56px;
 }
@@ -79,9 +72,10 @@ body {
 
 /* Estilo para indicador de carga */
 .loading-spinner {
-    position: fix               ed;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+    z-index: 1000;
+    /* Asegúrate de que esté por encima de otros elementos */
 }
