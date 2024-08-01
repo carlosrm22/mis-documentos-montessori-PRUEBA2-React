@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import AuthLayout from './AuthLayout';
 import { useGlobalDispatch } from '../utils/GlobalState';
 
-const Login = () => {
+const Login = ({ onSuccess }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -19,9 +19,24 @@ const Login = () => {
             const user = await login(email, password);
             dispatch({ type: 'SET_USER', payload: user });
             Swal.fire('Inicio de sesión exitoso', '', 'success');
-            navigate('/dashboard');
+            if (onSuccess) {
+                onSuccess();
+            } else {
+                navigate('/dashboard');
+            }
         } catch (error) {
-            Swal.fire('Error al iniciar sesión', error.message, 'error');
+            Swal.fire({
+                icon: 'error',
+                title: 'No se pudo iniciar sesión',
+                text: 'Usuario o contraseña no encontrada, por favor intenta de nuevo o regístrate.',
+                showCancelButton: true,
+                confirmButtonText: 'Registrarse',
+                cancelButtonText: 'Regresar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate('/register');
+                }
+            });
         }
     };
 
