@@ -1,6 +1,6 @@
 // src/components/AuthLayout.js
-
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 
 const AuthLayout = ({ children }) => {
@@ -24,6 +24,10 @@ const AuthLayout = ({ children }) => {
             </Row>
         </Container>
     );
+};
+
+AuthLayout.propTypes = {
+    children: PropTypes.node.isRequired
 };
 
 export default AuthLayout;
