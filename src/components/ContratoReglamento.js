@@ -1,3 +1,4 @@
+// src/components/ContratoReglamento.js
 import React from 'react';
 import { useGlobalState } from '../utils/GlobalState';
 
