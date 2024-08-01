@@ -1,11 +1,13 @@
 // src/components/AvisoPrivacidad.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { mostrarAvisoPDF, mostrarAlertaExito, mostrarAlertaError } from '../utils/sweetAlertUtils';
-import { generarPDF, subirPDFaFirebase } from '../utils/pdfUtils';
+import { generarPDF, subirPDFaFirebase, descargarPDFdeFirebase } from '../utils/pdfUtils'; // Asegúrate de importar la función para descargar
 import { useGlobalState } from '../utils/GlobalState';
 import { formatearFecha } from '../utils/dateUtils';
+import { auth } from '../utils/firebaseConfig';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 /**
  * Componente para la sección de Aviso de Privacidad.
@@ -13,6 +15,18 @@ import { formatearFecha } from '../utils/dateUtils';
 function AvisoPrivacidad({ setLoading }) {
     const navigate = useNavigate();
     const { formData } = useGlobalState();
+    const [pdfUrl, setPdfUrl] = useState(null);
+    const [user, loading, error] = useAuthState(auth);
+
+    useEffect(() => {
+        if (user) {
+            // Aquí se puede agregar la lógica para verificar si el PDF ya está generado
+            const storagePath = `pdfs/aviso-privacidad-${user.uid}.pdf`;
+            descargarPDFdeFirebase(storagePath)
+                .then(url => setPdfUrl(url))
+                .catch(error => console.error('Error al descargar el PDF:', error));
+        }
+    }, [user]);
 
     if (!formData || !formData.nombresAlumno) {
         return <div>Cargando datos...</div>;
@@ -21,33 +35,29 @@ function AvisoPrivacidad({ setLoading }) {
     const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
 
     const handleAceptarContinuar = async () => {
-        const result = await mostrarAvisoPDF();
+        const storagePath = `pdfs/aviso-privacidad-${user.uid}.pdf`;
 
-        if (result.isConfirmed) {
-            const storagePath = `pdfs/aviso-privacidad-${Date.now()}.pdf`;
-            try {
-                setLoading(true);
-                const pdfBlob = await generarPDF('aviso-privacidad');
-                await subirPDFaFirebase(pdfBlob, storagePath);
-                mostrarAlertaExito();
+        if (pdfUrl) {
+            // Descargar el PDF desde Firebase Storage
+            window.open(pdfUrl, '_blank');
+        } else {
+            const result = await mostrarAvisoPDF();
+            if (result.isConfirmed) {
+                try {
+                    setLoading(true);
+                    const pdfBlob = await generarPDF('aviso-privacidad');
+                    await subirPDFaFirebase(pdfBlob, storagePath);
+                    const url = await descargarPDFdeFirebase(storagePath);
+                    setPdfUrl(url);
+                    mostrarAlertaExito();
 
-                // Crear un enlace de descarga y simular un clic para descargar el archivo PDF
-                const nombreAlumno = formData.nombresAlumno.split(' ').join('-') + '-' + formData.apellidosAlumno.split(' ').join('-');
-                const nombreArchivo = `aviso-privacidad-${nombreAlumno}.pdf`;
-
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(pdfBlob);
-                link.download = nombreArchivo;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-
-                setLoading(false);
-                navigate('/contrato-reglamento'); // Navegar a ContratoReglamento
-            } catch (error) {
-                setLoading(false);
-                mostrarAlertaError(error.message);
-                console.error('Error al generar y subir el PDF:', error);
+                    setLoading(false);
+                    navigate('/contrato-reglamento'); // Navegar a ContratoReglamento
+                } catch (error) {
+                    setLoading(false);
+                    mostrarAlertaError(error.message);
+                    console.error('Error al generar y subir el PDF:', error);
+                }
             }
         }
     };
@@ -105,7 +115,9 @@ function AvisoPrivacidad({ setLoading }) {
                 <p>{formatearFecha(new Date())}</p>
             </div>
             <div className="text-center mt-5">
-                <Button className="btn btn-primary no-print" onClick={handleAceptarContinuar}>Aceptar y Continuar</Button>
+                <Button className="btn btn-primary no-print" onClick={handleAceptarContinuar}>
+                    {pdfUrl ? 'Volver a descargar' : 'Aceptar y Continuar'}
+                </Button>
             </div>
         </div>
     );
