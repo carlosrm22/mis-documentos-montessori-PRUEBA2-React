@@ -1,29 +1,10 @@
 // src/components/Bienvenida.js
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button, Card, Form, FloatingLabel } from 'react-bootstrap';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../utils/firebaseConfig';
-import { mostrarAlertaErrorLogin, mostrarAlertaLoginExitoso } from '../utils/sweetAlertUtils';
-import PropTypes from 'prop-types';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Container, Row, Col, Card } from 'react-bootstrap';
+import Login from './Login';
 
 const Bienvenida = () => {
-    const navigate = useNavigate();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            mostrarAlertaLoginExitoso();
-            navigate('/dashboard');
-        } catch (error) {
-            console.error('Error during login:', error);
-            mostrarAlertaErrorLogin(navigate);
-        }
-    };
-
     return (
         <Container className="shadow-lg p-4 mb-5 bg-body-tertiary rounded">
             <Row className="text-center mb-4">
@@ -35,29 +16,7 @@ const Bienvenida = () => {
             </Row>
             <Row className="justify-content-center mb-5">
                 <Col md={6} lg={4}>
-                    <Form onSubmit={handleLogin} className="text-start">
-                        <FloatingLabel controlId="floatingEmail" label="Email" className="mb-3">
-                            <Form.Control
-                                type="email"
-                                placeholder="name@example.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-                        </FloatingLabel>
-                        <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3">
-                            <Form.Control
-                                type="password"
-                                placeholder="Password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
-                        </FloatingLabel>
-                        <Button variant="primary" type="submit" className="w-100">
-                            Iniciar Sesión
-                        </Button>
-                    </Form>
+                    <Login />
                     <Link to="/register" className="btn btn-secondary w-100 mt-3">Registrarse</Link>
                 </Col>
             </Row>
@@ -107,12 +66,6 @@ const Bienvenida = () => {
             </Row>
         </Container>
     );
-};
-
-Bienvenida.propTypes = {
-    email: PropTypes.string,
-    password: PropTypes.string,
-    handleLogin: PropTypes.func
 };
 
 export default Bienvenida;
