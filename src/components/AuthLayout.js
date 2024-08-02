@@ -1,4 +1,3 @@
-// src/components/AuthLayout.js
 import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import '../styles/AuthLayout.css';
@@ -27,9 +26,7 @@ const AuthLayout = ({ children }) => {
     );
 };
 
-// Define las propiedades esperadas para el componente AuthLayout
 AuthLayout.propTypes = {
-    // children debe ser un nodo de React y es requerido
     children: PropTypes.node.isRequired
 };
 

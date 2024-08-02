@@ -4,7 +4,11 @@ import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
 // Estilos para el PDF
 const styles = StyleSheet.create({
-    page: {
+    page:/* The code block you provided is defining styles using the `StyleSheet.create` method from
+    the `@react-pdf/renderer` library in a React component for generating a PDF document. Each
+    key-value pair within the `styles` object represents a specific style that can be applied
+    to elements within the PDF document. */
+     {
         padding: 30,
         fontSize: 10,
         lineHeight: 1.5

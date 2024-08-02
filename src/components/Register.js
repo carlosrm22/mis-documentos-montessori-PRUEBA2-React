@@ -1,5 +1,5 @@
 // src/components/Register.js
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { register } from '../services/firebaseService';
@@ -20,8 +20,10 @@ const Register = () => {
     const dispatch = useGlobalDispatch();
 
     const handleRegister = async (values, { setSubmitting }) => {
+        console.log('Attempting to register with values:', values);
         if (values.password !== values.confirmPassword) {
             Swal.fire('Las contraseñas no coinciden', '', 'error');
+            setSubmitting(false);
             return;
         }
         try {
@@ -30,6 +32,7 @@ const Register = () => {
             Swal.fire('Registro exitoso', '', 'success');
             navigate('/datos-iniciales');
         } catch (error) {
+            console.error('Error during registration:', error);
             Swal.fire('Error al registrarse', error.message, 'error');
         }
         setSubmitting(false);

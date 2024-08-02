@@ -19,7 +19,7 @@ const DatosIniciales = () => {
     const { formData } = useGlobalState();
     const dispatch = useGlobalDispatch();
     const { setLoading } = useLoading();
-    const [user, loading, error] = useAuthState(auth);
+    const [user, loading] = useAuthState(auth);
 
     useEffect(() => {
         if (loading) {

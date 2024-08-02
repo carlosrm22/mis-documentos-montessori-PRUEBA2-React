@@ -1,7 +1,8 @@
 // src/utils/LoadingContext.js
 import React, { createContext, useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 
-const LoadingContext = createContext();
+const LoadingContext = createContext(false);
 
 export const LoadingProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
@@ -13,10 +14,8 @@ export const LoadingProvider = ({ children }) => {
     );
 };
 
-export const useLoading = () => {
-    const context = useContext(LoadingContext);
-    if (context === undefined) {
-        throw new Error('useLoading must be used within a LoadingProvider');
-    }
-    return context;
+LoadingProvider.propTypes = {
+    children: PropTypes.node.isRequired,
 };
+
+export const useLoading = () => useContext(LoadingContext);

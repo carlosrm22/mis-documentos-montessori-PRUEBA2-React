@@ -5,13 +5,27 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } f
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 
 // Función para registrar usuarios
-const register = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+const register = async (email, password) => {
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        console.log('Usuario registrado:', userCredential);
+        return userCredential.user;
+    } catch (error) {
+        console.error('Error en el registro:', error);
+        throw error;
+    }
 };
 
 // Función para iniciar sesión
-const login = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
+const login = async (email, password) => {
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log('Usuario logueado:', userCredential);
+        return userCredential.user;
+    } catch (error) {
+        console.error('Error al iniciar sesión:', error);
+        throw error;
+    }
 };
 
 // Función para cerrar sesión

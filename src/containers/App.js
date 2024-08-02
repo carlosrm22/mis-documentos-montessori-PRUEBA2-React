@@ -1,4 +1,3 @@
-// src/containers/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -13,7 +12,7 @@ import Login from '../components/Login';
 import Dashboard from '../components/Dashboard';
 import ContratoReglamento from '../components/ContratoReglamento';
 import Bienvenida from '../components/Bienvenida';
-import { GlobalStateProvider } from '../utils/GlobalState';
+import { GlobalProvider } from '../utils/GlobalState';
 import { LoadingProvider, useLoading } from '../utils/LoadingContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -21,15 +20,12 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/App.css';
 import '../styles/LoadingSpinner.css';
 
-/**
- * Componente principal de la aplicación.
- */
 function App() {
-  const [user] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
 
   return (
     <LoadingProvider>
-      <GlobalStateProvider>
+      <GlobalProvider>
         <Router>
           <LoadingConsumer>
             {({ loading, setLoading }) => (
@@ -42,10 +38,10 @@ function App() {
                     <Route path="/datos-iniciales" element={<DatosIniciales setLoading={setLoading} />} />
                     <Route path="/aviso-privacidad" element={<AvisoPrivacidad setLoading={setLoading} />} />
                     <Route path="/datos-personales" element={<DatosPersonales />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={user ? <Navigate to="/dashboard" /> : <Register />} />
+                    <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login />} />
                     <Route path="/contrato-reglamento" element={<ContratoReglamento />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
                   </Routes>
                 </div>
                 <Footer />
@@ -53,7 +49,7 @@ function App() {
             )}
           </LoadingConsumer>
         </Router>
-      </GlobalStateProvider>
+      </GlobalProvider>
     </LoadingProvider>
   );
 }

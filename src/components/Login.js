@@ -1,5 +1,5 @@
 // src/components/Login.js
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { login } from '../services/firebaseService';
@@ -19,6 +19,7 @@ const Login = ({ onSuccess }) => {
     const dispatch = useGlobalDispatch();
 
     const handleLogin = async (values, { setSubmitting }) => {
+        console.log('Attempting to login with values:', values);
         try {
             const user = await login(values.email, values.password);
             dispatch({ type: 'SET_USER', payload: user });
@@ -29,6 +30,7 @@ const Login = ({ onSuccess }) => {
                 navigate('/dashboard');
             }
         } catch (error) {
+            console.error('Error during login:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'No se pudo iniciar sesión',
