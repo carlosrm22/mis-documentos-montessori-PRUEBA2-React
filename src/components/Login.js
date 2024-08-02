@@ -7,12 +7,7 @@ import { mostrarAlertaLoginExitoso, mostrarAlertaErrorLogin } from '../utils/swe
 import AuthLayout from './AuthLayout';
 import { useGlobalDispatch } from '../utils/GlobalState';
 import { Formik, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-
-const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Email no válido').required('Email es requerido'),
-    password: Yup.string().required('Contraseña es requerida')
-});
+import { loginValidationSchema } from '../utils/validationSchemas'; // Importar esquema de validación
 
 const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
     const navigate = useNavigate();
@@ -21,7 +16,7 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
     const handleLogin = async (values, { setSubmitting }) => {
         try {
             const user = await login(values.email, values.password);
-            dispatch({ type: 'SET_USER', payload: user });  // Actualiza el estado global con el usuario autenticado
+            dispatch({ type: 'SET_USER', payload: user });
             mostrarAlertaLoginExitoso();
             if (onSuccess) {
                 onSuccess();
@@ -40,7 +35,7 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
             {showTitle && <h1 className="text-center mb-4">Inicio de Sesión</h1>}
             <Formik
                 initialValues={{ email: '', password: '' }}
-                validationSchema={validationSchema}
+                validationSchema={loginValidationSchema} // Usar esquema de validación importado
                 onSubmit={handleLogin}
             >
                 {({ isSubmitting }) => (

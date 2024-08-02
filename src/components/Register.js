@@ -7,13 +7,7 @@ import { mostrarAlertaRegistroExitoso, mostrarAlertaErrorRegistro } from '../uti
 import AuthLayout from './AuthLayout';
 import { useGlobalDispatch } from '../utils/GlobalState';
 import { Formik, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-
-const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Email no válido').required('Email es requerido'),
-    password: Yup.string().required('Contraseña es requerida'),
-    confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Confirmar contraseña es requerido')
-});
+import { registerValidationSchema } from '../utils/validationSchemas'; // Importar esquema de validación
 
 const Register = () => {
     const navigate = useNavigate();
@@ -43,7 +37,7 @@ const Register = () => {
             <h1 className="text-center mb-4">Registrarse</h1>
             <Formik
                 initialValues={{ email: '', password: '', confirmPassword: '' }}
-                validationSchema={validationSchema}
+                validationSchema={registerValidationSchema} // Usar esquema de validación importado
                 onSubmit={handleRegister}
             >
                 {({ isSubmitting }) => (
