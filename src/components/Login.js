@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { login } from '../services/firebaseService';
-import Swal from 'sweetalert2';
+import { mostrarAlertaLoginExitoso, mostrarAlertaErrorLogin } from '../utils/sweetAlertUtils';
 import AuthLayout from './AuthLayout';
 import { useGlobalDispatch } from '../utils/GlobalState';
 import { Formik, Field, ErrorMessage } from 'formik';
@@ -19,11 +19,10 @@ const Login = ({ onSuccess }) => {
     const dispatch = useGlobalDispatch();
 
     const handleLogin = async (values, { setSubmitting }) => {
-        console.log('Attempting to login with values:', values);
         try {
             const user = await login(values.email, values.password);
             dispatch({ type: 'SET_USER', payload: user });
-            Swal.fire('Inicio de sesión exitoso', '', 'success');
+            mostrarAlertaLoginExitoso();
             if (onSuccess) {
                 onSuccess();
             } else {
@@ -31,18 +30,7 @@ const Login = ({ onSuccess }) => {
             }
         } catch (error) {
             console.error('Error during login:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'No se pudo iniciar sesión',
-                text: 'Usuario o contraseña no encontrada, por favor intenta de nuevo o regístrate.',
-                showCancelButton: true,
-                confirmButtonText: 'Registrarse',
-                cancelButtonText: 'Regresar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    navigate('/register');
-                }
-            });
+            mostrarAlertaErrorLogin(navigate);
         }
         setSubmitting(false);
     };

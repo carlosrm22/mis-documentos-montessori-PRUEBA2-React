@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { register } from '../services/firebaseService';
-import Swal from 'sweetalert2';
+import { mostrarAlertaRegistroExitoso, mostrarAlertaErrorRegistro } from '../utils/sweetAlertUtils';
 import AuthLayout from './AuthLayout';
 import { useGlobalDispatch } from '../utils/GlobalState';
 import { Formik, Field, ErrorMessage } from 'formik';
@@ -22,18 +22,18 @@ const Register = () => {
     const handleRegister = async (values, { setSubmitting }) => {
         console.log('Attempting to register with values:', values);
         if (values.password !== values.confirmPassword) {
-            Swal.fire('Las contraseñas no coinciden', '', 'error');
+            mostrarAlertaErrorRegistro('Las contraseñas no coinciden');
             setSubmitting(false);
             return;
         }
         try {
             const user = await register(values.email, values.password);
             dispatch({ type: 'SET_USER', payload: user });
-            Swal.fire('Registro exitoso', '', 'success');
+            mostrarAlertaRegistroExitoso();
             navigate('/datos-iniciales');
         } catch (error) {
             console.error('Error during registration:', error);
-            Swal.fire('Error al registrarse', error.message, 'error');
+            mostrarAlertaErrorRegistro(error.message);
         }
         setSubmitting(false);
     };

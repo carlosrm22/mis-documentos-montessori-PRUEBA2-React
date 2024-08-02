@@ -1,34 +1,26 @@
-import React from 'react';
+// src/components/Bienvenida.js
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Card, Form, FloatingLabel } from 'react-bootstrap';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../utils/firebaseConfig';
-import Swal from 'sweetalert2';
+import { mostrarAlertaErrorLogin, mostrarAlertaLoginExitoso } from '../utils/sweetAlertUtils';
 import PropTypes from 'prop-types';
 
 const Bienvenida = () => {
     const navigate = useNavigate();
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             await signInWithEmailAndPassword(auth, email, password);
+            mostrarAlertaLoginExitoso();
             navigate('/dashboard');
         } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error al iniciar sesión',
-                text: 'Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.',
-                showCancelButton: true,
-                confirmButtonText: 'Registrarse',
-                cancelButtonText: 'Regresar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    navigate('/register');
-                }
-            });
+            console.error('Error during login:', error);
+            mostrarAlertaErrorLogin(navigate);
         }
     };
 
