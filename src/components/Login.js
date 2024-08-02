@@ -14,7 +14,7 @@ const validationSchema = Yup.object().shape({
     password: Yup.string().required('Contraseña es requerida')
 });
 
-const Login = ({ onSuccess, useLayout = true }) => {
+const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
     const navigate = useNavigate();
     const dispatch = useGlobalDispatch();
 
@@ -37,7 +37,7 @@ const Login = ({ onSuccess, useLayout = true }) => {
 
     const loginForm = (
         <>
-            <h1 className="text-center mb-4">Inicio de Sesión</h1>
+            {showTitle && <h1 className="text-center mb-4">Inicio de Sesión</h1>}
             <Formik
                 initialValues={{ email: '', password: '' }}
                 validationSchema={validationSchema}
