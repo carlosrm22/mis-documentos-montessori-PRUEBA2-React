@@ -1,12 +1,12 @@
 // src/components/Register.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { Button, Form as BootstrapForm } from 'react-bootstrap'; // Uso de BootstrapForm para evitar conflictos con Formik
 import { register } from '../services/firebaseService';
 import { mostrarAlertaRegistroExitoso, mostrarAlertaErrorRegistro } from '../utils/sweetAlertUtils';
 import AuthLayout from './AuthLayout';
 import { useGlobalDispatch } from '../utils/GlobalState';
-import { Formik, Field, ErrorMessage } from 'formik';
+import { Formik, Field, ErrorMessage, Form as FormikForm } from 'formik'; // Importando Form como FormikForm
 import { registroValidationSchema } from '../utils/validationSchemas';
 
 const Register = () => {
@@ -41,9 +41,9 @@ const Register = () => {
                 onSubmit={handleRegister}
             >
                 {({ isSubmitting }) => (
-                    <Form className="text-start">
-                        <Form.Group controlId="email" className="mb-3">
-                            <Form.Label>Email</Form.Label>
+                    <FormikForm className="text-start">
+                        <BootstrapForm.Group controlId="email" className="mb-3">
+                            <BootstrapForm.Label>Email</BootstrapForm.Label>
                             <Field
                                 name="email"
                                 type="email"
@@ -52,9 +52,9 @@ const Register = () => {
                                 required
                             />
                             <ErrorMessage name="email" component="div" className="text-danger" />
-                        </Form.Group>
-                        <Form.Group controlId="password" className="mb-3">
-                            <Form.Label>Contraseña</Form.Label>
+                        </BootstrapForm.Group>
+                        <BootstrapForm.Group controlId="password" className="mb-3">
+                            <BootstrapForm.Label>Contraseña</BootstrapForm.Label>
                             <Field
                                 name="password"
                                 type="password"
@@ -63,9 +63,9 @@ const Register = () => {
                                 required
                             />
                             <ErrorMessage name="password" component="div" className="text-danger" />
-                        </Form.Group>
-                        <Form.Group controlId="confirmPassword" className="mb-3">
-                            <Form.Label>Confirmar Contraseña</Form.Label>
+                        </BootstrapForm.Group>
+                        <BootstrapForm.Group controlId="confirmPassword" className="mb-3">
+                            <BootstrapForm.Label>Confirmar Contraseña</BootstrapForm.Label>
                             <Field
                                 name="confirmPassword"
                                 type="password"
@@ -74,11 +74,11 @@ const Register = () => {
                                 required
                             />
                             <ErrorMessage name="confirmPassword" component="div" className="text-danger" />
-                        </Form.Group>
+                        </BootstrapForm.Group>
                         <Button variant="secondary" type="submit" className="w-100 mt-3" disabled={isSubmitting}>
                             {isSubmitting ? 'Cargando...' : 'Registrarse'}
                         </Button>
-                    </Form>
+                    </FormikForm>
                 )}
             </Formik>
         </AuthLayout>
