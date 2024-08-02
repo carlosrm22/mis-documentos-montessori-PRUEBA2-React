@@ -2,23 +2,9 @@
 
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import { datosPersonalesValidationSchema } from '../utils/validationSchemas';
 import FormGroup from './FormGroup';
 import { Button } from 'react-bootstrap';
-
-/**
- * Esquema de validación para los datos personales.
- */
-const validationSchema = Yup.object().shape({
-    nombresAlumno: Yup.string().required('Nombre del alumno es requerido'),
-    apellidosAlumno: Yup.string().required('Apellidos del alumno son requeridos'),
-    lugarNacimientoAlumno: Yup.string().required('Lugar de nacimiento es requerido'),
-    nombresMadre: Yup.string().required('Nombre de la madre es requerido'),
-    apellidosMadre: Yup.string().required('Apellidos de la madre son requeridos'),
-    nombresPadre: Yup.string().required('Nombre del padre es requerido'),
-    apellidosPadre: Yup.string().required('Apellidos del padre son requeridos'),
-    domicilioPadres: Yup.string().required('Domicilio es requerido')
-});
 
 /**
  * Componente para los datos personales del alumno y los padres.
@@ -50,7 +36,7 @@ function DatosPersonales({ formData, setFormData }) {
                 firmado para constancia y aceptación:</p>
             <Formik
                 initialValues={formData}
-                validationSchema={validationSchema}
+                validationSchema={datosPersonalesValidationSchema}
                 onSubmit={(values) => setFormData(values)}
             >
                 {({ isSubmitting }) => (
