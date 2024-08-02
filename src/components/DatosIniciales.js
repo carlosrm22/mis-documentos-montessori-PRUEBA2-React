@@ -1,9 +1,9 @@
 // src/components/DatosIniciales.js
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Field, ErrorMessage, Form as FormikForm } from 'formik';
 import { getDatosIniciales } from '../services/firebaseService';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form as BootstrapForm } from 'react-bootstrap';
 import FormGroup from './FormGroup';
 import { datosInicialesValidationSchema } from '../utils/validationSchemas';
 import { handleGuardarDatos } from '../utils/sweetAlertUtils';
@@ -84,13 +84,13 @@ const DatosIniciales = () => {
                                 enableReinitialize
                             >
                                 {({ values, isSubmitting, handleChange, setFieldValue, errors, touched }) => (
-                                    <Form>
+                                    <FormikForm>
                                         <Row>
                                             <Col md={6}>
                                                 <div className="p-3 mb-4 bg-white border rounded">
                                                     <h2 className="mt-4">Datos del alumno</h2>
-                                                    <div className="mb-3">
-                                                        <label htmlFor="nivelEducativo" className="form-label">Nivel Educativo</label>
+                                                    <BootstrapForm.Group controlId="nivelEducativo" className="mb-3">
+                                                        <BootstrapForm.Label>Nivel Educativo</BootstrapForm.Label>
                                                         <Field
                                                             as="select"
                                                             id="nivelEducativo"
@@ -107,7 +107,7 @@ const DatosIniciales = () => {
                                                             <option value="Primaria (Taller)">Primaria (Taller)</option>
                                                         </Field>
                                                         <ErrorMessage name="nivelEducativo" component="div" className="text-danger" />
-                                                    </div>
+                                                    </BootstrapForm.Group>
                                                     <FormGroup name="apellidosAlumno" label="Apellidos del alumno" required readOnly={isReadOnly} onChange={handleChange} />
                                                     <FormGroup name="nombresAlumno" label="Nombre(s) del alumno" required readOnly={isReadOnly} onChange={handleChange} />
                                                     <FormGroup name="fechaNacimientoAlumno" label="Fecha de nacimiento del alumno" type="date" required readOnly={isReadOnly} onChange={(e) => {
@@ -141,7 +141,7 @@ const DatosIniciales = () => {
                                                 Por favor, completa todos los campos obligatorios.
                                             </div>
                                         )}
-                                    </Form>
+                                    </FormikForm>
                                 )}
                             </Formik>
                         </Card.Body>
