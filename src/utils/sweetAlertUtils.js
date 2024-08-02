@@ -114,3 +114,47 @@ export const handleGuardarDatos = async (values, setFormData, setSubmitting, nav
         setSubmitting(false);
     }
 };
+
+/**
+ * Muestra una alerta de error de inicio de sesión.
+ * @returns {Promise<SweetAlertResult>} - El resultado de la alerta.
+ */
+export const mostrarAlertaErrorLogin = (navigate) => {
+    return Swal.fire({
+        icon: 'error',
+        title: 'Error al iniciar sesión',
+        text: 'Usuario o contraseña no encontrada, por favor intenta de nuevo o regístrate.',
+        showCancelButton: true,
+        confirmButtonText: 'Registrarse',
+        cancelButtonText: 'Regresar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            navigate('/register');
+        }
+    });
+};
+
+/**
+ * Muestra una alerta de inicio de sesión exitoso.
+ * @returns {Promise<SweetAlertResult>} - El resultado de la alerta.
+ */
+export const mostrarAlertaLoginExitoso = () => {
+    return Swal.fire('Inicio de sesión exitoso', '', 'success');
+};
+
+/**
+ * Muestra una alerta de error de registro.
+ * @param {string} mensaje - El mensaje de error a mostrar.
+ * @returns {Promise<SweetAlertResult>} - El resultado de la alerta.
+ */
+export const mostrarAlertaErrorRegistro = (mensaje) => {
+    return Swal.fire('Error al registrarse', mensaje, 'error');
+};
+
+/**
+ * Muestra una alerta de registro exitoso.
+ * @returns {Promise<SweetAlertResult>} - El resultado de la alerta.
+ */
+export const mostrarAlertaRegistroExitoso = () => {
+    return Swal.fire('Registro exitoso', '', 'success');
+};
