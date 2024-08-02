@@ -1,22 +1,33 @@
 // src/components/PrivacidadPDF.js
+
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+
+// Registrar las fuentes personalizadas
+Font.register({
+    family: 'Helvetica',
+    fonts: [
+        { src: `${process.env.PUBLIC_URL}/assets/fonts/Helvetica.ttf` },
+        { src: `${process.env.PUBLIC_URL}/assets/fonts/Helvetica-Bold.ttf`, fontWeight: 'bold' },
+        { src: `${process.env.PUBLIC_URL}/assets/fonts/Helvetica-Oblique.ttf`, fontStyle: 'italic' }
+    ]
+});
 
 // Estilos para el PDF
 const styles = StyleSheet.create({
-    page:/* The code block you provided is defining styles using the `StyleSheet.create` method from
-    the `@react-pdf/renderer` library in a React component for generating a PDF document. Each
-    key-value pair within the `styles` object represents a specific style that can be applied
-    to elements within the PDF document. */
-     {
+    page: {
         padding: 30,
         fontSize: 10,
-        lineHeight: 1.5
+        lineHeight: 1.5,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        fontFamily: 'Helvetica'
     },
     title: {
         fontSize: 18,
         textAlign: 'center',
-        marginBottom: 20
+        marginBottom: 20,
+        fontWeight: 'bold'
     },
     text: {
         marginBottom: 10,
@@ -35,40 +46,55 @@ const styles = StyleSheet.create({
     },
     signatureLine: {
         marginVertical: 10,
+        width: '50%', // Ajustar el ancho de la línea de firma
         borderBottomWidth: 1,
         borderBottomColor: '#000',
-        borderBottomStyle: 'solid'
+        borderBottomStyle: 'solid',
+        alignSelf: 'center' // Centrar la línea de firma
+    },
+    bold: {
+        fontWeight: 'bold'
+    },
+    italic: {
+        fontStyle: 'italic'
     }
 });
 
+/**
+ * Componente de PDF para el Aviso de Privacidad.
+ *
+ * @param {Object} props - Las propiedades del componente.
+ * @param {Object} props.formData - Los datos del formulario.
+ * @param {Function} props.formatearFecha - Función para formatear la fecha.
+ */
 const PrivacidadPDF = ({ formData, formatearFecha }) => (
     <Document>
-        <Page style={styles.page}>
+        <Page style={styles.page} size="LETTER" wrap={false}>
             <View style={styles.section}>
                 <Text style={styles.title}>Aviso de Privacidad</Text>
                 <Text style={styles.text}>
-                    En la Institución Educativa denominada <Text style={{ fontWeight: 'bold' }}>Montessori Kalpilli</Text> con domicilio ubicado en la calle de Avenida 2 No.48 Colonia San Pedro de los Pinos, C.P. 03800, Benito Juárez, Ciudad de México. Con fundamento en lo dispuesto por los
+                    En la Institución Educativa denominada <Text style={styles.bold}>Montessori Kalpilli</Text> con domicilio ubicado en la calle de Avenida 2 No.48 Colonia San Pedro de los Pinos, C.P. 03800, Benito Juárez, Ciudad de México. Con fundamento en lo dispuesto por los
                     artículos 1, 2, 3, fracciones V, VI, XI, XII, XIII, 5, 6, 7, 8, 9, 10, 12, 16, 17, 22, 26, 34, 37, y demás relativos de la LEY
                     FEDERAL DE PROTECCIÓN DE DATOS PERSONALES EN POSESIÓN DE LOS PARTICULARES es
                     responsable de recibir sus datos personales y los de su hijo(a), del uso que se le dé a los mismos y de su protección, lo
                     anterior con el propósito de dar cumplimiento con la citada Ley. Para tal efecto se señala al Sr. Carlos Alfonso Romero
                     Muñoz como persona responsable directamente de salvaguardar y custodiar los datos proporcionados por usted. La
                     información proporcionada será utilizada para proveerle el servicio educativo que nos ha solicitado en favor de su hijo
-                    <Text style={{ fontWeight: 'bold' }}> {formData.nombresAlumno} {formData.apellidosAlumno}</Text>, y poderle informar a usted de la situación académica, comportamiento y aspectos importantes de su menor hijo, gestionar ante las autoridades
+                    <Text style={styles.bold}> {formData.nombresAlumno} {formData.apellidosAlumno}</Text>, y poderle informar a usted de la situación académica, comportamiento y aspectos importantes de su menor hijo, gestionar ante las autoridades
                     educativas la emisión de documentos oficiales incluyendo en los casos que proceda la obtención de su certificado de
                     estudios, para lo cual le requerimos nos proporcione:
                 </Text>
                 <View style={styles.list}>
-                    <Text style={styles.listItem}><Text style={{ fontStyle: 'italic' }}>1. Nombre completo del Padre o Tutor y del alumno(a)</Text></Text>
-                    <Text style={styles.listItem}><Text style={{ fontStyle: 'italic' }}>2. Domicilio, correo electrónico y teléfonos para poder comunicarnos con usted en una emergencia, o avisos importantes.</Text></Text>
-                    <Text style={styles.listItem}><Text style={{ fontStyle: 'italic' }}>3. Originales del acta de nacimiento, certificados de estudio, fotografías y certificado médico del alumno(a).</Text></Text>
-                    <Text style={styles.listItem}><Text style={{ fontStyle: 'italic' }}>4. Firma de reglamento escolar interno.</Text></Text>
-                    <Text style={styles.listItem}><Text style={{ fontStyle: 'italic' }}>5. Firma de contrato de prestación de servicios educativos.</Text></Text>
-                    <Text style={styles.listItem}><Text style={{ fontStyle: 'italic' }}>6. Datos complementarios para la protección del menor. (Cuando proceda).</Text></Text>
-                    <Text style={styles.listItem}><Text style={{ fontStyle: 'italic' }}>7. Datos ficha de inscripción.</Text></Text>
-                    <Text style={styles.listItem}><Text style={{ fontStyle: 'italic' }}>8. Datos complementarios para la protección del menor. (Cuando proceda).</Text></Text>
-                    <Text style={styles.listItem}><Text style={{ fontStyle: 'italic' }}>9. Ficha de identificación personal. (Cuando proceda).</Text></Text>
-                    <Text style={styles.listItem}><Text style={{ fontStyle: 'italic' }}>10. Hoja de datos personales.</Text></Text>
+                    <Text style={styles.listItem}><Text style={styles.italic}>1. Nombre completo del Padre o Tutor y del alumno(a)</Text></Text>
+                    <Text style={styles.listItem}><Text style={styles.italic}>2. Domicilio, correo electrónico y teléfonos para poder comunicarnos con usted en una emergencia, o avisos importantes.</Text></Text>
+                    <Text style={styles.listItem}><Text style={styles.italic}>3. Originales del acta de nacimiento, certificados de estudio, fotografías y certificado médico del alumno(a).</Text></Text>
+                    <Text style={styles.listItem}><Text style={styles.italic}>4. Firma de reglamento escolar interno.</Text></Text>
+                    <Text style={styles.listItem}><Text style={styles.italic}>5. Firma de contrato de prestación de servicios educativos.</Text></Text>
+                    <Text style={styles.listItem}><Text style={styles.italic}>6. Datos complementarios para la protección del menor. (Cuando proceda).</Text></Text>
+                    <Text style={styles.listItem}><Text style={styles.italic}>7. Datos ficha de inscripción.</Text></Text>
+                    <Text style={styles.listItem}><Text style={styles.italic}>8. Datos complementarios para la protección del menor. (Cuando proceda).</Text></Text>
+                    <Text style={styles.listItem}><Text style={styles.italic}>9. Ficha de identificación personal. (Cuando proceda).</Text></Text>
+                    <Text style={styles.listItem}><Text style={styles.italic}>10. Hoja de datos personales.</Text></Text>
                 </View>
                 <Text style={styles.text}>
                     La Ley de Protección de Datos Personales en Posesión de los Particulares, considera que tiene derecho a acceder,
@@ -97,8 +123,9 @@ const PrivacidadPDF = ({ formData, formatearFecha }) => (
                 </Text>
                 <View style={styles.signature}>
                     <Text>Nombre y firma del responsable legal del alumno:</Text>
+                    <Text style={{ marginBottom: 50 }}></Text> {/* Añadir espacio entre el nombre y la firma */}
                     <View style={styles.signatureLine} />
-                    <Text><Text style={{ fontWeight: 'bold' }}>{formData.nombresResponsable} {formData.apellidosResponsable}</Text></Text>
+                    <Text style={styles.bold}>{formData.nombresResponsable} {formData.apellidosResponsable}</Text>
                     <Text>{formatearFecha(new Date())}</Text>
                 </View>
             </View>
