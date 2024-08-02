@@ -16,7 +16,7 @@ const Bienvenida = () => {
             </Row>
             <Row className="justify-content-center mb-5">
                 <Col md={6} lg={4}>
-                    <Login />
+                    <Login useLayout={false} />
                     <Link to="/register" className="btn btn-secondary w-100 mt-3">Registrarse</Link>
                 </Col>
             </Row>
