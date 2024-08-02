@@ -21,7 +21,7 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
     const handleLogin = async (values, { setSubmitting }) => {
         try {
             const user = await login(values.email, values.password);
-            dispatch({ type: 'SET_USER', payload: user });
+            dispatch({ type: 'SET_USER', payload: user });  // Actualiza el estado global con el usuario autenticado
             mostrarAlertaLoginExitoso();
             if (onSuccess) {
                 onSuccess();

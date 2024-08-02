@@ -1,3 +1,4 @@
+// src/utils/GlobalState.js
 import React, { createContext, useReducer, useContext } from 'react';
 import PropTypes from 'prop-types';
 
