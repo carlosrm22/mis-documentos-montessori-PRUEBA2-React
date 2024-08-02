@@ -42,7 +42,7 @@ const Register = () => {
             >
                 {({ isSubmitting }) => (
                     <Form className="text-start">
-                        <Form.Group controlId="formBasicEmail" className="mb-3">
+                        <Form.Group controlId="email" className="mb-3">
                             <Form.Label>Email</Form.Label>
                             <Field
                                 name="email"
@@ -53,7 +53,7 @@ const Register = () => {
                             />
                             <ErrorMessage name="email" component="div" className="text-danger" />
                         </Form.Group>
-                        <Form.Group controlId="formBasicPassword" className="mb-3">
+                        <Form.Group controlId="password" className="mb-3">
                             <Form.Label>Contraseña</Form.Label>
                             <Field
                                 name="password"
@@ -64,7 +64,7 @@ const Register = () => {
                             />
                             <ErrorMessage name="password" component="div" className="text-danger" />
                         </Form.Group>
-                        <Form.Group controlId="formBasicConfirmPassword" className="mb-3">
+                        <Form.Group controlId="confirmPassword" className="mb-3">
                             <Form.Label>Confirmar Contraseña</Form.Label>
                             <Field
                                 name="confirmPassword"

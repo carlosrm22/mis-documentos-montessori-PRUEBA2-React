@@ -8,7 +8,7 @@ import { getStorage, ref, uploadBytes } from 'firebase/storage';
 const register = async (email, password) => {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        console.log('Usuario registrado:', userCredential);
+        console.log('Usuario registrado:', userCredential.user);
         return userCredential.user;
     } catch (error) {
         console.error('Error en el registro:', error);
@@ -20,7 +20,10 @@ const register = async (email, password) => {
 const login = async (email, password) => {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log('Usuario logueado:', userCredential);
+        if (!auth.currentUser) {
+            throw new Error('Usuario no autenticado');
+        }
+        console.log('Usuario logueado:', userCredential.user);
         return userCredential.user;
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
@@ -29,8 +32,14 @@ const login = async (email, password) => {
 };
 
 // Función para cerrar sesión
-const logout = () => {
-    return signOut(auth);
+const logout = async () => {
+    try {
+        await signOut(auth);
+        console.log('Usuario deslogueado');
+    } catch (error) {
+        console.error('Error al cerrar sesión:', error);
+        throw error;
+    }
 };
 
 /**

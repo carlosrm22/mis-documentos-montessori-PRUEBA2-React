@@ -21,7 +21,7 @@ import '../styles/App.css';
 import '../styles/LoadingSpinner.css';
 
 function App() {
-  const [user, loading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
 
   return (
     <Router>

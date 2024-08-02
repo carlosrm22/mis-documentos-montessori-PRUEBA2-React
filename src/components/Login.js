@@ -1,12 +1,12 @@
 // src/components/Login.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { Button, Form as BootstrapForm } from 'react-bootstrap'; // Uso de BootstrapForm para evitar conflictos con Formik
 import { login } from '../services/firebaseService';
 import { mostrarAlertaLoginExitoso, mostrarAlertaErrorLogin } from '../utils/sweetAlertUtils';
 import AuthLayout from './AuthLayout';
 import { useGlobalDispatch } from '../utils/GlobalState';
-import { Formik, Field, ErrorMessage } from 'formik';
+import { Formik, Field, ErrorMessage, Form as FormikForm } from 'formik'; // Importando Form como FormikForm
 import { loginValidationSchema } from '../utils/validationSchemas';
 
 const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
@@ -14,8 +14,10 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
     const dispatch = useGlobalDispatch();
 
     const handleLogin = async (values, { setSubmitting }) => {
+        console.log('Handle login called with values:', values);
         try {
             const user = await login(values.email, values.password);
+            console.log('User logged in:', user);
             dispatch({ type: 'SET_USER', payload: user });
             mostrarAlertaLoginExitoso();
             if (onSuccess) {
@@ -25,7 +27,7 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
             }
         } catch (error) {
             console.error('Error during login:', error);
-            await mostrarAlertaErrorLogin(navigate);
+            mostrarAlertaErrorLogin(navigate); // No await aquí si no es necesario
         }
         setSubmitting(false);
     };
@@ -39,9 +41,9 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
                 onSubmit={handleLogin}
             >
                 {({ isSubmitting }) => (
-                    <Form className="text-start">
-                        <Form.Group controlId="formBasicEmail" className="mb-3">
-                            <Form.Label>Email</Form.Label>
+                    <FormikForm className="text-start">
+                        <BootstrapForm.Group controlId="email" className="mb-3">
+                            <BootstrapForm.Label>Email</BootstrapForm.Label>
                             <Field
                                 name="email"
                                 type="email"
@@ -50,9 +52,9 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
                                 required
                             />
                             <ErrorMessage name="email" component="div" className="text-danger" />
-                        </Form.Group>
-                        <Form.Group controlId="formBasicPassword" className="mb-3">
-                            <Form.Label>Contraseña</Form.Label>
+                        </BootstrapForm.Group>
+                        <BootstrapForm.Group controlId="password" className="mb-3">
+                            <BootstrapForm.Label>Contraseña</BootstrapForm.Label>
                             <Field
                                 name="password"
                                 type="password"
@@ -61,11 +63,11 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
                                 required
                             />
                             <ErrorMessage name="password" component="div" className="text-danger" />
-                        </Form.Group>
+                        </BootstrapForm.Group>
                         <Button variant="primary" type="submit" className="w-100 mt-3" disabled={isSubmitting}>
                             {isSubmitting ? 'Cargando...' : 'Iniciar Sesión'}
                         </Button>
-                    </Form>
+                    </FormikForm>
                 )}
             </Formik>
         </>
