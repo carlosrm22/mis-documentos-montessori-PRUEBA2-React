@@ -11,12 +11,14 @@ function Footer() {
         <footer className="bg-light text-center text-lg-start mt-5 border-top">
             <div className="container p-4">
                 <div className="row">
+                    {/* Sección de la Asociación Montessori de México */}
                     <div className="col-12 col-md-4 mb-4 mb-md-0 text-center">
                         <a href="https://asociacionmontessori.com.mx/" target="_blank" rel="noopener noreferrer" className="text-black no-underline">
                             <img src={`${process.env.PUBLIC_URL}/assets/images/logo.png`} alt="Logo" width="50" height="50" className="d-inline-block align-top" />
                             <h5 className="text-uppercase mt-2">Asociación Montessori de México</h5>
                         </a>
                     </div>
+                    {/* Sección de información de contacto */}
                     <div className="col-12 col-md-4 mb-4 mb-md-0">
                         <h5 className="text-uppercase text-center">Información de contacto</h5>
                         <ul className="list-unstyled mb-0">
@@ -36,6 +38,7 @@ function Footer() {
                             </li>
                         </ul>
                     </div>
+                    {/* Sección de enlaces a redes sociales */}
                     <div className="col-12 col-md-4 mb-4 mb-md-0 text-center">
                         <h5 className="text-uppercase">Síguenos</h5>
                         <a href="https://www.instagram.com/asociacionmontessori/" className="btn btn-outline-dark btn-floating m-1" role="button" target="_blank" rel="noopener noreferrer">
@@ -53,6 +56,7 @@ function Footer() {
                     </div>
                 </div>
             </div>
+            {/* Sección de derechos de autor */}
             <div className="bg-primary text-center p-3">
                 <span className="text-white">
                     <a href="https://asociacionmontessori.com.mx" target="_blank" rel="noopener noreferrer" className="text-white no-underline">

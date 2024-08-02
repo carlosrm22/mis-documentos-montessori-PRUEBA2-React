@@ -1,18 +1,34 @@
 // src/components/Login.js
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Form as BootstrapForm } from 'react-bootstrap'; // Uso de BootstrapForm para evitar conflictos con Formik
+import { Button, Form as BootstrapForm } from 'react-bootstrap';
 import { login } from '../services/firebaseService';
 import { mostrarAlertaLoginExitoso, mostrarAlertaErrorLogin } from '../utils/sweetAlertUtils';
 import AuthLayout from './AuthLayout';
 import { useGlobalDispatch } from '../utils/GlobalState';
-import { Formik, Field, ErrorMessage, Form as FormikForm } from 'formik'; // Importando Form como FormikForm
+import { Formik, Field, ErrorMessage, Form as FormikForm } from 'formik';
 import { loginValidationSchema } from '../utils/validationSchemas';
 
+/**
+ * Componente de inicio de sesión.
+ * Proporciona un formulario para que los usuarios inicien sesión en la aplicación.
+ *
+ * @param {Object} props - Las propiedades del componente.
+ * @param {Function} [props.onSuccess] - Callback que se llama después de un inicio de sesión exitoso.
+ * @param {boolean} [props.useLayout=true] - Determina si se debe usar el layout de autenticación.
+ * @param {boolean} [props.showTitle=true] - Determina si se debe mostrar el título.
+ */
 const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
     const navigate = useNavigate();
     const dispatch = useGlobalDispatch();
 
+    /**
+     * Maneja el envío del formulario de inicio de sesión.
+     *
+     * @param {Object} values - Los valores del formulario.
+     * @param {Object} actions - Las acciones de Formik.
+     */
     const handleLogin = async (values, { setSubmitting }) => {
         console.log('Handle login called with values:', values);
         try {
@@ -27,11 +43,14 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
             }
         } catch (error) {
             console.error('Error during login:', error);
-            mostrarAlertaErrorLogin(navigate); // No await aquí si no es necesario
+            mostrarAlertaErrorLogin(navigate);
         }
         setSubmitting(false);
     };
 
+    /**
+     * Formulario de inicio de sesión.
+     */
     const loginForm = (
         <>
             {showTitle && <h1 className="text-center mb-4">Inicio de Sesión</h1>}

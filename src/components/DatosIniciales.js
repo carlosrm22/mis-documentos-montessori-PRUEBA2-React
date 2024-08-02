@@ -1,4 +1,5 @@
 // src/components/DatosIniciales.js
+
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Field, ErrorMessage, Form as FormikForm } from 'formik';
@@ -14,6 +15,10 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../utils/firebaseConfig';
 import { calculateAge } from '../utils/dateUtils';
 
+/**
+ * Componente para los datos iniciales del alumno.
+ * Proporciona un formulario para ingresar y guardar los datos iniciales del alumno y su responsable.
+ */
 const DatosIniciales = () => {
     const navigate = useNavigate();
     const { formData } = useGlobalState();
@@ -21,6 +26,9 @@ const DatosIniciales = () => {
     const { setLoading } = useLoading();
     const [user, loading] = useAuthState(auth);
 
+    /**
+     * Función para obtener los datos iniciales del usuario.
+     */
     useEffect(() => {
         if (loading) {
             return;

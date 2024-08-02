@@ -1,4 +1,5 @@
 // src/components/Dashboard.js
+
 import React, { useState, useEffect } from 'react';
 import { getDatosIniciales } from '../services/firebaseService';
 import Swal from 'sweetalert2';
@@ -6,12 +7,16 @@ import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
 
 /**
  * Componente para el Dashboard.
+ * Muestra la información inicial del usuario y maneja la carga de datos.
  */
 const Dashboard = () => {
     const { formData } = useGlobalState();
     const dispatch = useGlobalDispatch();
     const [error, setError] = useState(null);
 
+    /**
+     * Función para obtener los datos iniciales del usuario.
+     */
     useEffect(() => {
         const fetchDatos = async () => {
             try {

@@ -1,4 +1,5 @@
 // src/components/AvisoPrivacidad.js
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
@@ -11,11 +12,18 @@ import { auth } from '../utils/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import PrivacidadPDF from './PrivacidadPDF';
 
+/**
+ * Componente para mostrar el aviso de privacidad.
+ * Permite al usuario aceptar y generar un PDF con el aviso de privacidad.
+ *
+ * @param {Object} props - Las propiedades del componente.
+ * @param {Function} props.setLoading - Función para establecer el estado de carga.
+ */
 const AvisoPrivacidad = ({ setLoading }) => {
     const navigate = useNavigate();
     const { formData } = useGlobalState();
     const [pdfUrl, setPdfUrl] = useState(null);
-    const [user] = useAuthState(auth);  // Remove unused variables 'loading' and 'error'
+    const [user] = useAuthState(auth);
 
     useEffect(() => {
         if (user) {
@@ -24,7 +32,7 @@ const AvisoPrivacidad = ({ setLoading }) => {
                 .then(url => setPdfUrl(url))
                 .catch(error => console.error('Error al descargar el PDF:', error));
         }
-    }, [user, formData.apellidosAlumno, formData.nombresAlumno]); // Add missing dependencies
+    }, [user, formData.apellidosAlumno, formData.nombresAlumno]);
 
     if (!formData || !formData.nombresAlumno) {
         return <div>Cargando datos...</div>;
@@ -32,6 +40,9 @@ const AvisoPrivacidad = ({ setLoading }) => {
 
     const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
 
+    /**
+     * Maneja la aceptación del aviso de privacidad y la generación del PDF.
+     */
     const handleAceptarContinuar = async () => {
         const nombreArchivo = `aviso-privacidad-${nombresAlumno} ${apellidosAlumno}-${user.uid}.pdf`;
         const storagePath = `pdfs/${nombreArchivo}`;
@@ -65,6 +76,13 @@ const AvisoPrivacidad = ({ setLoading }) => {
         }
     };
 
+    /**
+     * Genera un PDF usando React PDF.
+     *
+     * @param {Object} formData - Los datos del formulario.
+     * @param {Function} formatearFecha - Función para formatear la fecha.
+     * @returns {Blob} - El blob del PDF generado.
+     */
     const generarPDFconReactPDF = async (formData, formatearFecha) => {
         const blob = await pdf(<PrivacidadPDF formData={formData} formatearFecha={formatearFecha} />).toBlob();
         return blob;

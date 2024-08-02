@@ -1,10 +1,14 @@
 // src/components/DatosPersonales.js
+
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import FormGroup from './FormGroup';
 import { Button } from 'react-bootstrap';
 
+/**
+ * Esquema de validación para los datos personales.
+ */
 const validationSchema = Yup.object().shape({
     nombresAlumno: Yup.string().required('Nombre del alumno es requerido'),
     apellidosAlumno: Yup.string().required('Apellidos del alumno son requeridos'),
