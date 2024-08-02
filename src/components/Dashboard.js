@@ -1,3 +1,4 @@
+// src/components/Dashboard.js
 import React, { useState, useEffect } from 'react';
 import { getDatosIniciales } from '../services/firebaseService';
 import Swal from 'sweetalert2';
