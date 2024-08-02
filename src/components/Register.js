@@ -7,7 +7,7 @@ import { mostrarAlertaRegistroExitoso, mostrarAlertaErrorRegistro } from '../uti
 import AuthLayout from './AuthLayout';
 import { useGlobalDispatch } from '../utils/GlobalState';
 import { Formik, Field, ErrorMessage } from 'formik';
-import { registerValidationSchema } from '../utils/validationSchemas'; // Importar esquema de validación
+import { registroValidationSchema } from '../utils/validationSchemas';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -37,7 +37,7 @@ const Register = () => {
             <h1 className="text-center mb-4">Registrarse</h1>
             <Formik
                 initialValues={{ email: '', password: '', confirmPassword: '' }}
-                validationSchema={registerValidationSchema} // Usar esquema de validación importado
+                validationSchema={registroValidationSchema}
                 onSubmit={handleRegister}
             >
                 {({ isSubmitting }) => (

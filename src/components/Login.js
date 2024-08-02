@@ -7,7 +7,7 @@ import { mostrarAlertaLoginExitoso, mostrarAlertaErrorLogin } from '../utils/swe
 import AuthLayout from './AuthLayout';
 import { useGlobalDispatch } from '../utils/GlobalState';
 import { Formik, Field, ErrorMessage } from 'formik';
-import { loginValidationSchema } from '../utils/validationSchemas'; // Importar esquema de validación
+import { loginValidationSchema } from '../utils/validationSchemas';
 
 const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
     const navigate = useNavigate();
@@ -25,7 +25,7 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
             }
         } catch (error) {
             console.error('Error during login:', error);
-            mostrarAlertaErrorLogin(navigate);
+            await mostrarAlertaErrorLogin(navigate);
         }
         setSubmitting(false);
     };
@@ -35,7 +35,7 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
             {showTitle && <h1 className="text-center mb-4">Inicio de Sesión</h1>}
             <Formik
                 initialValues={{ email: '', password: '' }}
-                validationSchema={loginValidationSchema} // Usar esquema de validación importado
+                validationSchema={loginValidationSchema}
                 onSubmit={handleLogin}
             >
                 {({ isSubmitting }) => (
