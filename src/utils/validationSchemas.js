@@ -16,6 +16,7 @@ export const datosInicialesValidationSchema = Yup.object().shape({
     apellidosAlumno: Yup.string().required('Apellidos del alumno son requeridos'),
     nombresAlumno: Yup.string().required('Nombre(s) del alumno es requerido'),
     fechaNacimientoAlumno: Yup.date().required('Fecha de nacimiento del alumno es requerida').nullable(),
+    edadAlumno: Yup.number().min(0, 'El alumno debe haber nacido ya, ¡no aceptamos viajeros del tiempo!').max(100, 'Lo sentimos, el alumno no puede ser inmortal').required('La edad del alumno no puede ser mayor a 100 años, ¡no aceptamos inmortales!'),
     curpAlumno: Yup.string().required('CURP del alumno es requerido'),
     apellidosResponsable: Yup.string().required('Apellidos del responsable son requeridos'),
     nombresResponsable: Yup.string().required('Nombre(s) del responsable es requerido'),
