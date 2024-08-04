@@ -1,4 +1,3 @@
-// src/utils/dataUtils.js
 import { getDatosIniciales } from '../services/firebaseService';
 
 /**
@@ -14,12 +13,13 @@ export const cargarDatosIniciales = async (dispatch) => {
             new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
         ]);
 
-        if (!datos || typeof datos !== 'object' || !Array.isArray(datos)) {
+        if (!datos || typeof datos !== 'object' || Array.isArray(datos)) {
             throw new Error('La estructura de los datos es incorrecta');
         }
 
         // Procesar los datos si son correctos
         console.log('Datos iniciales cargados correctamente:', datos);
+        dispatch({ type: 'SET_FORM_DATA', payload: datos }); // Despacha los datos cargados al estado global
         return datos;
     } catch (error) {
         console.error('No se encontraron datos iniciales o la estructura de los datos es incorrecta.', error);
