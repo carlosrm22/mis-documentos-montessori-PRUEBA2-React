@@ -1,64 +1,30 @@
-// src/components/DatosIniciales.js
-
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Formik, Field, ErrorMessage, Form as FormikForm } from 'formik';
-import { getDatosIniciales } from '../services/firebaseService';
-import { Container, Row, Col, Card, Button, Form as BootstrapForm } from 'react-bootstrap';
-import FormGroup from './FormGroup';
+import React from 'react';
+import { Formik, Form as FormikForm } from 'formik';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { datosInicialesValidationSchema } from '../utils/validationSchemas';
 import { handleGuardarDatos } from '../utils/sweetAlertUtils';
-import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
-import Swal from 'sweetalert2';
-import { useLoading } from '../utils/LoadingContext';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../utils/firebaseConfig';
-import { calculateAge } from '../utils/dateUtils';
+import useInitialData from '../utils/useInitialData';
+import { useGlobalDispatch } from '../utils/GlobalState';
+import { useNavigate } from 'react-router-dom';
+import useLoading from '../utils/useLoading';
+import DatosAlumno from './DatosAlumno';
+import DatosResponsable from './DatosResponsable';
 
-/**
- * Componente para los datos iniciales del alumno.
- * Proporciona un formulario para ingresar y guardar los datos iniciales del alumno y su responsable.
- */
-const DatosIniciales = () => {
-    const navigate = useNavigate();
-    const { formData } = useGlobalState();
+const DatosIniciales = React.memo(() => {
+    const { formData, authLoading } = useInitialData();
     const dispatch = useGlobalDispatch();
-    const { setLoading } = useLoading();
-    const [user, loading] = useAuthState(auth);
+    const navigate = useNavigate();
+    const setLoading = useLoading();
 
-    /**
-     * Función para obtener los datos iniciales del usuario.
-     */
-    useEffect(() => {
-        if (loading) {
-            return;
-        }
-        if (!user) {
-            navigate('/login');
-            return;
-        }
+    console.log("formData:", formData);
 
-        const fetchData = async () => {
-            try {
-                const data = await getDatosIniciales();
-                if (data) {
-                    dispatch({ type: 'SET_FORM_DATA', payload: data });
-                } else {
-                    console.log('No se encontraron datos iniciales');
-                }
-            } catch (error) {
-                console.error("Error fetching initial data:", error);
-                Swal.fire('Error al cargar datos iniciales', error.message, 'error');
-            }
-        };
-        fetchData();
-    }, [dispatch, navigate, user, loading]);
-
-    if (loading) {
+    if (authLoading) {
         return <div>Cargando...</div>;
     }
 
     const isReadOnly = formData && Object.keys(formData).length > 0 && formData.nombresAlumno !== '';
+
+    console.log("isReadOnly:", isReadOnly);
 
     return (
         <Container fluid className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
@@ -88,57 +54,32 @@ const DatosIniciales = () => {
                                     emailContacto: formData?.emailContacto || ''
                                 }}
                                 validationSchema={datosInicialesValidationSchema}
-                                onSubmit={(values, { setSubmitting }) => handleGuardarDatos(values, data => dispatch({ type: 'SET_FORM_DATA', payload: data }), setSubmitting, navigate, setLoading)}
+                                onSubmit={(values, { setSubmitting }) => {
+                                    setLoading(true); // Inicia la carga
+                                    handleGuardarDatos(values, data => {
+                                        dispatch({ type: 'SET_FORM_DATA', payload: data });
+                                        setLoading(false); // Termina la carga
+                                        navigate('/next-page'); // Navega a la siguiente página después de guardar
+                                    }, setSubmitting, navigate, setLoading);
+                                }}
                                 enableReinitialize
                             >
                                 {({ values, isSubmitting, handleChange, setFieldValue, errors, touched }) => (
                                     <FormikForm>
                                         <Row>
                                             <Col md={6}>
-                                                <div className="p-3 mb-4 bg-white border rounded">
-                                                    <h2 className="mt-4">Datos del alumno</h2>
-                                                    <BootstrapForm.Group controlId="nivelEducativo" className="mb-3">
-                                                        <BootstrapForm.Label>Nivel Educativo</BootstrapForm.Label>
-                                                        <Field
-                                                            as="select"
-                                                            id="nivelEducativo"
-                                                            name="nivelEducativo"
-                                                            className="form-select"
-                                                            value={values.nivelEducativo}
-                                                            onChange={handleChange}
-                                                            disabled={isReadOnly}
-                                                            required
-                                                        >
-                                                            <option value="">Selecciona el nivel educativo</option>
-                                                            <option value="Maternal (Nido & Casa de Niños)">Maternal (Nido & Casa de Niños)</option>
-                                                            <option value="Preescolar (Casa de niños)">Preescolar (Casa de niños)</option>
-                                                            <option value="Primaria (Taller)">Primaria (Taller)</option>
-                                                        </Field>
-                                                        <ErrorMessage name="nivelEducativo" component="div" className="text-danger" />
-                                                    </BootstrapForm.Group>
-                                                    <FormGroup name="apellidosAlumno" label="Apellidos del alumno" required readOnly={isReadOnly} onChange={handleChange} />
-                                                    <FormGroup name="nombresAlumno" label="Nombre(s) del alumno" required readOnly={isReadOnly} onChange={handleChange} />
-                                                    <FormGroup name="fechaNacimientoAlumno" label="Fecha de nacimiento del alumno" type="date" required readOnly={isReadOnly} onChange={(e) => {
-                                                        handleChange(e);
-                                                        setFieldValue('edadAlumno', calculateAge(new Date(e.target.value)));
-                                                    }} />
-                                                    <FormGroup name="edadAlumno" label="Edad del alumno" type="number" value={values.edadAlumno} readOnly />
-                                                    <FormGroup name="curpAlumno" label="CURP del alumno" required readOnly={isReadOnly} onChange={handleChange} />
-                                                    <div>
-                                                        <a href="https://consultas.curp.gob.mx/CurpSP/renapo/inicio2020.jsp" target="_blank" rel="noopener noreferrer">
-                                                            Consulta tu CURP aquí
-                                                        </a>
-                                                    </div>
-                                                </div>
+                                                <DatosAlumno
+                                                    values={values}
+                                                    handleChange={handleChange}
+                                                    setFieldValue={setFieldValue}
+                                                    isReadOnly={isReadOnly}
+                                                />
                                             </Col>
                                             <Col md={6}>
-                                                <div className="p-3 mb-4 bg-white border rounded">
-                                                    <h2 className="mt-4">Datos del responsable legal del alumno</h2>
-                                                    <FormGroup name="apellidosResponsable" label="Apellidos del responsable legal del alumno" required readOnly={isReadOnly} onChange={handleChange} />
-                                                    <FormGroup name="nombresResponsable" label="Nombre(s) del responsable legal del alumno" required readOnly={isReadOnly} onChange={handleChange} />
-                                                    <FormGroup name="telefonoContacto" label="Teléfono de contacto" type="tel" required readOnly={isReadOnly} helperText="Es posible que nos contactemos a este número vía WhatsApp para dar seguimiento a esta información." onChange={handleChange} />
-                                                    <FormGroup name="emailContacto" label="Email de contacto" type="email" required readOnly={isReadOnly} helperText="Es posible que nos comuniquemos a este correo para dar seguimiento a esta información." onChange={handleChange} />
-                                                </div>
+                                                <DatosResponsable
+                                                    handleChange={handleChange}
+                                                    isReadOnly={isReadOnly}
+                                                />
                                             </Col>
                                         </Row>
                                         {!isReadOnly && (
@@ -158,6 +99,6 @@ const DatosIniciales = () => {
             </Row>
         </Container>
     );
-};
+});
 
 export default DatosIniciales;
