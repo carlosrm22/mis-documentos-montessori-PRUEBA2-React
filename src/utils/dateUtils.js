@@ -33,9 +33,6 @@ export const formatearFecha = (date) => {
  * @throws {Error} - Si el parámetro no es una instancia de Date.
  */
 export const calculateAge = (fechaNacimiento) => {
-    if (!(fechaNacimiento instanceof Date) || isNaN(fechaNacimiento)) {
-        throw new Error('El parámetro debe ser una instancia válida de Date.');
-    }
 
     const hoy = new Date();
     let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
