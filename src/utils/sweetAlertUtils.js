@@ -1,6 +1,6 @@
 // src/utils/sweetAlertUtils.js
 import Swal from 'sweetalert2';
-import { saveData, updateDatosIniciales } from '../services/firebaseService';
+import { saveData } from '../services/firebaseService';
 import { calculateAge } from './dateUtils'; // Asegúrate de importar calculateAge
 
 /**
@@ -147,10 +147,14 @@ export const mostrarAlertaLoginExitoso = () => {
  * @param {string} mensaje - El mensaje de error a mostrar.
  * @returns {Promise<SweetAlertResult>} - El resultado de la alerta.
  */
-export const mostrarAlertaErrorRegistro = (mensaje) => {
-    return Swal.fire('Error al registrarse', mensaje, 'error');
+export const mostrarAlertaErrorRegistro = (mensaje, textoAdicional) => {
+    return Swal.fire({
+        title: 'Este correo ya está registrado',
+        text: 'Contacte al administrador',
+        icon: 'error',
+        footer: "admin@asociacionmontessori.com.mx",
+            });
 };
-
 /**
  * Muestra una alerta de registro exitoso.
  * @returns {Promise<SweetAlertResult>} - El resultado de la alerta.
