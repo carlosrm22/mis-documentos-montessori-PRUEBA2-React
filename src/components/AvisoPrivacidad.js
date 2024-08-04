@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { pdf } from '@react-pdf/renderer';
@@ -10,7 +10,7 @@ import useAuth from '../utils/useAuth';
 import useLoading from '../utils/useLoading';
 import PrivacidadPDF from './PrivacidadPDF';
 import Swal from 'sweetalert2';
-import { cargarDatosIniciales } from '../utils/dataUtils'; // Importar cargarDatosIniciales
+import { cargarDatosIniciales } from '../utils/dataUtils';
 
 const AvisoPrivacidad = React.memo(() => {
     const navigate = useNavigate();
@@ -20,6 +20,23 @@ const AvisoPrivacidad = React.memo(() => {
     const setLoading = useLoading();
     const [pdfUrl, setPdfUrl] = useState(null);
 
+    const fetchData = useCallback(async () => {
+        try {
+            setLoading(true);
+            const data = await cargarDatosIniciales(dispatch);
+            if (data) {
+                dispatch({ type: 'SET_FORM_DATA', payload: data });
+            } else {
+                console.log('No se encontraron datos iniciales');
+            }
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            console.error("Error fetching initial data:", error);
+            Swal.fire('Error al cargar datos iniciales', error.message, 'error');
+        }
+    }, [dispatch, setLoading]);
+
     useEffect(() => {
         if (authLoading) {
             return;
@@ -28,29 +45,11 @@ const AvisoPrivacidad = React.memo(() => {
             navigate('/login');
             return;
         }
-
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const data = await cargarDatosIniciales(dispatch);
-                if (data) {
-                    dispatch({ type: 'SET_FORM_DATA', payload: data });
-                } else {
-                    console.log('No se encontraron datos iniciales');
-                }
-                setLoading(false);
-            } catch (error) {
-                setLoading(false);
-                console.error("Error fetching initial data:", error);
-                Swal.fire('Error al cargar datos iniciales', error.message, 'error');
-            }
-        };
-
         fetchData();
-    }, [dispatch, navigate, user, authLoading, setLoading]);
+    }, [fetchData, navigate, user, authLoading]);
 
     useEffect(() => {
-        if (user && formData.nombresAlumno && formData.apellidosAlumno) {
+        if (user && formData && formData.nombresAlumno && formData.apellidosAlumno) {
             const storagePath = `pdfs/aviso-privacidad-${formData.nombresAlumno} ${formData.apellidosAlumno}-${user.uid}.pdf`;
             setLoading(true);
             descargarPDFdeFirebase(storagePath)
