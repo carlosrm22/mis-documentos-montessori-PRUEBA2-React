@@ -37,32 +37,32 @@ const AvisoPrivacidad = React.memo(() => {
         }
     }, [dispatch, setLoading]);
 
+    const fetchPdfUrl = useCallback(async () => {
+        if (user && formData?.nombresAlumno && formData?.apellidosAlumno) {
+            const storagePath = `pdfs/aviso-privacidad-${formData.nombresAlumno} ${formData.apellidosAlumno}-${user.uid}.pdf`;
+            setLoading(true);
+            try {
+                const url = await descargarPDFdeFirebase(storagePath);
+                setPdfUrl(url);
+            } catch (error) {
+                console.error('Error al descargar el PDF:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+    }, [user, formData, setLoading]);
+
     useEffect(() => {
-        if (authLoading) {
-            return;
-        }
-        if (!user) {
+        if (!authLoading && user) {
+            fetchData();
+        } else if (!authLoading && !user) {
             navigate('/login');
-            return;
         }
-        fetchData();
     }, [fetchData, navigate, user, authLoading]);
 
     useEffect(() => {
-        if (user && formData && formData.nombresAlumno && formData.apellidosAlumno) {
-            const storagePath = `pdfs/aviso-privacidad-${formData.nombresAlumno} ${formData.apellidosAlumno}-${user.uid}.pdf`;
-            setLoading(true);
-            descargarPDFdeFirebase(storagePath)
-                .then(url => {
-                    setPdfUrl(url);
-                    setLoading(false);
-                })
-                .catch(error => {
-                    console.error('Error al descargar el PDF:', error);
-                    setLoading(false);
-                });
-        }
-    }, [user, formData, setLoading]);
+        fetchPdfUrl();
+    }, [fetchPdfUrl]);
 
     if (!formData || !formData.nombresAlumno) {
         return <div>Cargando datos...</div>;
