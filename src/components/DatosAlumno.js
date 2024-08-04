@@ -26,15 +26,15 @@ const DatosAlumno = ({ values, handleChange, setFieldValue, isReadOnly }) => (
             </Field>
             <ErrorMessage name="nivelEducativo" component="div" className="text-danger" />
         </BootstrapForm.Group>
-        <FormGroup name="apellidosAlumno" label="Apellidos del alumno" required readOnly={isReadOnly} onChange={handleChange} />
-        <FormGroup name="nombresAlumno" label="Nombre(s) del alumno" required readOnly={isReadOnly} onChange={handleChange} />
+        <FormGroup name="apellidosAlumno" label="Apellidos del alumno" required readOnly={isReadOnly} onChange={handleChange} value={values.apellidosAlumno} />
+        <FormGroup name="nombresAlumno" label="Nombre(s) del alumno" required readOnly={isReadOnly} onChange={handleChange} value={values.nombresAlumno} />
         <FormGroup name="fechaNacimientoAlumno" label="Fecha de nacimiento del alumno" type="date" required readOnly={isReadOnly} onChange={(e) => {
             handleChange(e);
             const fecha = new Date(e.target.value);
             setFieldValue('edadAlumno', calculateAge(fecha));
-        }} />
+        }} value={values.fechaNacimientoAlumno} />
         <FormGroup name="edadAlumno" label="Edad del alumno" type="number" value={values.edadAlumno} readOnly />
-        <FormGroup name="curpAlumno" label="CURP del alumno" required readOnly={isReadOnly} onChange={handleChange} />
+        <FormGroup name="curpAlumno" label="CURP del alumno" required readOnly={isReadOnly} onChange={handleChange} value={values.curpAlumno} />
         <div>
             <a href="https://consultas.curp.gob.mx/CurpSP/renapo/inicio2020.jsp" target="_blank" rel="noopener noreferrer">
                 Consulta tu CURP aquí

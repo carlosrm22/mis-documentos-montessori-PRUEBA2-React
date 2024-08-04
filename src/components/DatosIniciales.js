@@ -77,6 +77,7 @@ const DatosIniciales = React.memo(() => {
                                             </Col>
                                             <Col md={6}>
                                                 <DatosResponsable
+                                                    values={values}
                                                     handleChange={handleChange}
                                                     isReadOnly={isReadOnly}
                                                 />
