@@ -1,34 +1,103 @@
 /* Estilos para el botón flotante de WhatsApp */
-.float-whatsapp {
+@keyframes highlight {
+    0% {
+        box-shadow: 0 0 0 0 rgb(1, 214, 97, 1);
+    }
+
+    100% {
+        box-shadow: 0 0 0 30px rgba(18, 140, 126, 0);
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%) scale(0.8);
+    }
+    60% {
+        opacity: 1;
+        transform: translateX(10%) scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-100%);
+        -webkit-transform: translateX(-100%);
+        -moz-transform: translateX(-100%);
+        -ms-transform: translateX(-100%);
+        -o-transform: translateX(-100%);
+}
+}
+
+.whatsapp-container {
     position: fixed;
-    width: 240px;
-    height: 70px;
-    bottom: 20px;
-    right: 20px;
+    bottom: 33px;
+    right: 33px;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+    animation: slideIn 0.5s ease-out;
+}
+
+.whatsapp-text {
     background-color: #25d366;
-    color: white;
-    border-radius: 25px;
-    text-align: center;
-    box-shadow: 7px 7px 3px #999;
+    color: #fff;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin-right: 10px;
+    font-size: 16px;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+.icon-whatsapp {
+    font-size: 35px;
+}
+
+.whatsapp-float {
+    width: 60px;
+    height: 60px;
+    background-color: #25d366;
+    color: #fff;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
-    z-index: 1000;
-    text-decoration: none;
+    animation: highlight 1.5s infinite alternate;
+    text-decoration: none !important;
 }
 
-.float-whatsapp:hover {
-    background-color: white;
-    color: #25d366;
-    text-decoration: none;
-    font-size: 19px;
-    border-color: dimgray;
+.whatsapp-float:hover {
+    background-color: #25d366;
+    color: #fff !important;
 }
 
-.float-whatsapp i {
-    font-size: 24px;
-    margin-right: 10px;
+.whatsapp-float:hover + .whatsapp-text {
+    opacity: 1;
+    transform: translateX(0);
+    animation: fadeIn 0.4s ease-out forwards;
 }
 
 /* Línea de firma en el aviso de privacidad */
