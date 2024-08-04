@@ -65,9 +65,6 @@ function NavigationBar() {
                   </LinkContainer>
                 </>
               )}
-              <LinkContainer to="/contacto">
-                <Nav.Link>Contacto</Nav.Link>
-              </LinkContainer>
               {!user ? (
                 <>
                   <LinkContainer to="/login">
