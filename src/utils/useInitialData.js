@@ -1,7 +1,6 @@
 // src/utils/useInitialData.js
 import { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
 import { useGlobalState, useGlobalDispatch } from './GlobalState';
 import { cargarDatosIniciales } from './dataUtils';
 import useAuth from './useAuth';
@@ -32,7 +31,7 @@ const useInitialData = () => {
                 console.error("Error fetching initial data:", error);
                 retries += 1;
                 if (retries >= MAX_RETRIES) {
-                    Swal.fire('Error al cargar datos iniciales', error.message, 'error');
+                    console.error('Error al cargar datos iniciales:', error.message);
                 }
             }
         }
