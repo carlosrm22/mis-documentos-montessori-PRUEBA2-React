@@ -1,38 +1,69 @@
-// src/components/AvisoPrivacidad.js
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { pdf } from '@react-pdf/renderer';
 import { mostrarAvisoPDF, mostrarAlertaExito, mostrarAlertaError } from '../utils/sweetAlertUtils';
 import { subirPDFaFirebase, descargarPDFdeFirebase } from '../utils/pdfUtils';
-import { useGlobalState } from '../utils/GlobalState';
+import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
 import { formatearFecha } from '../utils/dateUtils';
-import { auth } from '../utils/firebaseConfig';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import useAuth from '../utils/useAuth';
+import useLoading from '../utils/useLoading';
 import PrivacidadPDF from './PrivacidadPDF';
+import Swal from 'sweetalert2';
+import { cargarDatosIniciales } from '../utils/dataUtils'; // Importar cargarDatosIniciales
 
-/**
- * Componente para mostrar el aviso de privacidad.
- * Permite al usuario aceptar y generar un PDF con el aviso de privacidad.
- *
- * @param {Object} props - Las propiedades del componente.
- * @param {Function} props.setLoading - Función para establecer el estado de carga.
- */
-const AvisoPrivacidad = ({ setLoading }) => {
+const AvisoPrivacidad = React.memo(() => {
     const navigate = useNavigate();
     const { formData } = useGlobalState();
+    const dispatch = useGlobalDispatch();
+    const { user, authLoading } = useAuth();
+    const setLoading = useLoading();
     const [pdfUrl, setPdfUrl] = useState(null);
-    const [user] = useAuthState(auth);
 
     useEffect(() => {
-        if (user) {
-            const storagePath = `pdfs/aviso-privacidad-${formData.nombresAlumno} ${formData.apellidosAlumno}-${user.uid}.pdf`;
-            descargarPDFdeFirebase(storagePath)
-                .then(url => setPdfUrl(url))
-                .catch(error => console.error('Error al descargar el PDF:', error));
+        if (authLoading) {
+            return;
         }
-    }, [user, formData.apellidosAlumno, formData.nombresAlumno]);
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const data = await cargarDatosIniciales(dispatch);
+                if (data) {
+                    dispatch({ type: 'SET_FORM_DATA', payload: data });
+                } else {
+                    console.log('No se encontraron datos iniciales');
+                }
+                setLoading(false);
+            } catch (error) {
+                setLoading(false);
+                console.error("Error fetching initial data:", error);
+                Swal.fire('Error al cargar datos iniciales', error.message, 'error');
+            }
+        };
+
+        fetchData();
+    }, [dispatch, navigate, user, authLoading, setLoading]);
+
+    useEffect(() => {
+        if (user && formData.nombresAlumno && formData.apellidosAlumno) {
+            const storagePath = `pdfs/aviso-privacidad-${formData.nombresAlumno} ${formData.apellidosAlumno}-${user.uid}.pdf`;
+            setLoading(true);
+            descargarPDFdeFirebase(storagePath)
+                .then(url => {
+                    setPdfUrl(url);
+                    setLoading(false);
+                })
+                .catch(error => {
+                    console.error('Error al descargar el PDF:', error);
+                    setLoading(false);
+                });
+        }
+    }, [user, formData, setLoading]);
 
     if (!formData || !formData.nombresAlumno) {
         return <div>Cargando datos...</div>;
@@ -40,9 +71,6 @@ const AvisoPrivacidad = ({ setLoading }) => {
 
     const { nombresAlumno, apellidosAlumno, nombresResponsable, apellidosResponsable } = formData;
 
-    /**
-     * Maneja la aceptación del aviso de privacidad y la generación del PDF.
-     */
     const handleAceptarContinuar = async () => {
         const nombreArchivo = `aviso-privacidad-${nombresAlumno} ${apellidosAlumno}-${user.uid}.pdf`;
         const storagePath = `pdfs/${nombreArchivo}`;
@@ -76,13 +104,6 @@ const AvisoPrivacidad = ({ setLoading }) => {
         }
     };
 
-    /**
-     * Genera un PDF usando React PDF.
-     *
-     * @param {Object} formData - Los datos del formulario.
-     * @param {Function} formatearFecha - Función para formatear la fecha.
-     * @returns {Blob} - El blob del PDF generado.
-     */
     const generarPDFconReactPDF = async (formData, formatearFecha) => {
         const blob = await pdf(<PrivacidadPDF formData={formData} formatearFecha={formatearFecha} />).toBlob();
         return blob;
@@ -147,6 +168,6 @@ const AvisoPrivacidad = ({ setLoading }) => {
             </div>
         </div>
     );
-};
+});
 
 export default AvisoPrivacidad;
