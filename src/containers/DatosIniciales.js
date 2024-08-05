@@ -1,4 +1,5 @@
-import React from 'react';
+// src/containers/DatosIniciales.js
+import React, { useEffect, useCallback } from 'react';
 import { Formik, Form as FormikForm } from 'formik';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { datosInicialesValidationSchema } from '../utils/validationSchemas';
@@ -10,12 +11,46 @@ import useLoading from '../utils/useLoading';
 import DatosAlumno from '../components/Forms/DatosAlumno';
 import DatosResponsable from '../components/Forms/DatosResponsable';
 import withAuth from '../hoc/withAuth';
+import { cargarDatosIniciales } from '../utils/dataUtils';
 
 const DatosIniciales = React.memo(() => {
     const { formData, authLoading, user } = useInitialData();
     const dispatch = useGlobalDispatch();
     const navigate = useNavigate();
     const setLoading = useLoading();
+
+    const fetchData = useCallback(async () => {
+        try {
+            setLoading(true);
+            const data = await cargarDatosIniciales(dispatch);
+            if (data) {
+                dispatch({ type: 'SET_FORM_DATA', payload: data });
+            } else {
+                console.log('No se encontraron datos iniciales');
+            }
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            console.error("Error fetching initial data:", error);
+            dispatch({ type: 'SET_FORM_DATA', payload: { error: error.message } });
+        }
+    }, [dispatch, setLoading]);
+
+    useEffect(() => {
+        if (!authLoading && user) {
+            fetchData();
+        } else if (!authLoading && !user) {
+            navigate('/login');
+        }
+    }, [fetchData, navigate, user, authLoading]);
+
+    if (authLoading) {
+        return <div>Cargando datos...</div>;
+    }
+
+    if (formData?.error) {
+        return <div>Error: {formData.error}</div>;
+    }
 
     const isReadOnly = formData && Object.keys(formData).length > 0 && formData.nombresAlumno !== '';
 

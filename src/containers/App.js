@@ -1,3 +1,4 @@
+// src/containers/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Navbar from '../components/Layout/Navbar';
@@ -13,16 +14,14 @@ import Bienvenida from '../containers/Bienvenida';
 import LoadingSpinner from '../components/Shared/LoadingSpinner';
 import { useGlobalState } from '../utils/GlobalState';
 import useAuth from '../utils/useAuth';
-// import useLoading from '../utils/useLoading';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/App.css';
 import '../styles/LoadingSpinner.css';
 
 function App() {
-  const { user, loading } = useGlobalState();
   useAuth(); // Custom hook for handling auth
-  // const setLoading = useLoading(); // Custom hook for setting loading state
+  const { user, loading } = useGlobalState();
 
   return (
     <Router>

@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+// src/containers/DatosPersonales.js
+import React, { useEffect, useCallback } from 'react';
 import { Formik, Form } from 'formik';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import { datosPersonalesValidationSchema } from '../utils/validationSchemas';
@@ -7,35 +8,41 @@ import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
 import { cargarDatosIniciales } from '../utils/dataUtils';
 import useLoading from '../utils/useLoading';
 import useAuth from '../utils/useAuth';
+import withAuth from '../hoc/withAuth';
+import { useNavigate } from 'react-router-dom';
 
-const DatosPersonales = () => {
-    const { formData } = useGlobalState();
+const DatosPersonales = React.memo(() => {
+    const { formData, user, authLoading } = useGlobalState();
     const dispatch = useGlobalDispatch();
     const setLoading = useLoading();
-    const { user, authLoading } = useAuth();
+    const navigate = useNavigate();
+
+    useAuth(); // Asegurarnos de que el estado de autenticación se maneje
+
+    const fetchData = useCallback(async () => {
+        try {
+            setLoading(true);
+            const data = await cargarDatosIniciales(dispatch);
+            if (data) {
+                dispatch({ type: 'SET_FORM_DATA', payload: data });
+            } else {
+                console.log('No se encontraron datos iniciales');
+            }
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            console.error("Error fetching initial data:", error);
+            dispatch({ type: 'SET_FORM_DATA', payload: { error: error.message } });
+        }
+    }, [dispatch, setLoading]);
 
     useEffect(() => {
-        if (authLoading) return;
-        if (!user) return;
-
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const data = await cargarDatosIniciales(dispatch);
-                if (data) {
-                    dispatch({ type: 'SET_FORM_DATA', payload: data });
-                }
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (!formData || Object.keys(formData).length === 0) {
+        if (!authLoading && user) {
             fetchData();
+        } else if (!authLoading && !user) {
+            navigate('/login');
         }
-    }, [dispatch, formData, setLoading, user, authLoading]);
+    }, [fetchData, user, authLoading, navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -48,12 +55,13 @@ const DatosPersonales = () => {
         });
     };
 
-    useEffect(() => {
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-    }, [setLoading]);
+    if (authLoading) {
+        return <div>Cargando datos...</div>;
+    }
+
+    if (formData?.error) {
+        return <div>Error: {formData.error}</div>;
+    }
 
     return (
         <Container className="mt-5">
@@ -96,6 +104,6 @@ const DatosPersonales = () => {
             </Row>
         </Container>
     );
-}
+});
 
-export default DatosPersonales;
+export default withAuth(DatosPersonales);

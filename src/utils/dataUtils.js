@@ -1,3 +1,4 @@
+// src/utils/dataUtils.js
 import { getDatosIniciales } from '../services/firebaseService';
 
 /**

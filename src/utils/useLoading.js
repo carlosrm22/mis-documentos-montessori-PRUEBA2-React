@@ -1,16 +1,8 @@
-import { useCallback } from 'react';
-import { useGlobalDispatch } from './GlobalState';
+import { useContext } from 'react';
+import { LoadingContext } from './LoadingContext';
 
-/**
- * Custom hook to set the loading state in the global state.
- * @returns {Function} setLoading - Function to set the loading state.
- */
 const useLoading = () => {
-    const dispatch = useGlobalDispatch();
-
-    const setLoading = useCallback((isLoading) => {
-        dispatch({ type: 'SET_LOADING', payload: isLoading });
-    }, [dispatch]);
+    const { loading, setLoading } = useContext(LoadingContext);
 
     return setLoading;
 };

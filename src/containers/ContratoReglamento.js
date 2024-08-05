@@ -22,7 +22,8 @@ const ContratoReglamento = () => {
                 dispatch({ type: 'SET_FORM_DATA', payload: data });
             }
         } catch (error) {
-            console.error(error);
+            console.error('Error fetching initial data:', error);
+            dispatch({ type: 'SET_FORM_DATA', payload: { error } });
         } finally {
             setLoading(false);
         }
@@ -37,7 +38,7 @@ const ContratoReglamento = () => {
         fetchData();
     }, [fetchData, user, authLoading, navigate]);
 
-    if (!formData || !formData.nombresResponsable) {
+    if (!formData || formData.error) {
         return <div>Cargando datos...</div>;
     }
 

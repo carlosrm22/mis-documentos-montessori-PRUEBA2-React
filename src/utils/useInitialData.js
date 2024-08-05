@@ -1,55 +1,38 @@
 // src/utils/useInitialData.js
-import { useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useGlobalState, useGlobalDispatch } from './GlobalState';
-import { cargarDatosIniciales } from './dataUtils';
-import useAuth from './useAuth';
-import useLoading from './useLoading';
+import { useState, useEffect } from 'react';
+import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
+import { getAuth } from 'firebase/auth';
+import { cargarDatosIniciales } from '../utils/dataUtils';
 
 const useInitialData = () => {
-    const navigate = useNavigate();
+    const [initialData, setInitialData] = useState(null);
     const { formData } = useGlobalState();
     const dispatch = useGlobalDispatch();
-    const setLoading = useLoading();
-    const { user, authLoading } = useAuth();
-    const MAX_RETRIES = 1;
-
-    const fetchData = useCallback(async () => {
-        setLoading(true);
-        let retries = 0;
-
-        while (retries < MAX_RETRIES) {
-            try {
-                const data = await cargarDatosIniciales(dispatch);
-                if (data) {
-                    dispatch({ type: 'SET_FORM_DATA', payload: data });
-                } else {
-                    dispatch({ type: 'SET_FORM_DATA', payload: {} });
-                }
-                break;
-            } catch (error) {
-                console.error("Error fetching initial data:", error);
-                retries += 1;
-                if (retries >= MAX_RETRIES) {
-                    console.error('Error al cargar datos iniciales:', error.message);
-                }
-            }
-        }
-        setLoading(false);
-    }, [dispatch, setLoading]);
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const [authLoading, setAuthLoading] = useState(true);
 
     useEffect(() => {
-        if (authLoading) return;
-        if (!user) {
-            navigate('/login');
-            return;
-        }
-        if (!formData || Object.keys(formData).length === 0) {
-            fetchData();
-        }
-    }, [authLoading, user, navigate, formData, fetchData]);
+        const fetchInitialData = async () => {
+            try {
+                const data = await cargarDatosIniciales(dispatch);
+                setInitialData(data);
+            } catch (error) {
+                console.error('Error in useInitialData:', error);
+                setInitialData({ error: error.message });  // Asegúrate de no pasar un objeto de error
+            } finally {
+                setAuthLoading(false);
+            }
+        };
 
-    return { formData, user, authLoading };
+        if (user && !formData) {
+            fetchInitialData();
+        } else {
+            setAuthLoading(false);
+        }
+    }, [user, formData, dispatch]);
+
+    return { formData: initialData || formData, authLoading, user };
 };
 
 export default useInitialData;

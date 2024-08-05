@@ -1,7 +1,7 @@
-// src/utils/LoadingContext.js
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
+import PropTypes from 'prop-types';
 
-const LoadingContext = createContext();
+export const LoadingContext = createContext();
 
 export const LoadingProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
@@ -13,6 +13,6 @@ export const LoadingProvider = ({ children }) => {
     );
 };
 
-export const useLoading = () => {
-    return useContext(LoadingContext);
+LoadingProvider.propTypes = {
+    children: PropTypes.node.isRequired,
 };
