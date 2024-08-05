@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field, ErrorMessage } from 'formik';
-import { Form as BootstrapForm, Container, Row, Col, Card, FormGroup as BootstrapFormGroup, FormLabel, FormControl } from 'react-bootstrap';
+import { Form as Container, Row, Col, FormGroup as BootstrapFormGroup, FormLabel } from 'react-bootstrap';
 import FormGroup from './FormGroup';
 import { calculateAge } from '../utils/dateUtils';
 

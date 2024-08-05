@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import FormGroup from './FormGroup';
 
 const DatosResponsable = ({ values, handleChange, isReadOnly }) => (
