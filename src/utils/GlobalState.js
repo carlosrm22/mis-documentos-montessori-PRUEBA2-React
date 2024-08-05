@@ -1,5 +1,11 @@
-import React, { createContext, useReducer, useContext } from 'react';
+import React, { createContext, useReducer, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
+
+// Definir constantes para las acciones
+const SET_FORM_DATA = 'SET_FORM_DATA';
+const SET_USER = 'SET_USER';
+const SET_LOADING = 'SET_LOADING';
+const SET_ERROR = 'SET_ERROR';
 
 const initialState = {
     formData: {},
@@ -13,13 +19,13 @@ const GlobalDispatchContext = createContext(() => null);
 
 const globalReducer = (state, action) => {
     switch (action.type) {
-        case 'SET_FORM_DATA':
+        case SET_FORM_DATA:
             return { ...state, formData: action.payload };
-        case 'SET_USER':
+        case SET_USER:
             return { ...state, user: action.payload };
-        case 'SET_LOADING':
+        case SET_LOADING:
             return { ...state, loading: action.payload };
-        case 'SET_ERROR':
+        case SET_ERROR:
             return { ...state, error: action.payload };
         default:
             return state;
@@ -29,9 +35,13 @@ const globalReducer = (state, action) => {
 export const GlobalProvider = ({ children }) => {
     const [state, dispatch] = useReducer(globalReducer, initialState);
 
+    // Memoizar los valores de los contextos
+    const stateValue = useMemo(() => state, [state]);
+    const dispatchValue = useMemo(() => dispatch, [dispatch]);
+
     return (
-        <GlobalStateContext.Provider value={state}>
-            <GlobalDispatchContext.Provider value={dispatch}>
+        <GlobalStateContext.Provider value={stateValue}>
+            <GlobalDispatchContext.Provider value={dispatchValue}>
                 {children}
             </GlobalDispatchContext.Provider>
         </GlobalStateContext.Provider>
