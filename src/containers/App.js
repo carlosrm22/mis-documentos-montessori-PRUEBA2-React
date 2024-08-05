@@ -1,19 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import DatosIniciales from '../components/DatosIniciales';
-import AvisoPrivacidad from '../components/AvisoPrivacidad';
-import DatosPersonales from '../components/DatosPersonales';
-import Register from '../components/Register';
-import Login from '../components/Login';
-import Dashboard from '../components/Dashboard';
-import ContratoReglamento from '../components/ContratoReglamento';
-import Bienvenida from '../components/Bienvenida';
-import LoadingSpinner from '../components/LoadingSpinner';
+import Navbar from '../components/Layout/Navbar';
+import Footer from '../components/Layout/Footer';
+import DatosIniciales from '../containers/DatosIniciales';
+import AvisoPrivacidad from '../containers/AvisoPrivacidad';
+import DatosPersonales from '../containers/DatosPersonales';
+import Register from '../components/Auth/Register';
+import Login from '../components/Auth/Login';
+import Dashboard from '../containers/Dashboard/Dashboard';
+import ContratoReglamento from '../containers/ContratoReglamento';
+import Bienvenida from '../containers/Bienvenida';
+import LoadingSpinner from '../components/Shared/LoadingSpinner';
 import { useGlobalState } from '../utils/GlobalState';
 import useAuth from '../utils/useAuth';
-import useLoading from '../utils/useLoading';
+// import useLoading from '../utils/useLoading';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/App.css';
@@ -22,7 +22,7 @@ import '../styles/LoadingSpinner.css';
 function App() {
   const { user, loading } = useGlobalState();
   useAuth(); // Custom hook for handling auth
-  const setLoading = useLoading(); // Custom hook for setting loading state
+  // const setLoading = useLoading(); // Custom hook for setting loading state
 
   return (
     <Router>

@@ -1,0 +1,1 @@
+// Archivo vacío preparado para su uso futuro
