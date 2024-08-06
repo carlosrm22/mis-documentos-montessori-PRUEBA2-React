@@ -1,5 +1,5 @@
 import { getDatosIniciales } from '../services/firebaseService';
-import { mostrarAlertaError, mostrarAlertaExito } from './sweetAlertUtils';
+import { mostrarAlertaError, mostrarAlertaExito } from '../utils/sweetAlertUtils';
 
 // Constantes para los tipos de acción
 const SET_LOADING = 'SET_LOADING';
@@ -28,24 +28,18 @@ export const cargarDatosIniciales = async (dispatch) => {
             createTimeout(5000)
         ]);
 
-        if (!datos) {
-            console.log('No se encontraron datos iniciales.');
-            dispatch({ type: SET_FORM_DATA, payload: {} }); // Cargar datos vacíos
-            return {};
-        }
-
-        if (typeof datos !== 'object' || Array.isArray(datos)) {
+        if (!datos || typeof datos !== 'object' || Array.isArray(datos)) {
             throw new Error('La estructura de los datos es incorrecta');
         }
 
         console.log('Datos iniciales cargados correctamente:', datos);
         dispatch({ type: SET_FORM_DATA, payload: datos });
-        mostrarAlertaExito();  // Mostrar alerta de éxito al cargar los datos correctamente
+        mostrarAlertaExito(); // Mostrar alerta de éxito si los datos se cargan correctamente
         return datos;
     } catch (error) {
         console.error('No se encontraron datos iniciales o la estructura de los datos es incorrecta.', error);
         dispatch({ type: SET_ERROR, payload: error.message });
-        mostrarAlertaError(error.message);  // Mostrar alerta de error al fallar la carga de datos
+        mostrarAlertaError(error.message); // Mostrar alerta de error si hay un problema al cargar los datos
         throw error;
     } finally {
         dispatch({ type: SET_LOADING, payload: false });
