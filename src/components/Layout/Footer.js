@@ -93,7 +93,7 @@ function Footer() {
             {/* Botón flotante de WhatsApp */}
             <div className="whatsapp-container">
                 <div className="whatsapp-text no-underline">
-                    <b>Necesitas ayuuda?</b><br></br> Contáctanos por WhatsApp! 😊
+                    <b>Necesitas ayuda?</b><br></br> Contáctanos por WhatsApp! 😊
                 </div>
                 <a href="https://wa.me/5215548885013?text=Hola,%20necesito%20ayuda%20con%20mi%20cuenta%20Montessori" className="whatsapp-float" target="_blank" rel="noopener noreferrer">
                     <i className="fab fa-whatsapp icon-whatsapp"></i>
