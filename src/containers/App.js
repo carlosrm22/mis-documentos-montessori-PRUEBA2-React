@@ -1,4 +1,3 @@
-// src/containers/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Navbar from '../components/Layout/Navbar';
@@ -20,24 +19,35 @@ import '../styles/App.css';
 import '../styles/LoadingSpinner.css';
 
 function App() {
-  useAuth(); // Custom hook for handling auth
   const { user, loading } = useGlobalState();
+  useAuth(); // Inicializa la autenticación
+
+  if (loading) {
+    return <LoadingSpinner />; // Spinner para cuando cargue algo
+  }
 
   return (
     <Router>
       <>
-        {loading && <LoadingSpinner />}
         <Navbar />
         <div className="container">
           <Routes>
             <Route path="/" element={<Bienvenida />} />
-            <Route path="/datos-iniciales" element={<DatosIniciales />} />
-            <Route path="/aviso-privacidad" element={<AvisoPrivacidad />} />
-            <Route path="/datos-personales" element={<DatosPersonales />} />
-            <Route path="/register" element={user ? <Navigate to="/dashboard" /> : <Register />} />
-            <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login />} />
-            <Route path="/contrato-reglamento" element={<ContratoReglamento />} />
-            <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            {user ? ( // si el usuario está logueado entonces ir a:
+              <>
+                <Route path="/datos-iniciales" element={<DatosIniciales />} />
+                <Route path="/aviso-privacidad" element={<AvisoPrivacidad />} />
+                <Route path="/datos-personales" element={<DatosPersonales />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/inicio" element={<Dashboard />} />
+                <Route path="/contrato-reglamento" element={<ContratoReglamento />} />
+                <Route path="*" element={<Navigate to="/dashboard" />} />
+              </>
+            ) : (
+              <Route path="*" element={<Navigate to="/login" />} /> // Ruta comodín si el usuario no está logueado siempre manda a login
+            )}
           </Routes>
         </div>
         <Footer />
