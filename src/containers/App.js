@@ -23,7 +23,7 @@ function App() {
   useAuth(); // Inicializa la autenticación
 
   if (loading) {
-    return <LoadingSpinner />; // Spinner para cuando cargue algo
+    return <LoadingSpinner />; // Si está cargando entonces mostrar Spinner de carga
   }
 
   return (
@@ -43,7 +43,7 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/inicio" element={<Dashboard />} />
                 <Route path="/contrato-reglamento" element={<ContratoReglamento />} />
-                <Route path="*" element={<Navigate to="/dashboard" />} />
+                <Route path="*" element={<Navigate to="/Dashboard" />} />
               </>
             ) : (
               <Route path="*" element={<Navigate to="/login" />} /> // Ruta comodín si el usuario no está logueado siempre manda a login
