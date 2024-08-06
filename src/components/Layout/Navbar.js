@@ -1,6 +1,4 @@
-// src/components/Navbar.js
-
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -13,6 +11,7 @@ import { auth } from '../../utils/firebaseConfig';
 function NavigationBar() {
   const [user] = useAuthState(auth);
   const [expanded, setExpanded] = useState(false);
+  const navbarRef = useRef(null);
 
   /**
    * Maneja el evento de clic para expandir/colapsar el Navbar.
@@ -28,8 +27,22 @@ function NavigationBar() {
     setExpanded(false);
   };
 
+  // Cierra el Navbar al seleccionar fuera de él
+  const handleClickOutside = (event) => {
+    if (navbarRef.current && !navbarRef.current.contains(event.target)) {
+      setExpanded(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="pb-5">
+    <div className="pb-5" ref={navbarRef}>
       <Navbar bg="primary" variant="dark" expand="lg" expanded={expanded} fixed="top">
         <Container>
           <LinkContainer to="/">
@@ -52,7 +65,7 @@ function NavigationBar() {
           <Navbar.Toggle aria-controls="navbar-nav" onClick={handleToggle} />
           <Navbar.Collapse id="navbar-nav">
             <Nav className="ms-auto" onSelect={handleSelect}>
-              <LinkContainer to="/">
+              <LinkContainer to="/dashboard">
                 <Nav.Link>Inicio</Nav.Link>
               </LinkContainer>
               {user && (
