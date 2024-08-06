@@ -1,4 +1,4 @@
-// src/utils/authUtils.js
+// No mantiene un estado local como useAuth. Solo verifica el estado de autenticación y actualiza el estado global.
 import { auth } from './firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 
