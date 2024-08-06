@@ -70,7 +70,8 @@ export const mostrarAlertaError = (mensaje) => {
     return Swal.fire({
         icon: 'error',
         title: 'Error al guardar los datos',
-        text: mensaje
+        text: "Por favor contacte al administrador",
+        footer: "admin@asociacionmontessori.com.mx",
     });
 };
 
@@ -150,7 +151,7 @@ export const mostrarAlertaLoginExitoso = () => {
 export const mostrarAlertaErrorRegistro = (mensaje, textoAdicional) => {
     return Swal.fire({
         title: 'Este correo ya está registrado',
-        text: 'Contacte al administrador',
+        text: 'Por favor, contacte al administrador',
         icon: 'error',
         footer: "admin@asociacionmontessori.com.mx",
             });
