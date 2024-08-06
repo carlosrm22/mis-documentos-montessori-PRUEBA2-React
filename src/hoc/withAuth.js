@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../utils/useAuth';
-import useLoading from '../utils/useLoading';
 import LoadingSpinner from '../components/Shared/LoadingSpinner';
+import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
 
 const withAuth = (WrappedComponent) => {
     return (props) => {
         const { user, authLoading } = useAuth();
-        const setLoading = useLoading();
+        const { loading } = useGlobalState();
+        const dispatch = useGlobalDispatch();
         const navigate = useNavigate();
 
         useEffect(() => {
@@ -15,12 +16,12 @@ const withAuth = (WrappedComponent) => {
                 if (!user) {
                     navigate('/login');
                 } else {
-                    setLoading(false);
+                    dispatch({ type: 'SET_LOADING', payload: false });
                 }
             }
-        }, [authLoading, user, navigate, setLoading]);
+        }, [authLoading, user, navigate, dispatch]);
 
-        if (authLoading) {
+        if (loading || authLoading) {
             return <LoadingSpinner />;
         }
 
