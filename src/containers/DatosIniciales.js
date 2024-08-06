@@ -1,40 +1,36 @@
-// src/containers/DatosIniciales.js
 import React, { useEffect, useCallback } from 'react';
 import { Formik, Form as FormikForm } from 'formik';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { datosInicialesValidationSchema } from '../utils/validationSchemas';
-import { handleGuardarDatos } from '../utils/sweetAlertUtils';
+import { handleGuardarDatos, mostrarAlertaError, mostrarAlertaExito } from '../utils/sweetAlertUtils';
 import useInitialData from '../utils/useInitialData';
 import { useGlobalDispatch } from '../utils/GlobalState';
 import { useNavigate } from 'react-router-dom';
-import useLoading from '../utils/useLoading';
 import DatosAlumno from '../components/Forms/DatosAlumno';
 import DatosResponsable from '../components/Forms/DatosResponsable';
 import withAuth from '../hoc/withAuth';
 import { cargarDatosIniciales } from '../utils/dataUtils';
+import useAuth from '../utils/useAuth';
 
 const DatosIniciales = React.memo(() => {
-    const { formData, authLoading, user } = useInitialData();
+    const { formData, loading } = useInitialData();
+    const { user, authLoading } = useAuth();
     const dispatch = useGlobalDispatch();
     const navigate = useNavigate();
-    const setLoading = useLoading();
 
     const fetchData = useCallback(async () => {
         try {
-            setLoading(true);
             const data = await cargarDatosIniciales(dispatch);
             if (data) {
                 dispatch({ type: 'SET_FORM_DATA', payload: data });
             } else {
                 console.log('No se encontraron datos iniciales');
             }
-            setLoading(false);
         } catch (error) {
-            setLoading(false);
             console.error("Error fetching initial data:", error);
             dispatch({ type: 'SET_FORM_DATA', payload: { error: error.message } });
         }
-    }, [dispatch, setLoading]);
+    }, [dispatch]);
 
     useEffect(() => {
         if (!authLoading && user) {
@@ -44,11 +40,12 @@ const DatosIniciales = React.memo(() => {
         }
     }, [fetchData, navigate, user, authLoading]);
 
-    if (authLoading) {
+    if (authLoading || loading) {
         return <div>Cargando datos...</div>;
     }
 
     if (formData?.error) {
+        mostrarAlertaError(formData.error);
         return <div>Error: {formData.error}</div>;
     }
 
@@ -83,12 +80,17 @@ const DatosIniciales = React.memo(() => {
                                 }}
                                 validationSchema={datosInicialesValidationSchema}
                                 onSubmit={(values, { setSubmitting }) => {
-                                    setLoading(true);
-                                    handleGuardarDatos(values, data => {
-                                        dispatch({ type: 'SET_FORM_DATA', payload: data });
-                                        setLoading(false);
-                                        navigate('/next-page');
-                                    }, setSubmitting, navigate, setLoading);
+                                    handleGuardarDatos(
+                                        values,
+                                        (data) => {
+                                            dispatch({ type: 'SET_FORM_DATA', payload: data });
+                                            mostrarAlertaExito();
+                                            navigate('/next-page');
+                                        },
+                                        setSubmitting,
+                                        navigate,
+                                        (isLoading) => dispatch({ type: 'SET_LOADING', payload: isLoading })
+                                    );
                                 }}
                                 enableReinitialize
                             >
