@@ -12,6 +12,7 @@ const useAuth = () => {
         dispatch({ type: 'SET_LOADING', payload: true }); // Establecer el estado de carga en true
 
         const unsubscribe = onAuthStateChanged(auth, (user) => { // Suscribirse a los cambios de estado de autenticación
+            console.log("Auth state changed, user: ", user);
             dispatch({ type: 'SET_USER', payload: user || null }); // Actualizar el usuario en el estado global
             dispatch({ type: 'SET_LOADING', payload: false }); // Establecer el estado de carga en false
             setAuthState({ user, loading: false }); // Actualizar el estado local

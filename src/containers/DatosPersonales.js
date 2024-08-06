@@ -1,4 +1,3 @@
-// src/containers/DatosPersonales.js
 import React, { useEffect, useCallback } from 'react';
 import { Formik, Form } from 'formik';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
@@ -6,35 +5,33 @@ import { datosPersonalesValidationSchema } from '../utils/validationSchemas';
 import FormGroup from '../components/Forms/FormGroup';
 import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
 import { cargarDatosIniciales } from '../utils/dataUtils';
-import useLoading from '../utils/useLoading';
 import useAuth from '../utils/useAuth';
 import withAuth from '../hoc/withAuth';
 import { useNavigate } from 'react-router-dom';
 
 const DatosPersonales = React.memo(() => {
-    const { formData, user, authLoading } = useGlobalState();
+    const { formData, user, authLoading, loading } = useGlobalState();
     const dispatch = useGlobalDispatch();
-    const setLoading = useLoading();
     const navigate = useNavigate();
 
     useAuth(); // Asegurarnos de que el estado de autenticación se maneje
 
     const fetchData = useCallback(async () => {
         try {
-            setLoading(true);
+            dispatch({ type: 'SET_LOADING', payload: true });
             const data = await cargarDatosIniciales(dispatch);
             if (data) {
                 dispatch({ type: 'SET_FORM_DATA', payload: data });
             } else {
                 console.log('No se encontraron datos iniciales');
             }
-            setLoading(false);
+            dispatch({ type: 'SET_LOADING', payload: false });
         } catch (error) {
-            setLoading(false);
+            dispatch({ type: 'SET_LOADING', payload: false });
             console.error("Error fetching initial data:", error);
             dispatch({ type: 'SET_FORM_DATA', payload: { error: error.message } });
         }
-    }, [dispatch, setLoading]);
+    }, [dispatch]);
 
     useEffect(() => {
         if (!authLoading && user) {
@@ -55,7 +52,7 @@ const DatosPersonales = React.memo(() => {
         });
     };
 
-    if (authLoading) {
+    if (authLoading || loading) {
         return <div>Cargando datos...</div>;
     }
 

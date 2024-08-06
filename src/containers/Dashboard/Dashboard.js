@@ -1,41 +1,31 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useGlobalState, useGlobalDispatch } from '../../utils/GlobalState.js';
-import { cargarDatosIniciales } from '../../utils/dataUtils';
-import useLoading from '../../utils/useLoading';
-import useAuth from '../../utils/useAuth';
+import React from 'react';
+import { useGlobalState } from '../../utils/GlobalState.js';
+import useInitialData from '../../utils/useInitialData';
+import withAuth from '../../hoc/withAuth';
 
 const Dashboard = React.memo(() => {
     const { formData } = useGlobalState();
-    const dispatch = useGlobalDispatch();
-    const setLoading = useLoading();
-    useAuth();
-    const [error, setError] = useState(null);
-
-    const fetchData = useCallback(async () => {
-        setLoading(true);
-        try {
-            const data = await cargarDatosIniciales(dispatch);
-            dispatch({ type: 'SET_FORM_DATA', payload: data });
-        } catch (error) {
-            setError(error);
-        } finally {
-            setLoading(false);
-        }
-    }, [dispatch, setLoading]);
-
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+    const { loading, error } = useInitialData();
 
     if (error) {
         return <div>Error: {error.message}</div>;
     }
 
-    if (!formData) {
+    if (loading) {
         return <div>Cargando datos...</div>;
     }
 
-    return <div>{/* Aquí va el contenido del dashboard */}</div>;
+    if (!formData) {
+        console.log("No se encontraron datos iniciales");
+        return <div>No se encontraron datos iniciales</div>;
+    }
+
+    return (
+        <div>
+            <h1>Bienvenido al Dashboard</h1>
+            <p>Hola, {formData.nombresAlumno}</p> {/* Muestra un ejemplo de datos cargados */}
+        </div>
+    );
 });
 
-export default Dashboard;
+export default withAuth(Dashboard);

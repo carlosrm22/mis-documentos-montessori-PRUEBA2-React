@@ -78,5 +78,4 @@ const DatosAlumno = ({ values, handleChange, setFieldValue, isReadOnly }) => {
     );
 };
 
-
 export default DatosAlumno;

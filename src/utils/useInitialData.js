@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
-import { getAuth } from 'firebase/auth';
 import { cargarDatosIniciales } from '../utils/dataUtils';
 import { useNavigate } from 'react-router-dom';
 import { mostrarAlertaError, mostrarAlertaExito } from '../utils/sweetAlertUtils';
@@ -10,10 +9,8 @@ const useInitialData = () => {
     const [error, setError] = useState(null);
     const [dataLoaded, setDataLoaded] = useState(false);
 
-    const { formData, loading } = useGlobalState();
+    const { formData, loading, user } = useGlobalState();
     const dispatch = useGlobalDispatch();
-    const auth = getAuth();
-    const user = auth.currentUser;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -34,12 +31,12 @@ const useInitialData = () => {
             }
         };
 
-        if (user && !formData && !dataLoaded) {
-            fetchInitialData();
-        } else if (user && !formData && dataLoaded) {
-            navigate('/datos-iniciales');
-        } else {
-            dispatch({ type: 'SET_LOADING', payload: false });
+        if (user) {
+            if (!formData && !dataLoaded) {
+                fetchInitialData();
+            } else if (!formData && dataLoaded) {
+                navigate('/datos-iniciales');
+            }
         }
     }, [user, formData, dataLoaded, dispatch, navigate]);
 

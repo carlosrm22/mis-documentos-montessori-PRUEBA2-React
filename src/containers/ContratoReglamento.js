@@ -3,19 +3,17 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
 import { cargarDatosIniciales } from '../utils/dataUtils';
 import useAuth from '../utils/useAuth';
-import useLoading from '../utils/useLoading';
 import { useNavigate } from 'react-router-dom';
 import withAuth from '../hoc/withAuth';
 
 const ContratoReglamento = () => {
-    const { formData } = useGlobalState();
+    const { formData, loading } = useGlobalState();
     const dispatch = useGlobalDispatch();
-    const setLoading = useLoading();
     const { user, authLoading } = useAuth();
     const navigate = useNavigate();
 
     const fetchData = useCallback(async () => {
-        setLoading(true);
+        dispatch({ type: 'SET_LOADING', payload: true });
         try {
             if (!formData) {
                 const data = await cargarDatosIniciales(dispatch);
@@ -25,9 +23,9 @@ const ContratoReglamento = () => {
             console.error('Error fetching initial data:', error);
             dispatch({ type: 'SET_FORM_DATA', payload: { error } });
         } finally {
-            setLoading(false);
+            dispatch({ type: 'SET_LOADING', payload: false });
         }
-    }, [dispatch, formData, setLoading]);
+    }, [dispatch, formData]);
 
     useEffect(() => {
         if (authLoading) return;
@@ -38,7 +36,7 @@ const ContratoReglamento = () => {
         fetchData();
     }, [fetchData, user, authLoading, navigate]);
 
-    if (!formData || formData.error) {
+    if (loading || !formData || formData.error) {
         return <div>Cargando datos...</div>;
     }
 

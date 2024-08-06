@@ -20,3 +20,4 @@ export const verificarAutenticacion = (dispatch) => {
         console.error('Error al verificar la autenticación:', error);
     }
 };
+//

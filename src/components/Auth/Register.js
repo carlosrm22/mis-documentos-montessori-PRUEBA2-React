@@ -1,12 +1,10 @@
-// src/components/Register.js
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Form as BootstrapForm } from 'react-bootstrap';
 import { register } from '../../services/firebaseService';
 import { mostrarAlertaRegistroExitoso, mostrarAlertaErrorRegistro } from '../../utils/sweetAlertUtils';
 import AuthLayout from '../Layout/AuthLayout';
-import { useGlobalDispatch } from '../../utils/GlobalState';
+import { useGlobalDispatch, useGlobalState } from '../../utils/GlobalState';
 import { Formik, Field, ErrorMessage, Form as FormikForm } from 'formik';
 import { registroValidationSchema } from '../../utils/validationSchemas';
 
@@ -17,6 +15,9 @@ import { registroValidationSchema } from '../../utils/validationSchemas';
 const Register = () => {
     const navigate = useNavigate();
     const dispatch = useGlobalDispatch();
+/* The line `const { user } = useGlobalState();` is using object destructuring to extract the `user`
+property from the object returned by the `useGlobalState()` hook. */
+    const { user } = useGlobalState();
 
     /**
      * Maneja el envío del formulario de registro.
@@ -33,8 +34,10 @@ const Register = () => {
         }
         try {
             const user = await register(values.email, values.password);
+            console.log('User registered:', user);
             dispatch({ type: 'SET_USER', payload: user });
             mostrarAlertaRegistroExitoso();
+            console.log('Navigating to /datos-iniciales');
             navigate('/datos-iniciales');
         } catch (error) {
             console.error('Error during registration:', error);
@@ -42,6 +45,14 @@ const Register = () => {
         }
         setSubmitting(false);
     };
+
+    // useEffect para redirigir al usuario si ya está registrado y logueado
+    React.useEffect(() => {
+        if (user) {
+            console.log('User already logged in, redirecting to /datos-iniciales');
+            navigate('/datos-iniciales');
+        }
+    }, [user, navigate]);
 
     /**
      * Formulario de registro.

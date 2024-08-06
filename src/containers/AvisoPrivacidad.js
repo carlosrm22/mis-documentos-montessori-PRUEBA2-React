@@ -7,7 +7,6 @@ import { subirPDFaFirebase, descargarPDFdeFirebase } from '../utils/pdfUtils';
 import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
 import { formatearFecha } from '../utils/dateUtils';
 import useAuth from '../utils/useAuth';
-import useLoading from '../utils/useLoading';
 import PrivacidadPDF from '../pdfRenders/PrivacidadPDF';
 import Swal from 'sweetalert2';
 import { cargarDatosIniciales } from '../utils/dataUtils';
@@ -15,43 +14,42 @@ import withAuth from '../hoc/withAuth';
 
 const AvisoPrivacidad = React.memo(() => {
     const navigate = useNavigate();
-    const { formData } = useGlobalState();
+    const { formData, loading } = useGlobalState();
     const dispatch = useGlobalDispatch();
     const { user, authLoading } = useAuth();
-    const setLoading = useLoading();
     const [pdfUrl, setPdfUrl] = useState(null);
 
     const fetchData = useCallback(async () => {
         try {
-            setLoading(true);
+            dispatch({ type: 'SET_LOADING', payload: true });
             const data = await cargarDatosIniciales(dispatch);
             if (data) {
                 dispatch({ type: 'SET_FORM_DATA', payload: data });
             } else {
                 console.log('No se encontraron datos iniciales');
             }
-            setLoading(false);
+            dispatch({ type: 'SET_LOADING', payload: false });
         } catch (error) {
-            setLoading(false);
+            dispatch({ type: 'SET_LOADING', payload: false });
             console.error("Error fetching initial data:", error);
             Swal.fire('Error al cargar datos iniciales', error.message, 'error');
         }
-    }, [dispatch, setLoading]);
+    }, [dispatch]);
 
     const fetchPdfUrl = useCallback(async () => {
         if (user && formData?.nombresAlumno && formData?.apellidosAlumno) {
             const storagePath = `pdfs/aviso-privacidad-${formData.nombresAlumno} ${formData.apellidosAlumno}-${user.uid}.pdf`;
-            setLoading(true);
+            dispatch({ type: 'SET_LOADING', payload: true });
             try {
                 const url = await descargarPDFdeFirebase(storagePath);
                 setPdfUrl(url);
             } catch (error) {
                 console.error('Error al descargar el PDF:', error);
             } finally {
-                setLoading(false);
+                dispatch({ type: 'SET_LOADING', payload: false });
             }
         }
-    }, [user, formData, setLoading]);
+    }, [user, formData, dispatch]);
 
     useEffect(() => {
         if (!authLoading && user) {
@@ -64,6 +62,10 @@ const AvisoPrivacidad = React.memo(() => {
     useEffect(() => {
         fetchPdfUrl();
     }, [fetchPdfUrl]);
+
+    if (authLoading || loading) {
+        return <div>Cargando datos...</div>;
+    }
 
     if (!formData || !formData.nombresAlumno) {
         return <div>Cargando datos...</div>;
@@ -81,7 +83,7 @@ const AvisoPrivacidad = React.memo(() => {
             const result = await mostrarAvisoPDF();
             if (result.isConfirmed) {
                 try {
-                    setLoading(true);
+                    dispatch({ type: 'SET_LOADING', payload: true });
                     const pdfBlob = await generarPDFconReactPDF(formData, formatearFecha);
                     await subirPDFaFirebase(pdfBlob, storagePath);
                     const url = await descargarPDFdeFirebase(storagePath);
@@ -93,10 +95,10 @@ const AvisoPrivacidad = React.memo(() => {
                     link.download = nombreArchivo;
                     link.click();
 
-                    setLoading(false);
+                    dispatch({ type: 'SET_LOADING', payload: false });
                     navigate('/contrato-reglamento');
                 } catch (error) {
-                    setLoading(false);
+                    dispatch({ type: 'SET_LOADING', payload: false });
                     mostrarAlertaError(error.message);
                     console.error('Error al generar y subir el PDF:', error);
                 }

@@ -1,5 +1,3 @@
-// src/components/Login.js
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Form as BootstrapForm } from 'react-bootstrap';
@@ -36,16 +34,15 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
             console.log('User logged in:', user);
             dispatch({ type: 'SET_USER', payload: user });
             mostrarAlertaLoginExitoso();
-            if (onSuccess) {
-                onSuccess();
-            } else {
-                navigate('/dashboard');
-            }
+
+            // Redirigir al dashboard o a datos iniciales después del inicio de sesión
+            navigate('/dashboard');
         } catch (error) {
             console.error('Error during login:', error);
             mostrarAlertaErrorLogin(navigate);
+        } finally {
+            setSubmitting(false);
         }
-        setSubmitting(false);
     };
 
     /**

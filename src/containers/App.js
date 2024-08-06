@@ -22,6 +22,8 @@ function App() {
   const { user, loading } = useGlobalState();
   useAuth(); // Inicializa la autenticación
 
+  console.log("User in App: ", user);
+
   if (loading) {
     return <LoadingSpinner />; // Si está cargando entonces mostrar Spinner de carga
   }
@@ -43,7 +45,7 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/inicio" element={<Dashboard />} />
                 <Route path="/contrato-reglamento" element={<ContratoReglamento />} />
-                <Route path="*" element={<Navigate to="/Dashboard" />} />
+                <Route path="*" element={<Dashboard />} />
               </>
             ) : (
               <Route path="*" element={<Navigate to="/login" />} /> // Ruta comodín si el usuario no está logueado siempre manda a login
