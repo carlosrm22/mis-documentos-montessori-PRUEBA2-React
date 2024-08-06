@@ -5,12 +5,7 @@ import React, { createContext, useReducer, useContext, useMemo } from 'react';
 // useMemo: Hook para memorizar valores y evitar cálculos innecesarios.
 import PropTypes from 'prop-types';
 // PropTypes: Biblioteca para validar las propiedades que se pasan a los componentes.
-
-const SET_FORM_DATA = 'SET_FORM_DATA'; // Para restablecer datos del formulario.
-const SET_USER = 'SET_USER'; // Para restablecer el usuario.
-const SET_LOADING = 'SET_LOADING'; // Para establecer el estado de carga.
-const SET_ERROR = 'SET_ERROR'; // Para establecer un error.
-// Constantes que representan los tipos de acciones que se pueden despachar.
+import { SET_FORM_DATA, SET_USER, SET_LOADING, SET_ERROR } from './actionTypes'; // Importar las acciones centralizadas
 
 const initialState = {
     formData: {},
