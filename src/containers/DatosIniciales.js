@@ -3,14 +3,14 @@ import { Formik, Form as FormikForm } from 'formik';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { datosInicialesValidationSchema } from '../utils/validationSchemas';
 import { handleGuardarDatos, mostrarAlertaError, mostrarAlertaExito } from '../utils/sweetAlertUtils';
-import useInitialData from '../utils/useInitialData';
+import useInitialData from '../utils/hooks/useInitialData';
 import { useGlobalDispatch } from '../utils/GlobalState';
 import { useNavigate } from 'react-router-dom';
 import DatosAlumno from '../components/Forms/DatosAlumno';
 import DatosResponsable from '../components/Forms/DatosResponsable';
 import withAuth from '../hoc/withAuth';
 import { cargarDatosIniciales } from '../utils/dataUtils';
-import useAuth from '../utils/useAuth';
+import useAuth from '../utils/hooks/useAuth';
 
 const DatosIniciales = React.memo(() => {
     const { formData, loading } = useInitialData();

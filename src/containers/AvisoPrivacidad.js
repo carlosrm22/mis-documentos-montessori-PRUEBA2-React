@@ -6,7 +6,7 @@ import { mostrarAvisoPDF, mostrarAlertaExito, mostrarAlertaError } from '../util
 import { subirPDFaFirebase, descargarPDFdeFirebase } from '../utils/pdfUtils';
 import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
 import { formatearFecha } from '../utils/dateUtils';
-import useAuth from '../utils/useAuth';
+import useAuth from '../utils/hooks/useAuth';
 import PrivacidadPDF from '../pdfRenders/PrivacidadPDF';
 import Swal from 'sweetalert2';
 import { cargarDatosIniciales } from '../utils/dataUtils';

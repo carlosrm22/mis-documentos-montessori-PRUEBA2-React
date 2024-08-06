@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '../utils/useAuth';
+import useAuth from '../utils/hooks/useAuth';
 import LoadingSpinner from '../components/Shared/LoadingSpinner';
 import { useGlobalState } from '../utils/GlobalState';
 

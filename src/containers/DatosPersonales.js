@@ -5,7 +5,7 @@ import { datosPersonalesValidationSchema } from '../utils/validationSchemas';
 import FormGroup from '../components/Forms/FormGroup';
 import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
 import { cargarDatosIniciales } from '../utils/dataUtils';
-import useAuth from '../utils/useAuth';
+import useAuth from '../utils/hooks/useAuth';
 import withAuth from '../hoc/withAuth';
 import { useNavigate } from 'react-router-dom';
 

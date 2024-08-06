@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useGlobalState, useGlobalDispatch } from '../utils/GlobalState';
 import { cargarDatosIniciales } from '../utils/dataUtils';
-import useAuth from '../utils/useAuth';
+import useAuth from '../utils/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import withAuth from '../hoc/withAuth';
 

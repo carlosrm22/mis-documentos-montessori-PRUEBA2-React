@@ -12,7 +12,7 @@ import ContratoReglamento from '../containers/ContratoReglamento';
 import Bienvenida from '../containers/Bienvenida';
 import LoadingSpinner from '../components/Shared/LoadingSpinner';
 import { useGlobalState } from '../utils/GlobalState';
-import useAuth from '../utils/useAuth';
+import useAuth from '../utils/hooks/useAuth';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/App.css';

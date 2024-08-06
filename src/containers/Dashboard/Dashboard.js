@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGlobalState } from '../../utils/GlobalState.js';
-import useInitialData from '../../utils/useInitialData';
+import useInitialData from '../../utils/hooks/useInitialData';
 import withAuth from '../../hoc/withAuth';
 
 const Dashboard = React.memo(() => {
