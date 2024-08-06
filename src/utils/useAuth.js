@@ -15,6 +15,7 @@ const useAuth = () => {
             dispatch({ type: 'SET_USER', payload: user || null }); // Actualizar el usuario en el estado global
             dispatch({ type: 'SET_LOADING', payload: false }); // Establecer el estado de carga en false
             setAuthState({ user, loading: false }); // Actualizar el estado local
+            console.log("User state updated: ", user);
         }, (error) => { // Manejar errores
             console.error('Error in useAuth:', error); // Mostrar error en consola
             dispatch({ type: 'SET_USER', payload: null }); // Establecer usuario en null en caso de error
