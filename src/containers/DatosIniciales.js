@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Formik, Form as FormikForm } from 'formik';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { datosInicialesValidationSchema } from '../utils/validationSchemas';
@@ -9,44 +9,33 @@ import { useNavigate } from 'react-router-dom';
 import DatosAlumno from '../components/Forms/DatosAlumno';
 import DatosResponsable from '../components/Forms/DatosResponsable';
 import withAuth from '../hoc/withAuth';
-import { cargarDatosIniciales } from '../utils/dataUtils';
-import useAuth from '../utils/hooks/useAuth';
 
 const DatosIniciales = React.memo(() => {
-    const { formData, loading } = useInitialData();
-    const { user, authLoading } = useAuth();
+    const { formData, loading, error } = useInitialData();
     const dispatch = useGlobalDispatch();
     const navigate = useNavigate();
 
-    const fetchData = useCallback(async () => {
-        try {
-            const data = await cargarDatosIniciales(dispatch);
-            if (data) {
+    const handleSubmit = useCallback((values, { setSubmitting }) => {
+        handleGuardarDatos(
+            values,
+            (data) => {
                 dispatch({ type: 'SET_FORM_DATA', payload: data });
-            } else {
-                console.log('No se encontraron datos iniciales');
-            }
-        } catch (error) {
-            console.error("Error fetching initial data:", error);
-            dispatch({ type: 'SET_FORM_DATA', payload: { error: error.message } });
-        }
-    }, [dispatch]);
+                mostrarAlertaExito();
+                navigate('/next-page');
+            },
+            setSubmitting,
+            navigate,
+            (isLoading) => dispatch({ type: 'SET_LOADING', payload: isLoading })
+        );
+    }, [dispatch, navigate]);
 
-    useEffect(() => {
-        if (!authLoading && user) {
-            fetchData();
-        } else if (!authLoading && !user) {
-            navigate('/login');
-        }
-    }, [fetchData, navigate, user, authLoading]);
-
-    if (authLoading || loading) {
+    if (loading) {
         return <div>Cargando datos...</div>;
     }
 
-    if (formData?.error) {
-        mostrarAlertaError(formData.error);
-        return <div>Error: {formData.error}</div>;
+    if (error) {
+        mostrarAlertaError(error);
+        return <div>Error al cargar los datos: {error}</div>;
     }
 
     const isReadOnly = formData && Object.keys(formData).length > 0 && formData.nombresAlumno !== '';
@@ -79,19 +68,7 @@ const DatosIniciales = React.memo(() => {
                                     emailContacto: formData?.emailContacto || ''
                                 }}
                                 validationSchema={datosInicialesValidationSchema}
-                                onSubmit={(values, { setSubmitting }) => {
-                                    handleGuardarDatos(
-                                        values,
-                                        (data) => {
-                                            dispatch({ type: 'SET_FORM_DATA', payload: data });
-                                            mostrarAlertaExito();
-                                            navigate('/next-page');
-                                        },
-                                        setSubmitting,
-                                        navigate,
-                                        (isLoading) => dispatch({ type: 'SET_LOADING', payload: isLoading })
-                                    );
-                                }}
+                                onSubmit={handleSubmit}
                                 enableReinitialize
                             >
                                 {({ values, isSubmitting, handleChange, setFieldValue, errors, touched }) => (
