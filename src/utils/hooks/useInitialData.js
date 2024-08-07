@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useGlobalState, useGlobalDispatch } from '../GlobalState';
 import { cargarDatosIniciales } from '../dataUtils';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { mostrarAlertaError, mostrarAlertaExito } from '../sweetAlertUtils';
 
 const useInitialData = () => {
@@ -12,6 +12,7 @@ const useInitialData = () => {
     const { formData, loading, user } = useGlobalState();
     const dispatch = useGlobalDispatch();
     const navigate = useNavigate();
+    const location = useLocation(); // Obtener la ubicación actual
 
     useEffect(() => {
         const fetchInitialData = async () => {
@@ -34,11 +35,12 @@ const useInitialData = () => {
         if (user) {
             if (!formData && !dataLoaded) {
                 fetchInitialData();
-            } else if (!formData && dataLoaded) {
+            } else if (!formData && dataLoaded && location.pathname !== '/datos-iniciales') {
+                // Solo redirigir si no estamos ya en /datos-iniciales
                 navigate('/datos-iniciales');
             }
         }
-    }, [user, formData, dataLoaded, dispatch, navigate]);
+    }, [user, formData, dataLoaded, dispatch, navigate, location]);
 
     return { formData: initialData || formData, loading, user, error };
 };
