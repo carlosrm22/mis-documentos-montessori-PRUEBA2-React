@@ -35,17 +35,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
-/* Observaciones y Mejoras
-Estructura del Sidebar:
-
-La estructura del Sidebar está bien organizada y utiliza react - bootstrap y react - router - bootstrap correctamente para la navegación.
-Clase sidebar - sticky:
-
-La clase sidebar - sticky está presente pero no parece estar haciendo nada en el código mostrado.Asegúrate de que esta clase tenga estilos aplicados en tus archivos CSS para que tenga efecto.
-Accesibilidad y Mejora Visual:
-
-Podrías considerar añadir un icono o un indicador visual para cada enlace del Sidebar para mejorar la experiencia del usuario.
-Estilo CSS:
-
-Asegúrate de que la clase sidebar y cualquier otra clase utilizada en el Sidebar tengan estilos definidos en tu archivo CSS para mantener la consistencia del diseño. */

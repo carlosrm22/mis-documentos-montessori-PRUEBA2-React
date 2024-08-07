@@ -1,0 +1,28 @@
+/* src/styles/Sidebar.css */
+.sidebar {
+    height: 100vh;
+    /* Asegura que el sidebar ocupe toda la altura de la pantalla */
+    position: fixed;
+    /* Fija el sidebar en su posición */
+    background-color: #f8f9fa;
+    /* Color de fondo del sidebar */
+    padding-top: 1rem;
+    /* Espacio superior */
+}
+
+.sidebar .nav-link {
+    color: #000;
+    /* Color de los enlaces */
+}
+
+.sidebar .nav-link:hover {
+    background-color: #e9ecef;
+    /* Color de fondo al pasar el cursor */
+}
+
+.sidebar-sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    /* Fija el contenido del sidebar al principio */
+}
