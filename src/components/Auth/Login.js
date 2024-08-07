@@ -36,7 +36,12 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
             mostrarAlertaLoginExitoso();
 
             // Redirigir al dashboard o a datos iniciales después del inicio de sesión
-            navigate('/dashboard');
+            if (onSuccess) {
+                onSuccess();
+            } else {
+                // Redirigir al dashboard o a datos iniciales después del inicio de sesión si no se proporciona onSuccess
+                navigate('/dashboard');
+            }
         } catch (error) {
             console.error('Error during login:', error);
             mostrarAlertaErrorLogin(navigate);
