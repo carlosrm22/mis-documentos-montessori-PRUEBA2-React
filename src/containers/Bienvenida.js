@@ -1,6 +1,7 @@
 // src/components/Bienvenida.js
 
-import React from 'react'; import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import Login from '../components/Auth/Login';
 
@@ -8,15 +9,14 @@ import Login from '../components/Auth/Login';
  * Componente de bienvenida.
  * Muestra la pantalla de bienvenida con opciones para iniciar sesión y registrarse.
  */
-const Bienvenida = ({ setLoading }) => {
-
+const Bienvenida = () => {
     return (
         <Container className="shadow-lg p-4 mb-5 bg-body-tertiary rounded">
             {/* Sección de bienvenida */}
             <Row className="text-center mb-4">
                 <Col>
                     <img src={`${process.env.PUBLIC_URL}/assets/images/Logo-No-Text.webp`} alt="Logo" className="img-fluid mb-3" style={{ maxWidth: '200px' }} />
-                    <h1>Bienvenido a <br></br>Mi Cuenta Montessori</h1>
+                    <h1>Bienvenido a <br />Mi Cuenta Montessori</h1>
                     <p className="fs-5 fw-light">Gestione sus documentos y datos fácilmente</p>
                 </Col>
             </Row>
