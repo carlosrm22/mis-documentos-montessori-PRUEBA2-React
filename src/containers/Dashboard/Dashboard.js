@@ -1,31 +1,30 @@
 import React from 'react';
-import { useGlobalState } from '../../utils/GlobalState.js';
-import useInitialData from '../../utils/hooks/useInitialData';
+import { Container, Row, Col } from 'react-bootstrap';
+import Sidebar from './Sidebar';
+import { useGlobalState } from '../../utils/GlobalState';
 import withAuth from '../../hoc/withAuth';
 
-const Dashboard = React.memo(() => {
-    const { formData } = useGlobalState();
-    const { loading, error } = useInitialData();
-
-    if (error) {
-        return <div>Error: {error.message}</div>;
-    }
-
-    if (loading) {
-        return <div>Cargando datos...</div>;
-    }
-
-    if (!formData) {
-        console.log("No se encontraron datos iniciales");
-        return <div>No se encontraron datos iniciales</div>;
-    }
+/**
+ * Componente principal del Dashboard.
+ * Proporciona una vista general de la aplicación y enlaces a diferentes secciones.
+ */
+const Dashboard = () => {
+    const { user } = useGlobalState(); // Obtener el estado global del usuario
 
     return (
-        <div>
-            <h1>Bienvenido al Dashboard</h1>
-            <p>Hola, {formData.nombresAlumno}</p> {/* Muestra un ejemplo de datos cargados */}
-        </div>
+        <Container fluid className="p-0">
+            <Row noGutters>
+                <Col md={2}>
+                    <Sidebar />
+                </Col>
+                <Col md={10} className="p-4">
+                    <h1>Bienvenido, {user?.email}</h1> {/* Mostrar el email del usuario */}
+                    <p>Aquí puedes gestionar tus documentos y datos.</p>
+                    {/* Aquí puedes agregar más contenido del dashboard */}
+                </Col>
+            </Row>
+        </Container>
     );
-});
+};
 
-export default withAuth(Dashboard);
+export default withAuth(Dashboard); // Proteger la ruta con autenticación
