@@ -41,10 +41,10 @@ function App() {
               <>
                 <Route path="/datos-iniciales" element={<DatosIniciales />} />
                 <Route path="/aviso-privacidad" element={<AvisoPrivacidad />} />
+                <Route path="/contrato-reglamento" element={<ContratoReglamento />} />
                 <Route path="/datos-personales" element={<DatosPersonales />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/inicio" element={<Dashboard />} />
-                <Route path="/contrato-reglamento" element={<ContratoReglamento />} />
                 <Route path="*" element={<Dashboard />} />
               </>
             ) : (
