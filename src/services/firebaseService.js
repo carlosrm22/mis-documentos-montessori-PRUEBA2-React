@@ -2,7 +2,6 @@
 import { db, auth } from '../utils/firebaseConfig';
 import { collection, addDoc, getDocs, query, where, updateDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
 
 // Función para registrar usuarios
 const register = async (email, password) => {
@@ -95,16 +94,4 @@ const updateDatosIniciales = async (data) => {
     await updateDoc(docRef, data);
 };
 
-/**
- * Función para subir el PDF a Firebase Storage
- * @param {Blob} pdfBlob - El Blob del archivo PDF
- * @param {string} storagePath - La ruta en Firebase Storage
- * @returns {Promise<void>}
- */
-const subirPDFaFirebase = async (pdfBlob, storagePath) => {
-    const storage = getStorage();
-    const storageRef = ref(storage, storagePath);
-    await uploadBytes(storageRef, pdfBlob);
-};
-
-export { register, login, logout, saveData, getDatosIniciales, updateDatosIniciales, subirPDFaFirebase };
+export { register, login, logout, saveData, getDatosIniciales, updateDatosIniciales };

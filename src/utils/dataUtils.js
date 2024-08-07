@@ -1,10 +1,6 @@
 import { getDatosIniciales } from '../services/firebaseService';
 import { mostrarAlertaError, mostrarAlertaExito } from '../utils/sweetAlertUtils';
-
-// Constantes para los tipos de acción
-const SET_LOADING = 'SET_LOADING';
-const SET_FORM_DATA = 'SET_FORM_DATA';
-const SET_ERROR = 'SET_ERROR';
+import { SET_LOADING, SET_FORM_DATA, SET_ERROR } from './actionTypes'; // Importar las acciones centralizadas
 
 /**
  * Función auxiliar para crear un timeout.
