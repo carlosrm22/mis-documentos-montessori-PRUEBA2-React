@@ -71,6 +71,7 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
                                 placeholder="Ingresa tu email"
                                 className="form-control"
                                 required
+                                autoComplete="email"
                             />
                             <ErrorMessage name="email" component="div" className="text-danger" />
                         </BootstrapForm.Group>
@@ -82,6 +83,7 @@ const Login = ({ onSuccess, useLayout = true, showTitle = true }) => {
                                 placeholder="Ingresa tu contraseña"
                                 className="form-control"
                                 required
+                                autoComplete="current-password"
                             />
                             <ErrorMessage name="password" component="div" className="text-danger" />
                         </BootstrapForm.Group>

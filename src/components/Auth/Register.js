@@ -75,6 +75,7 @@ property from the object returned by the `useGlobalState()` hook. */
                                 placeholder="Ingresa tu email"
                                 className="form-control"
                                 required
+                                autoComplete="email"
                             />
                             <ErrorMessage name="email" component="div" className="text-danger" />
                         </BootstrapForm.Group>
@@ -86,6 +87,7 @@ property from the object returned by the `useGlobalState()` hook. */
                                 placeholder="Ingresa tu contraseña"
                                 className="form-control"
                                 required
+                                autoComplete="new-password"
                             />
                             <ErrorMessage name="password" component="div" className="text-danger" />
                         </BootstrapForm.Group>
@@ -97,6 +99,7 @@ property from the object returned by the `useGlobalState()` hook. */
                                 placeholder="Confirma tu contraseña"
                                 className="form-control"
                                 required
+                                autoComplete="new-password"
                             />
                             <ErrorMessage name="confirmPassword" component="div" className="text-danger" />
                         </BootstrapForm.Group>
